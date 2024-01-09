@@ -1,11 +1,20 @@
 import React from 'react'
-import { StyleSheet, View, Text } from 'react-native'
+import { StyleSheet, SafeAreaView, View, Text } from 'react-native'
 
 export default function SettingsScreen({navigation}) {
 
     return (
-        <View>
+        <SafeAreaView style={styles.mainContainer}>
             <Text>Game settings</Text>
-        </View>
+        </SafeAreaView>
     )
 }
+
+let styles = StyleSheet.create({
+    mainContainer: {
+        backgroundColor: 'lightgray',
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
+    }
+})
