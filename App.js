@@ -7,9 +7,6 @@ import GameScreen from './screens/GameScreen'
 import SettingsScreen from './screens/SettingsScreen'
 import ScoresScreen from './screens/ScoresScreen'
 
-import Store from './store/configStore'
-import { Provider } from 'react-redux'
-
 
 const Stack = createNativeStackNavigator()
 
@@ -17,22 +14,19 @@ const Stack = createNativeStackNavigator()
 export default function App() {
   return (
 
-    <Provider store={Store}>
+    <NavigationContainer>
 
-      <NavigationContainer>
+      <Stack.Navigator>
 
-        <Stack.Navigator>
-
-          <Stack.Screen name='HomeScreen' component={HomeScreen} />
-          <Stack.Screen name='GameScreen' component={GameScreen} />
-          <Stack.Screen name='SettingsScreen' component={SettingsScreen} />
-          <Stack.Screen name='ScoresScreen' component={ScoresScreen} />
+        <Stack.Screen name='HomeScreen' component={HomeScreen} options={{ title: 'Welcome !' }} />
+        <Stack.Screen name='GameScreen' component={GameScreen} />
+        <Stack.Screen name='SettingsScreen' component={SettingsScreen} />
+        <Stack.Screen name='ScoresScreen' component={ScoresScreen} />
 
 
-        </Stack.Navigator>
+      </Stack.Navigator>
 
-      </NavigationContainer>
+    </NavigationContainer>
 
-    </Provider>
   );
 }

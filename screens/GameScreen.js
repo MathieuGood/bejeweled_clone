@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleSheet, View, Text } from 'react-native'
 
-export default function GameScreen() {
+export default function GameScreen({navigation}) {
 
     return (
         <View>
