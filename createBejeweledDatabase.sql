@@ -16,7 +16,8 @@ CREATE TABLE players (
     player_id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     player_name VARCHAR(255) NOT NULL,
     player_email VARCHAR(255) NOT NULL,
-    player_password VARCHAR(255) NOT NULL
+    player_password VARCHAR(255) NOT NULL,
+    last_game_id INT DEFAULT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
 INSERT INTO players (
