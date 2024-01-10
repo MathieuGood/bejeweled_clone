@@ -1,7 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import { StyleSheet, SafeAreaView, View, Text } from 'react-native'
+import React, { useState } from 'react'
+import { StyleSheet, SafeAreaView, View, Text, Alert } from 'react-native'
 import TouchButton from '../components/TouchButton'
 import TextField from '../components/TextField'
+import { addPlayer, checkIfEmailDoesNotExist } from '../core/apiRequests'
+import { checkEmailFormat, checkNameFormat, checkPasswordFormat } from '../core/userEntryCheck'
+
 
 export default function RegisterScreen({ navigation }) {
 
@@ -11,7 +14,30 @@ export default function RegisterScreen({ navigation }) {
         password: ''
     })
 
-    const { count, theme, email, password } = state
+    const { theme, name, email, password } = state
+
+    
+    //////////
+    // TO DO
+    // Implement alert if checkNameFormat is false
+    /////////
+
+    // Checking if name, email and password have right format
+
+    function checkUserEntryAndAddPlayer(name, email, password) {
+        checkIfEmailDoesNotExist(email, () => {
+            console.log('EMAIL TES$T OK')
+            if (checkEmailFormat(email)
+                && checkPasswordFormat(password)
+                && checkNameFormat(name)) {
+                console.log('Adding player')
+                    // Then add new player to database and navigate to PlayerScreen
+                addPlayer(name.trim(), email, password, navigation)
+            }
+        })
+
+    }
+
 
     return (
         <SafeAreaView style={styles.mainContainer}>
@@ -19,11 +45,11 @@ export default function RegisterScreen({ navigation }) {
             <Text>Register screen</Text>
             <TextField
                 placeholder='Name'
-                value={email}
+                value={name}
                 onChangeText={text => setState(prevState => {
                     return { ...prevState, name: text }
                 })}
-                autoCapitalize='none'
+                autoCapitalize='words'
                 secureTextEntry={false}
             />
             <TextField
@@ -46,7 +72,7 @@ export default function RegisterScreen({ navigation }) {
             />
             <TouchButton
                 title='Create account'
-                press={() => console.log('Create account PRESSED')}
+                press={() => checkUserEntryAndAddPlayer(name, email, password)}
             />
 
         </SafeAreaView>
