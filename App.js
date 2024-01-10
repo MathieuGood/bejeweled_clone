@@ -6,6 +6,8 @@ import HomeScreen from './screens/HomeScreen'
 import GameScreen from './screens/GameScreen'
 import SettingsScreen from './screens/SettingsScreen'
 import ScoresScreen from './screens/ScoresScreen'
+import RegisterScreen from './screens/RegisterScreen'
+import PlayerScreen from './screens/PlayerScreen'
 
 
 const Stack = createNativeStackNavigator()
@@ -19,8 +21,8 @@ export default function App() {
       <Stack.Navigator>
 
         <Stack.Screen name='HomeScreen' component={HomeScreen} options={{ title: 'Welcome !' }} />
-        <Stack.Screen name='RegisterrScreen' component={HomeScreen} options={{ title: 'Register' }} />
-        <Stack.Screen name='PlayerScreen' component={HomeScreen} options={{ title: 'Player' }} />
+        <Stack.Screen name='RegisterScreen' component={RegisterScreen} options={{ title: 'Register' }} />
+        <Stack.Screen name='PlayerScreen' component={PlayerScreen} options={{ title: 'Player' }} />
         <Stack.Screen name='GameScreen' component={GameScreen} />
         <Stack.Screen name='SettingsScreen' component={SettingsScreen} />
         <Stack.Screen name='ScoresScreen' component={ScoresScreen} />

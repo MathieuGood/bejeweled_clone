@@ -1,46 +1,61 @@
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, View, Text, SafeAreaView } from 'react-native'
+import { StyleSheet, View, Text, SafeAreaView, Alert } from 'react-native'
 import TouchButton from '../components/TouchButton'
 import TextField from '../components/TextField'
 
-export default function HomeScreen({navigation}) {
+export default function HomeScreen({ navigation }) {
 
     const [state, setState] = useState({
-        count: 4,
         theme: 'light',
         email: '',
         password: ''
     })
 
-    const { count, theme, email, password } = state
+    const { theme, email, password } = state
     const [emailStatus, setEmailStatus] = useState('Click the button to show e-mail')
 
-    useEffect(() => {
-        console.log('Component HomeScreen mounted')
-    })
+    // For debug : know when component renders
+    // useEffect(() => {
+    //     console.log('Component HomeScreen render')
+    // })
 
 
-    function testing() {
-        if (count > 24) {
-            setState(prevState => {
-                return { ...prevState, count: prevState.count + 400 }
-            })
-            styles = StyleSheet.compose({
-                mainContainer: {
-                    backgroundColor: 'lightyellow',
-                    flex: 1
+    // Check if e-mail and password match the entry in the databse
+    function checkCredentials(email, password) {
+        const bodyData = {
+            player_email: email,
+            player_password: password
+        };
+
+        fetch('http://mathieubon.com:3001/checklogin', {
+            method: 'POST',
+            body: JSON.stringify(bodyData),
+            headers: { "Content-Type": "application/json" }
+        })
+            .then((response) => response.json())
+            .then((json) => {
+                // If credentials are valid, navigate to PlayerScreen
+                if (json) {
+                    console.log('Password OK')
+                    navigation.navigate('PlayerScreen')
+                } else {
+                    console.log('Password wrong')
+                    Alert.alert(
+                        'Error',
+                        'E-mail or password are incorrect',
+                        [
+                            { text: 'OK' }
+                        ],
+                        { cancelable: false }
+                    );
                 }
             })
-        }
+            .catch((error) => {
+                console.error(error);
+            });
     }
 
-    // changeCount()
 
-    function changeCount() {
-        setState(prevState => {
-            return { ...prevState, count: prevState.count + 4 }
-        })
-    }
 
     return (
         <SafeAreaView style={styles.mainContainer}>
@@ -67,12 +82,12 @@ export default function HomeScreen({navigation}) {
             />
 
             <TouchButton title='Login' press={() => {
-                console.log('Start login check function')
+                checkCredentials(email, password)
             }}
             />
 
             <TouchButton title='Create account' press={() => {
-                navigation.navigate('GameScreen')
+                navigation.navigate('RegisterScreen')
             }}
             />
 
@@ -88,7 +103,7 @@ export default function HomeScreen({navigation}) {
 
 let styles = StyleSheet.create({
     mainContainer: {
-        backgroundColor: '#864AF9',
+        backgroundColor: 'lightgray',
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center'
