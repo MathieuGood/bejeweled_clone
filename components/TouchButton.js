@@ -13,16 +13,17 @@ export default function TouchButton({ title, press }) {
 
 const styles = StyleSheet.create({
     buttonText: {
-        color: 'red',
+        color: '#FF004D',
         alignSelf: 'center',
         fontWeight: '800',
-        fontSize: 12
+        fontSize: 14,
+        letterSpacing: 0.9
     },
     buttonContainer: {
         justifyContent: 'center',
         width: '85%',
         borderRadius: 5,
-        backgroundColor: 'yellow',
+        backgroundColor: '#FAEF5D',
         paddingVertical: 10,
         marginVertical: 5
     }

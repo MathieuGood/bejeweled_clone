@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, View, Text, SafeAreaView } from 'react-native'
 import TouchButton from '../components/TouchButton'
 import TextField from '../components/TextField'
@@ -14,6 +14,10 @@ export default function HomeScreen({navigation}) {
 
     const { count, theme, email, password } = state
     const [emailStatus, setEmailStatus] = useState('Click the button to show e-mail')
+
+    useEffect(() => {
+        console.log('Component HomeScreen mounted')
+    })
 
 
     function testing() {
@@ -84,7 +88,7 @@ export default function HomeScreen({navigation}) {
 
 let styles = StyleSheet.create({
     mainContainer: {
-        backgroundColor: 'lightgray',
+        backgroundColor: '#864AF9',
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center'
