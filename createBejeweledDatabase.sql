@@ -23,10 +23,11 @@ CREATE TABLE players (
 INSERT INTO players (
     player_name,
     player_email,
-    player_password
+    player_password,
+    last_game_id
     ) VALUES
-    ('Mathieu', 'bon.mathieu@gmail.com', 'mb'),
-    ('Test', 'test@test.com', 'test');
+    ('Mathieu', 'bon.mathieu@gmail.com', 'mb', 2),
+    ('Test', 'test@test.com', 'test', 3);
 
 
 
@@ -44,10 +45,15 @@ INSERT INTO games (
     duration,
     end_time
     ) VALUES
-    (234, 1, 276, '2024-01-08'),
-    (134, 2, 231, '2024-01-08'),
-    (302, 1, 456, '2024-01-08');
-
+    (234, 1, 276, '2024-01-08 14:01:00'),
+    (204, 1, 230, '2024-01-08 14:08:00'),
+    (134, 2, 231, '2024-01-08 15:00:00'),
+    (302, 1, 456, '2024-01-08 17:00:00'),
+    (300, 1, 400, '2024-01-08 17:05:30'),
+    (287, 1, 340, '2024-01-08 17:12:00'),
+    (255, 1, 300, '2024-01-08 17:15:00'),
+    (156, 2, 124, '2024-01-09 06:00:00')
+    ;
 
 
 COMMIT;
