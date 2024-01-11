@@ -1,52 +1,37 @@
--- Send e-mail 1 hour after the last game with the list of games played
+-------------------------------------------
+-- Draft for SQL functions
+-------------------------------------------
 
 
 
--- Query #1
 -- Get last played games for one player (entries superior than last_game_id)
 
--- last_games
 SELECT * FROM `games`
-        WHERE player_id = 1 
-          AND game_id > (SELECT last_game_id FROM players 
-                            WHERE player_id = 1)
+INNER JOIN players
+ON players.player_id = games.player_id
+WHERE player_email = 'bon.mathieu@gmail.com' 
+  AND game_id > (
+    SELECT last_game_id 
+    FROM players 
+    WHERE player_email = 'bon.mathieu@gmail.com' 
+  );
 
 
--- STORED PROCEDURE for Query #1
+
+
 DELIMITER //
 
-CREATE PROCEDURE bejeweledClone.getLastGames(IN input_player_id INT)
+CREATE PROCEDURE getLastGames(IN email VARCHAR(255))
 BEGIN
-
-
-    SELECT *
+    SELECT game_id, games.player_id, player_name, player_email, score, duration, end_time, last_game_id
     FROM `games`
-    WHERE player_id = input_player_id
-      AND game_id > (SELECT last_game_id FROM players WHERE player_id = input_player_id);
-
-
+    INNER JOIN players ON players.player_id = games.player_id
+    WHERE player_email = email
+      AND game_id > (
+        SELECT last_game_id 
+        FROM players 
+        WHERE player_email = email
+      );
 END //
 
 DELIMITER ;
-
-
-
-
-
--- Query #2
--- Get very last game_id and end_time of one player
--- MAX(game_id) of Query #1
--- last_game
-SELECT MAX(game_id), MAX(end_time)
-    FROM (
-        SELECT * FROM `games`
-            WHERE player_id = 1 
-            AND game_id > (SELECT last_game_id FROM players 
-                                WHERE player_id = 1)
-    ) AS last_game
-
-
--- Check if last_game has ended for at least an hour
--- If yes, send e-mail
--- TO : email
--- CONTENT : last_games
