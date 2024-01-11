@@ -13,11 +13,10 @@ export default function HomeScreen({ navigation }) {
     })
 
     const { theme, email, password } = state
-    const [emailStatus, setEmailStatus] = useState('Click the button to show e-mail')
 
     // For debug : know when component renders
     // useEffect(() => {
-    //     console.log('Component HomeScreen render')
+    //     console.log('Component HomeScreen mounted')
     // })
 
 
