@@ -57,6 +57,8 @@ INSERT INTO games (
 
 
 
+-- Procedure to get all the games superior to last_game_id based on inputted player_email
+
 DELIMITER //
 
 CREATE PROCEDURE getLastGames(IN email VARCHAR(255))
