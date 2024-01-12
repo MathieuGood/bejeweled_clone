@@ -12,12 +12,11 @@ import { Alert } from 'react-native'
 // Using /addplayer
 // Create entry in database for new account
 export const addPlayer = (name, email, password, navigation) => {
-
     const bodyData = {
         player_name: name,
         player_email: email,
         player_password: password
-    };
+    }
 
     fetch('http://mathieubon.com:3001/addplayer', {
         method: 'POST',
@@ -43,7 +42,7 @@ export const addPlayer = (name, email, password, navigation) => {
             }
         })
         .catch((error) => {
-            console.error(error);
+            console.error(error)
         });
 }
 
@@ -55,7 +54,7 @@ export const checkCredentials = (email, password, navigation) => {
     const bodyData = {
         player_email: email,
         player_password: password
-    };
+    }
 
     fetch('http://mathieubon.com:3001/checklogin', {
         method: 'POST',
@@ -81,7 +80,7 @@ export const checkCredentials = (email, password, navigation) => {
             }
         })
         .catch((error) => {
-            console.error(error);
+            console.error(error)
         });
 }
 
@@ -91,7 +90,7 @@ export const checkCredentials = (email, password, navigation) => {
 export const checkIfEmailDoesNotExist = (email, callbackFunction) => {
     const bodyData = {
         player_email: email,
-    };
+    }
 
     fetch('http://mathieubon.com:3001/checkemail', {
         method: 'POST',
@@ -117,7 +116,7 @@ export const checkIfEmailDoesNotExist = (email, callbackFunction) => {
             }
         })
         .catch((error) => {
-            console.error(error);
+            console.error(error)
         });
 }
 
