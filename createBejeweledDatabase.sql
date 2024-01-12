@@ -27,7 +27,9 @@ INSERT INTO players (
     last_game_id
     ) VALUES
     ('Mathieu', 'bon.mathieu@gmail.com', 'mb', 2),
-    ('Test', 'test@test.com', 'test', 3);
+    ('Test', 'mathieu.bon@uha.com', 'test', 3),
+    ('Toto', 'toto@toto.com', 'toto', NULL),
+    ('John', 'john@john.com', 'john', NULL);
 
 
 
@@ -61,16 +63,16 @@ INSERT INTO games (
 
 DELIMITER //
 
-CREATE PROCEDURE getLastGames(IN email VARCHAR(255))
+CREATE PROCEDURE getLastGames(IN id VARCHAR(255))
 BEGIN
     SELECT game_id, games.player_id, player_name, player_email, score, duration, end_time, last_game_id
     FROM `games`
     INNER JOIN players ON players.player_id = games.player_id
-    WHERE player_email = email
+    WHERE players.player_id = id
       AND game_id > (
         SELECT last_game_id 
         FROM players 
-        WHERE player_email = email
+        WHERE player_id = id
       );
 END //
 
