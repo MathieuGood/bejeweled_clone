@@ -20,6 +20,8 @@ export default function RegisterScreen({ navigation }) {
     //////////
     // TO DO
     // Implement alert if checkNameFormat is false
+    //                 if checkPasswordFormat is false
+    //                 if checkEmailFormat is false
     /////////
 
     // Checking if name, email and password have right format
