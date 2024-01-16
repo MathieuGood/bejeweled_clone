@@ -179,7 +179,7 @@ app.get('/lastgames/:player_id', (req, res) => {
         })
 })
 // Test /lastgames/player_id
-// curl -X GET "http://mathieubon.com:3001/lastgames/bon.mathieu%40gmail.com"
+// curl -X GET "http://mathieubon.com:3001/lastgames/1"
 
 
 
