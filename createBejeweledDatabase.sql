@@ -32,7 +32,7 @@ CREATE TABLE players (
     player_name VARCHAR(255) NOT NULL,
     player_email VARCHAR(255) NOT NULL,
     player_password VARCHAR(255) NOT NULL,
-    last_game_id INT DEFAULT NULL,
+    last_game_id INT DEFAULT 0,
     prev_rank INT DEFAULT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
@@ -43,13 +43,13 @@ INSERT INTO players (
     last_game_id
     ) VALUES
     ('Mathieu', 'bon.mathieu@gmail.com', 'mb', 2),
-    ('Testeur', 'mathieu.bon@uha.com', 'test', 3),
-    ('Guru', 'gurumatmat@gmail.com', 'guru', NULL),
-    ('John', 'john@john.com', 'john', NULL),
-    ('Alex', 'alex@alex.com', 'alex', NULL),
-    ('Terry', 'terry@terry.com', 'terry', NULL),
-    ('Graham', 'graham@graham.com', 'graham', NULL),
-    ('Eric', 'eric@eric.com', 'eric', NULL)
+    ('Testeur', 'mathieu.bon@uha.fr', 'test', 3),
+    ('Guru', 'gurumatmat@gmail.com', 'guru', 0),
+    ('John', 'john@john.com', 'john', 0),
+    ('Alex', 'alex@alex.com', 'alex', 0),
+    ('Terry', 'terry@terry.com', 'terry', 0),
+    ('Graham', 'graham@graham.com', 'graham', 0),
+    ('Eric', 'eric@eric.com', 'eric', 0)
     ;
 
 
@@ -121,7 +121,8 @@ DELIMITER //
 
 -- Get all the games superior to last_game_id based on inputted player_email
 
-CREATE PROCEDURE getLastGames(IN id VARCHAR(255))
+-- Recently changes input paramter to INT, if not working anymore replace it with VARCHAR(255)
+CREATE PROCEDURE getLastGames(IN id INT)
 BEGIN
     SELECT game_id, games.player_id, player_name, player_email, score, duration, end_time, last_game_id
     FROM `games`
