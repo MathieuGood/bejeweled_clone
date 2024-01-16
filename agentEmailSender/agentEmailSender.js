@@ -3,6 +3,8 @@ const Mailjet = require('node-mailjet')
 
 sendUpdatesToAllPlayers()
 
+// getRankingDifferences()
+
 
 
 function sendUpdatesToAllPlayers() {
@@ -36,19 +38,94 @@ function sendUpdatesToAllPlayers() {
 
 
 
-function sendMail(player_email, player_name, fetchScoresResult) {
+function getRankingDifferences() {
 
-    const mailjet = Mailjet.apiConnect(
-        // API Key
-        'abe539777eedf22676deaf4d3643a0a9',
-        // Secret Key
-        '125ff23dba0087e2a32070553111bca5')
+    return fetch(`http://mathieubon.com:3001/rankdiff`, {
+        method: 'GET',
+        headers: { "Content-Type": "application/json" }
+    })
+        .then(response => response.json())
+        .then(json => {
+            // Get the list of all unique player IDs in the databse
+            if (json) {
+                console.log(json)
+                // For each player in the database
+                json.forEach((ranking) => {
+                    // Run function to send recap by e-mail if last played game has ended for an hour at least
+                    console.log(ranking)
+                    if (ranking.rank > ranking.prev_rank) {
+                        console.log(`>>>>>>${ranking.player_name} was rank #${ranking.prev_rank}, now he is rank #${ranking.rank} `)
+                        const email = buildRankingUpdateEmail(ranking.player_email, ranking.player_name, [{ prev: ranking.prev_rank, current: ranking.rank }])
+                        sendMail(email)
+                    }
+                })
+                // return json
 
-    // console.log(fetchScoresResult)
+            } else {
+                console.log('File empty or no return from API call')
+                return null
+            }
+        })
+        .catch(error => {
+            console.error(error)
+            return null
+        });
+}
+
+
+
+function buildRankingUpdateEmail(player_email, player_name, apiResponseResults) {
+
+    const previousRank = apiResponseResults[0].prev
+    const currentRank = apiResponseResults[0].current
+
+    const emailToSend = {
+        Messages: [
+            {
+                From: {
+                    Email: "mathieu.bon@uha.fr",
+                    Name: "Bejeweled Clone"
+                },
+                To: [
+                    {
+                        Email: player_email,
+                        Name: player_name
+                    }
+                ],
+                Subject: "Bejeweled Clone 💎 You went down in the rankings!",
+                TextPart:
+                    `Dear ${player_name},
+                    
+                    You went down from #${previousRank} to #${currentRank}.
+
+                    Come play again to reclaim your spot!
+
+                    See you soon 👋
+                    
+                    Bejeweled Clone Team`,
+
+                HTMLPart:
+                    `<p>Dear ${player_name},</p>` +
+                    `<p>You went down from #${previousRank} to #${currentRank}.</p>` +
+                    `<p>Come play again to reclaim your spot!</p>` +
+                    `<p>See you soon 👋<p>` +
+                    `<p>Bejeweled Clone team</p>`
+            }
+        ]
+    }
+    
+    console.log(emailToSend)
+    console.log(player_email, player_name)
+    console.log(emailToSend.Messages[0].To[0])
+    return emailToSend
+}
+
+
+function buildRecapEmail(player_email, player_name, apiResponseResults) {
 
     let scoresHTMLContent = ''
     let scoresTextContent = ''
-    fetchScoresResult.forEach((game) => {
+    apiResponseResults.forEach((game) => {
         const formattedDate = new Date(game.end_time).toLocaleDateString('fr-FR', {
             day: 'numeric',
             month: 'numeric',
@@ -102,14 +179,29 @@ function sendMail(player_email, player_name, fetchScoresResult) {
         ]
     }
 
+    return emailToSend
+}
+
+function sendMail(emailToSend) {
+
+    const mailjet = Mailjet.apiConnect(
+        // API Key
+        'abe539777eedf22676deaf4d3643a0a9',
+        // Secret Key
+        '125ff23dba0087e2a32070553111bca5')
+
+
+    const player_name = emailToSend.Messages[0].To[0].Name
+    const player_email = emailToSend.Messages[0].To[0].Email
+
     const sendMailjet = mailjet
         .post('send', { version: 'v3.1' })
         .request(emailToSend)
 
 
     sendMailjet.then((result) => {
-        console.log('Sending e-mail to ' + player_name + ' at ' + player_email)
-        console.log(result.body)
+        console.log('Sending e-mail to ' + player_name + ' at ' + player_email + ' with subject ' + emailToSend.Messages[0].Subject)
+        // console.log(result.body)
     }).catch((err) => {
         console.log(err.statusCode)
     })
@@ -172,6 +264,8 @@ function sendRecapEmailIfTimeReached(player_id) {
     // Get all the last games for one player
     getLastGames(player_id)
         .then(result => {
+            // Print last games
+            // console.log(result)
             if (result != false) {
 
                 // console.log(result)
@@ -189,14 +283,19 @@ function sendRecapEmailIfTimeReached(player_id) {
                 // If it is time to notify the user
                 if (end_time < now) {
 
-                    const email = result[result.length - 1]['player_email']
-                    const name = result[result.length - 1]['player_name']
+                    const player_email = result[result.length - 1]['player_email']
+                    const player_name = result[result.length - 1]['player_name']
 
                     // Send e-mail
-                    // console.log('SEND E-MAIL NOW to ' + email)
-                    sendMail(email, name, result)
+                    console.log('SEND E-MAIL NOW to ' + player_email)
+                    const email = buildRecapEmail(player_email, player_name, result)
+                    sendMail(email)
 
 
+                    //
+                    // IMPORTANT !!!!!!!!!!!!!
+                    // TO REACTIVATE !!!!!!!!!
+                    //
                     // Update last_game_id in player table
                     // const last_game_id = result[result.length - 1]['game_id']
                     // updateLastGameId(player_id, last_game_id)
