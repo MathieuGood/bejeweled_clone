@@ -199,7 +199,7 @@ app.post('/updatelastgame', (req, res) => {
 
 // Update prev_rank
 
-app.get('/updaterank', (req, res) => {
+app.get('/updateranking', (req, res) => {
     db.query('CALL updatePrevRanking()',
         (err, results) => {
             if (err) throw err
