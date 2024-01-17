@@ -3,13 +3,13 @@ const { buildRankingUpdateEmail, buildRecapEmail } = require('./emailBuilder');
 const Mailjet = require('node-mailjet')
 
 
-sendUpdatesToAllPlayers()
+sendGameRecapToAllPlayers()
 
-getRankingDifferences()
+sendRankingDifferences()
 
 
 
-function sendUpdatesToAllPlayers() {
+function sendGameRecapToAllPlayers() {
 
     return fetch(`http://mathieubon.com:3001/playerlist`, {
         method: 'GET',
@@ -40,7 +40,32 @@ function sendUpdatesToAllPlayers() {
 
 
 
-function getRankingDifferences() {
+function updateRankingInDatabase() {
+
+    return fetch(`http://mathieubon.com:3001/updateranking`, {
+        method: 'GET',
+        headers: { "Content-Type": "application/json" }
+    })
+        .then(response => response.json())
+        .then(json => {
+            // Update ranking in database
+            if (json) {
+                console.log("RANKING UPDATE IN DATABASE. API RESPONSE : ")
+                console.log(json)
+            } else {
+                console.log('File empty or no return from API call')
+                return null
+            }
+        })
+        .catch(error => {
+            console.error(error)
+            return null
+        });
+}
+
+
+
+function sendRankingDifferences() {
 
     return fetch(`http://mathieubon.com:3001/rankdiff`, {
         method: 'GET',
@@ -48,20 +73,23 @@ function getRankingDifferences() {
     })
         .then(response => response.json())
         .then(json => {
-            // Get the list of all unique player IDs in the databse
+            // Get the response for ranking difference
             if (json) {
                 console.log(json)
                 // For each player in the database
                 json.forEach((ranking) => {
                     // Run function to send recap by e-mail if last played game has ended for an hour at least
                     console.log(ranking)
-                    if (ranking.rank > ranking.prev_rank) {
+                    if (ranking.rank > ranking.prev_rank || ranking.rank === null) {
                         console.log(`>>>>>>${ranking.player_name} was rank #${ranking.prev_rank}, now he is rank #${ranking.rank} `)
                         const email = buildRankingUpdateEmail(ranking.player_email, ranking.player_name, [{ prev: ranking.prev_rank, current: ranking.rank }])
                         sendMail(email)
                     }
                 })
                 // return json
+
+                // When all e-mails are sent, updates prev_rank in in players table
+                updateRankingInDatabase()
 
             } else {
                 console.log('File empty or no return from API call')
@@ -160,14 +188,10 @@ function sendRecapEmailIfTimeReached(player_id) {
                     sendMail(email)
 
 
-                    //
-                    // IMPORTANT !!!!!!!!!!!!!
-                    // TO REACTIVATE !!!!!!!!!
-                    //
                     // Update last_game_id in player table
-                    // const last_game_id = result[result.length - 1]['game_id']
-                    // updateLastGameId(player_id, last_game_id)
-                    // console.log('-> Update last_game_id in player table')
+                    const last_game_id = result[result.length - 1]['game_id']
+                    updateLastGameId(player_id, last_game_id)
+                    console.log('-> Update last_game_id in player table')
 
 
                 } else {

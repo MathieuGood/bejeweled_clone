@@ -38,9 +38,10 @@ function buildRankingUpdateEmail(player_email, player_name, apiResponseResults) 
         ]
     }
     
-    console.log(emailToSend)
-    console.log(player_email, player_name)
-    console.log(emailToSend.Messages[0].To[0])
+    // console.log(emailToSend)
+    // console.log(player_email, player_name)
+    // console.log(emailToSend.Messages[0].To[0])
+
     return emailToSend
 }
 
