@@ -80,7 +80,7 @@ function sendRankingDifferences() {
                 json.forEach((ranking) => {
                     // Run function to send recap by e-mail if last played game has ended for an hour at least
                     console.log(ranking)
-                    if (ranking.rank > ranking.prev_rank) {
+                    if (ranking.rank > ranking.prev_rank || ranking.rank === null) {
                         console.log(`>>>>>>${ranking.player_name} was rank #${ranking.prev_rank}, now he is rank #${ranking.rank} `)
                         const email = buildRankingUpdateEmail(ranking.player_email, ranking.player_name, [{ prev: ranking.prev_rank, current: ranking.rank }])
                         sendMail(email)
