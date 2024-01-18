@@ -17,25 +17,42 @@ export default function RegisterScreen({ navigation }) {
     const { name, email, password } = state
 
 
-    //////////
-    // TO DO
-    // Implement alert if checkNameFormat is false
-    //                 if checkPasswordFormat is false
-    //                 if checkEmailFormat is false
-    // Global alert or individual alerts for each error ?
-    //
-    /////////
-
     // Check if name, email and password have right format
     function checkUserEntryAndAddPlayer(name, email, password) {
+        // Check if entered e-mail does not already exist in the database
         checkIfEmailDoesNotExist(email, () => {
             console.log('EMAIL TES$T OK')
+
+            // Initalize errorMessage to empty string
+            let errorMessage = ''
+
+            // Run all entry check functions and feed errorMessage string if the return is false
+            checkEmailFormat(email) ? errorMessage += '' : errorMessage += 'Wrong e-mail format.\n'
+            checkPasswordFormat(password) ? errorMessage += '' : errorMessage += 'Wrong password format, it must contain at least 6 characters and no space.\n'
+            checkNameFormat(name) ? errorMessage += '' : errorMessage += 'Wrong name format, it must contain at least one letter.\n'
+
+            // If errorMessage is empty and all the checks went well
+            if (errorMessage === '') {
+                // Execute addPlayer() that sends API call to create new player in database
+                // and navigate to PlayerScreen
+                console.log('Adding player')
+                addPlayer(name.trim(), email, password, navigation)
+            } else {
+                Alert.alert(
+                    'Invalid entry',
+
+                    errorMessage.slice(0, -2),
+                    [
+                        { text: 'OK' }
+                    ],
+                    { cancelable: false }
+                );
+            }
+
             if (checkEmailFormat(email)
                 && checkPasswordFormat(password)
                 && checkNameFormat(name)) {
                 console.log('Adding player')
-                // If it is the case, execute addPlayer() that sends API call to create new player in database
-                // Navigate to PlayerScreen
                 addPlayer(name.trim(), email, password, navigation)
             }
         })

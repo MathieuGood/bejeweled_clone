@@ -6,6 +6,7 @@ export default function PlayerScreen({navigation}) {
     return (
         <SafeAreaView style={styles.mainContainer}>
             <Text>Player screen</Text>
+            <TouchButton/>
         </SafeAreaView>
     )
 }
