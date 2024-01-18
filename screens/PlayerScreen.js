@@ -15,7 +15,7 @@ export default function PlayerScreen({ navigation }) {
                 }}
             />
             <TouchButton
-                title='Go back to home screen'
+                title='Back to home screen'
                 press={() => {
                     navigation.navigate('HomeScreen')
                 }}
