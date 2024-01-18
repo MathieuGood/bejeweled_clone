@@ -1,12 +1,22 @@
 import React from 'react'
-import { StyleSheet, SafeAreaView, View, Text } from 'react-native'
+import { StyleSheet, View, Text } from 'react-native'
+import TouchButton from '../components/TouchButton'
 
 export default function GameScreen({navigation}) {
 
     return (
-        <SafeAreaView style={styles.mainContainer}>
+        <View style={styles.mainContainer}>
+        
             <Text>GameScreen</Text>
-        </SafeAreaView>
+
+            <TouchButton
+                title='Back to player screen'
+                press={() => {
+                    navigation.navigate('HomeScreen')
+                }}
+            />
+        
+        </View>
     )
 }
 

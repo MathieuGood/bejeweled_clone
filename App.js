@@ -20,12 +20,12 @@ export default function App() {
 
       <Stack.Navigator>
 
-        <Stack.Screen name='HomeScreen' component={HomeScreen} options={{ title: 'Welcome !' }} />
-        <Stack.Screen name='RegisterScreen' component={RegisterScreen} options={{ title: 'Register' }} />
-        <Stack.Screen name='PlayerScreen' component={PlayerScreen} options={{ title: 'Player' }} />
-        <Stack.Screen name='GameScreen' component={GameScreen} />
-        <Stack.Screen name='SettingsScreen' component={SettingsScreen} />
-        <Stack.Screen name='ScoresScreen' component={ScoresScreen} />
+        <Stack.Screen name='HomeScreen' component={HomeScreen} options={{ headerShown: false }} />
+        <Stack.Screen name='RegisterScreen' component={RegisterScreen} options={{ headerShown: false }} />
+        <Stack.Screen name='PlayerScreen' component={PlayerScreen} options={{ headerShown: false }} />
+        <Stack.Screen name='GameScreen' component={GameScreen} options={{ headerShown: false }} />
+        <Stack.Screen name='SettingsScreen' component={SettingsScreen} options={{ headerShown: false }} />
+        <Stack.Screen name='ScoresScreen' component={ScoresScreen} options={{ headerShown: false }} />
 
 
       </Stack.Navigator>

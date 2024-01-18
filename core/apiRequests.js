@@ -112,7 +112,7 @@ export const checkIfEmailDoesNotExist = (email, callbackFunction) => {
                         { text: 'OK' }
                     ],
                     { cancelable: false }
-                );
+                )
             }
         })
         .catch((error) => {

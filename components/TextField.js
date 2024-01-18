@@ -24,7 +24,8 @@ const styles = StyleSheet.create({
         width: '85%',
         margin: 12,
         borderWidth: 1,
-        borderColor: 'gray',
+        borderColor: '#d4af37',
         padding: 10,
+        backgroundColor: 'white',
     }
 })

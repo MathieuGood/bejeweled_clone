@@ -50,8 +50,7 @@ function updateRankingInDatabase() {
         .then(json => {
             // Update ranking in database
             if (json) {
-                console.log("RANKING UPDATE IN DATABASE. API RESPONSE : ")
-                console.log(json)
+                console.log("PREV_RANK updated in database")
             } else {
                 console.log('File empty or no return from API call')
                 return null
@@ -75,18 +74,17 @@ function sendRankingDifferences() {
         .then(json => {
             // Get the response for ranking difference
             if (json) {
-                console.log(json)
+                // console.log(json)
                 // For each player in the database
                 json.forEach((ranking) => {
                     // Run function to send recap by e-mail if last played game has ended for an hour at least
-                    console.log(ranking)
+                    // console.log(ranking)
                     if (ranking.rank > ranking.prev_rank || ranking.rank === null) {
                         console.log(`>>>>>>${ranking.player_name} was rank #${ranking.prev_rank}, now he is rank #${ranking.rank} `)
                         const email = buildRankingUpdateEmail(ranking.player_email, ranking.player_name, [{ prev: ranking.prev_rank, current: ranking.rank }])
                         sendMail(email)
                     }
                 })
-                // return json
 
                 // When all e-mails are sent, updates prev_rank in in players table
                 updateRankingInDatabase()

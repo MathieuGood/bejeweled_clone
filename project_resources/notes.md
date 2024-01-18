@@ -107,3 +107,9 @@ Déroulement d'une partie
   - Si combinaisons présentes, régénérer le plateau
   - Démarrage du minuteur 
 - Permutation de 
+
+
+À voir avec Norah :
+  - Style dans composant ?
+  - Positionner bouton en bas grâce au flex plutôt ?
+  
