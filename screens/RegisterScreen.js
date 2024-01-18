@@ -40,7 +40,7 @@ export default function RegisterScreen({ navigation }) {
             } else {
                 Alert.alert(
                     'Invalid entry',
-
+                    // Remove last line break in error message
                     errorMessage.slice(0, -2),
                     [
                         { text: 'OK' }
