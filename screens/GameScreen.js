@@ -12,7 +12,7 @@ export default function GameScreen({navigation}) {
             <TouchButton
                 title='Back to player screen'
                 press={() => {
-                    navigation.navigate('HomeScreen')
+                    navigation.navigate('PlayerScreen')
                 }}
             />
         

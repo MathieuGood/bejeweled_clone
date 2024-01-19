@@ -1,6 +1,7 @@
 import React from 'react'
 import { StyleSheet, View, Text } from 'react-native'
 import TouchButton from '../components/TouchButton'
+import Artifact from '../components/Artifact'
 
 export default function PlayerScreen({ navigation }) {
 
@@ -20,6 +21,8 @@ export default function PlayerScreen({ navigation }) {
                     navigation.navigate('HomeScreen')
                 }}
             />
+
+            <Artifact artifactNumber={0} />
 
         </View>
     )
