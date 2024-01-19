@@ -14,8 +14,14 @@ exampleGameGrid = [
 ]
 
 
+
+checkGameGridForAlignments(exampleGameGrid)
+
+switchTwoItemsOnGrid(exampleGameGrid, 8, [-1, 1], [0, 2])
+
 // let result = checkAdjacentCellsForSimilarItem(exampleGameGrid, 5, 6)
 // console.log(result)
+
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -131,13 +137,13 @@ function getRandomItemFromArray(array) {
 }
 
 
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 // Check if there are any alignments of matching items on the game grid
 // Return an array for each alignement with coordinates of each matching cell
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 function checkGameGridForAlignments(gameGrid) {
 
@@ -146,7 +152,7 @@ function checkGameGridForAlignments(gameGrid) {
     for (let i = 0; i < gameGrid.length; i++) {
 
         checkForMatchesOneWay(gameGrid, 'row', i, allMatches)
-        checkForMatchesOneWay(gameGrid, 'col',i, allMatches)
+        checkForMatchesOneWay(gameGrid, 'col', i, allMatches)
     }
 
     console.log(allMatches)
@@ -155,18 +161,41 @@ function checkGameGridForAlignments(gameGrid) {
 }
 
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Check for matches one way (x or y axis)
+//
+// direction parameter : 'row' or 'col'
+// i : counter of the loop the function is inserted  in
+// allMatches : array to return all results in
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
 function checkForMatchesOneWay(gameGrid, direction, i, allMatches) {
 
-    let rowPreviousItem = ''
-    let rowCount = 1
+    // previousItem records what item was before current entry
+    let previousItem = ''
+
+    // count records the number of matching items 
+    let count = 1
+
+    // matches records the coordinates of matching items
     let matches = []
 
+    // Loop through rows/columns of gameGrid
     for (let j = 0; j < gameGrid.length; j++) {
 
+        // value of the item
         let value = ''
+
+        // y/x coordinates of previous item
         let previousCoordinates = ''
+
+        // y/x coordinates of current item
         let currentCoordinates = ''
 
+        // Set coordinates accordingly for the result regarding the direction chosen
         if (direction == 'row') {
             value = gameGrid[i][j]
             previousCoordinates = [i, j - 1]
@@ -177,35 +206,66 @@ function checkForMatchesOneWay(gameGrid, direction, i, allMatches) {
             currentCoordinates = [j, i]
         }
 
-
-        if (rowPreviousItem === '') {
-
-            rowPreviousItem = value
+        // If it is the first occurence of the list, initalize previousItem to current value
+        if (previousItem === '') {
+            previousItem = value
 
         } else {
-
-            if (value === rowPreviousItem) {
-
-                if (rowCount === 1) {
+            // For all other items
+            // Check if current value matches previous item
+            if (value === previousItem) {
+                // In case of a match, add the coordinates of the previous (first) item of the row/column to match array
+                if (count === 1) {
                     matches.push(previousCoordinates)
                 }
+                // Add the coordinates of current item to match array
                 matches.push(currentCoordinates)
-                rowCount++
+                // Increase match count 
+                count++
 
             } else {
-                if (rowCount > 2) {
+                // If the value does not match and if count is at least 3, record matches to allMatches array
+                if (count > 2) {
                     allMatches.push(matches)
                     matches = []
-                    rowCount = 1
+                    count = 1
                 }
-                rowPreviousItem = value
+
+                // Set previousItem to current value before next iteration
+                previousItem = value
             }
         }
-
     }
 }
 
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Switch two items (coordinatesItem1, coordinatesItem2) on the grid
+// Returns the updated gameGrid
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
-checkGameGridForAlignments(exampleGameGrid)
+function switchTwoItemsOnGrid(gameGrid, gridSize, coordinatesItem1, coordinatesItem2) {
+
+    // Check if the coordinates are not out of the grid
+    const validCoordinates = (coord) => coord[0] >= 0 && coord[0] < gridSize && coord[1] >= 0 && coord[1] < gridSize
+
+    if (validCoordinates(coordinatesItem1) && validCoordinates(coordinatesItem2)) {
+        // Switch values between two items
+        const tempCoordinates = gameGrid[coordinatesItem1[0]][coordinatesItem1[1]]
+        gameGrid[coordinatesItem1[0]][coordinatesItem1[1]] = gameGrid[coordinatesItem2[0]][coordinatesItem2[1]]
+        gameGrid[coordinatesItem2[0]][coordinatesItem2[1]] = tempCoordinates
+        console.log(gameGrid)
+        // Return the updated gameGrid after switch
+        return gameGrid
+    } else {
+        // Return false if move is out of the grid
+        console.log(`! Out of the grid move : cannot switch ${coordinatesItem1} with ${coordinatesItem2}`)
+        return false
+    }
+}
+
+
+
