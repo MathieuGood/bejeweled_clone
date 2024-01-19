@@ -4,6 +4,7 @@ import TouchButton from '../components/TouchButton'
 import TextField from '../components/TextField'
 import { addPlayer, checkIfEmailDoesNotExist } from '../core/apiRequests'
 import { checkEmailFormat, checkNameFormat, checkPasswordFormat } from '../core/userEntryCheck'
+import Header from '../components/Header'
 
 
 export default function RegisterScreen({ navigation }) {
@@ -70,6 +71,8 @@ export default function RegisterScreen({ navigation }) {
             >
 
                 <View style={styles.form}>
+                <Header style={styles.header} title='registration'/>
+
                     {/* TextField behavior :
                     onChangeText -> update state with user entry and reinject the state as value */}
                     <TextField
@@ -145,4 +148,14 @@ let styles = StyleSheet.create({
         elevation: 5,
         alignItems: 'center',
     },
+    header: {
+        color: '#2b50c8', 
+        fontSize: 20,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        textTransform: 'uppercase',
+        marginBottom: 20
+
+      },
+      
 })
