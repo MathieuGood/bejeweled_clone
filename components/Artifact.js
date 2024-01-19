@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleSheet, TouchableOpacity, View, Image } from 'react-native'
 
-export default function Artifact({ artifactNumber, press }) {
+export default function Artifact({ artifactNumber, press}) {
 
     const artifactsImages = {
         0: require('../assets/1.png'),
@@ -14,15 +14,17 @@ export default function Artifact({ artifactNumber, press }) {
         7: require('../assets/30.png'),
     }
 
-    console.log(artifactsImages[artifactNumber])
+
+    function onCellPress(row, col) {
+        console.log(`Cell pressed: ${row}, ${col}`);
+      }
 
     return (
-        <View>
 
-            <TouchableOpacity style={styles.artifactContainer} onPress={press}>
+        <View style={styles.artifactContainer}>
+
                 <Image source={artifactsImages[artifactNumber]} style={styles.artifactImage} />
-            </TouchableOpacity>
-
+                
         </View>
     )
 }

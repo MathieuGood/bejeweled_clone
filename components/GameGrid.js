@@ -1,29 +1,41 @@
-import React, {useState} from 'react'
+import React from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Artifact from './Artifact'
 
 
 export default function GameGrid({ gridContent, press }) {
 
-    const [gameGrid, setGameGrid] = useState([])
 
+    function renderGrid (gameGrid) {
+        return gameGrid.map((row, rowIndex) => (
 
-    function buildGameGrid(size, numberOfDifferentValues) {
-        let gameGrid = []
-        for (let i = 0; i < size; i++) {
-            let row = []
-            for (let j = 0; j < size; j++) {
-                const randomInteger = Math.floor(Math.random() * numberOfDifferentValues)
-                row.push(randomInteger)
-            }
-            gameGrid.push(row)
-        }
-        return gameGrid
+            <View key={rowIndex} style={styles.row}>
+
+                {row.map((artefact, colIndex) => (
+
+                    <TouchableOpacity
+                        key={colIndex}
+                        style={styles.cell}
+                        onPress={() => onCellPress(rowIndex, colIndex)}>
+                        {/* <Image
+                            source={this.props.artefactsImages[artefact]}
+                            style={styles.artifactImage}
+                        /> */}
+                        <Text>{artefact}</Text>
+                        <Artifact artifactNumber={artefact}/>
+                    </TouchableOpacity>
+
+                ))}
+
+            </View>
+        ))
     }
 
-    function renderGrid() {
-        console.log('Render grid')
-    }
+    function onCellPress(row, col) {
+        console.log(`Cell pressed: ${row}, ${col}`);
+      }
+    
+
 
     return (
         // <View>
@@ -34,7 +46,7 @@ export default function GameGrid({ gridContent, press }) {
         // </View>
 
         <View style={styles.grid}>
-            {renderGrid()}
+            {renderGrid(gridContent)}
         </View>
 
 
