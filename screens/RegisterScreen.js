@@ -14,12 +14,7 @@ export default function RegisterScreen({ navigation }) {
         password: ''
     })
 
-    const [count, setCount] = useState(3)
-    console.log(count)
-    setCount(3)
-
     const { name, email, password } = state
-
 
     // Check if name, email and password have right format
     function checkUserEntryAndAddPlayer(name, email, password) {
