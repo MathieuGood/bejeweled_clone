@@ -14,14 +14,6 @@ export default function HomeScreen({ navigation }) {
 
     const { email, password } = state
 
-    // For debug : know when component renders
-    // useEffect(() => {
-    //     console.log('Component HomeScreen mounted')
-    // })
-
-    // QUESTIONS
-    // - Move component styles to each component file ?
-
 
     return (
         <View style={styles.mainContainer}>

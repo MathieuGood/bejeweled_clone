@@ -142,6 +142,7 @@ function checkGameGridForAlignments(gameGrid) {
 
     for (const [rowIndex, rowValue] of gameGrid.entries()) {
         console.log(`For row index ${rowIndex} value is ${rowValue}`)
+        
         for (const [colIndex, cellValue] of rowValue.entries()) {
             console.log(`>>> Col ${colIndex} value ${cellValue}`)
         }

@@ -17,7 +17,6 @@ export default function RegisterScreen({ navigation }) {
 
     const { name, email, password } = state
 
-
     // Check if name, email and password have right format
     function checkUserEntryAndAddPlayer(name, email, password) {
         // Check if entered e-mail does not already exist in the database
