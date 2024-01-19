@@ -14,14 +14,16 @@ export default function Artifact({ artifactNumber, press }) {
         7: require('../assets/30.png'),
     }
 
-    console.log(artifactsImages[artifactNumber])
+
+    function onCellPress(row, col) {
+        console.log(`Cell pressed: ${row}, ${col}`);
+    }
 
     return (
-        <View>
 
-            <TouchableOpacity style={styles.artifactContainer} onPress={press}>
-                <Image source={artifactsImages[artifactNumber]} style={styles.artifactImage} />
-            </TouchableOpacity>
+        <View style={styles.artifactContainer}>
+
+            <Image source={artifactsImages[artifactNumber]} style={styles.artifactImage} />
 
         </View>
     )

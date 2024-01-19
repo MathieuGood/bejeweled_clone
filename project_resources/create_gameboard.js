@@ -6,11 +6,11 @@ exampleGameGrid = [
     ['❤️', '💚', '💙', '🧡', '🧡', '🧡', '🧡', '💜'],
     ['💙', '🖤', '💙', '🖤', '💛', '🖤', '💜', '🖤'],
     ['🖤', '❤️', '💙', '💙', '💚', '🖤', '❤️', '💙'],
-    ['💜', '💜', '❤️', '🖤', '🧡', '💛', '💚', '🖤'],
+    ['💜', '💜', '💜', '🖤', '🧡', '💛', '💚', '🖤'],
     ['💚', '🖤', '💜', '💜', '🧡', '💚', '💜', '💙'],
     ['🧡', '❤️', '💜', '🖤', '💜', '❤️', '❤️', '❤️'],
     ['🧡', '🖤', '💛', '🖤', '💛', '💙', '🧡', '🖤'],
-    ['💛', '🖤', '💛', '🖤', '💚', '💚', '🖤', '💜']
+    ['💛', '🖤', '💛', '💚', '💚', '💚', '🖤', '💜']
 ]
 
 
@@ -138,16 +138,73 @@ function getRandomItemFromArray(array) {
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
 function checkGameGridForAlignments(gameGrid) {
 
-    for (const [rowIndex, rowValue] of gameGrid.entries()) {
-        console.log(`For row index ${rowIndex} value is ${rowValue}`)
-        
-        for (const [colIndex, cellValue] of rowValue.entries()) {
-            console.log(`>>> Col ${colIndex} value ${cellValue}`)
+    let allMatches = []
+
+    for (let i = 0; i < gameGrid.length; i++) {
+
+        checkForMatchesOneWay(gameGrid, 'row', i, allMatches)
+        checkForMatchesOneWay(gameGrid, 'col',i, allMatches)
+    }
+
+    console.log(allMatches)
+    return allMatches
+
+}
+
+
+function checkForMatchesOneWay(gameGrid, direction, i, allMatches) {
+
+    let rowPreviousItem = ''
+    let rowCount = 1
+    let matches = []
+
+    for (let j = 0; j < gameGrid.length; j++) {
+
+        let value = ''
+        let previousCoordinates = ''
+        let currentCoordinates = ''
+
+        if (direction == 'row') {
+            value = gameGrid[i][j]
+            previousCoordinates = [i, j - 1]
+            currentCoordinates = [i, j]
+        } else {
+            value = gameGrid[j][i]
+            previousCoordinates = [j - 1, i]
+            currentCoordinates = [j, i]
         }
+
+
+        if (rowPreviousItem === '') {
+
+            rowPreviousItem = value
+
+        } else {
+
+            if (value === rowPreviousItem) {
+
+                if (rowCount === 1) {
+                    matches.push(previousCoordinates)
+                }
+                matches.push(currentCoordinates)
+                rowCount++
+
+            } else {
+                if (rowCount > 2) {
+                    allMatches.push(matches)
+                    matches = []
+                    rowCount = 1
+                }
+                rowPreviousItem = value
+            }
+        }
+
     }
 }
+
 
 
 
