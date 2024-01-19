@@ -1,11 +1,11 @@
 let jewels = ['🧡', '💛', '💚', '💙', '💜', '🖤', '❤️']
-let gb = buildGameBoard(jewels, 8)
+let gb = buildGameGrid(jewels, 8)
 
 
-exampleGameBoard = [
-    ['❤️', '💚', '💙', '🧡', '🖤', '💜', '🧡', '💜'],
+exampleGameGrid = [
+    ['❤️', '💚', '💙', '🧡', '🧡', '🧡', '🧡', '💜'],
     ['💙', '🖤', '💙', '🖤', '💛', '🖤', '💜', '🖤'],
-    ['🖤', '❤️', '🧡', '💙', '💚', '🖤', '❤️', '💙'],
+    ['🖤', '❤️', '💙', '💙', '💚', '🖤', '❤️', '💙'],
     ['💜', '💜', '❤️', '🖤', '🧡', '💛', '💚', '🖤'],
     ['💚', '🖤', '💜', '💜', '🧡', '💚', '💜', '💙'],
     ['🧡', '❤️', '💜', '🖤', '💜', '❤️', '❤️', '❤️'],
@@ -14,27 +14,27 @@ exampleGameBoard = [
 ]
 
 
-let result = checkAdjacentCellsForSimilarItem(exampleGameBoard, 5, 6)
-console.log(result)
+// let result = checkAdjacentCellsForSimilarItem(exampleGameGrid, 5, 6)
+// console.log(result)
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-// Based on a gameBoard array and the y, x coordinates of one cell,
+// Based on a gameGrid array and the y, x coordinates of one cell,
 // check if there are similar items in any of the adjacent cells
 // and return their coordinates in an array
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function checkAdjacentCellsForSimilarItem(gameBoard, y, x) {
+function checkAdjacentCellsForSimilarItem(gameGrid, y, x) {
 
     matchingItems = []
 
     // y = horizontal position of current item
     // x = vertical position of current item
 
-    let currentItem = gameBoard[y][x]
-    let gameBoardSize = gameBoard.length
+    let currentItem = gameGrid[y][x]
+    let gameGridSize = gameGrid.length
 
     console.log('Current item : ' + currentItem)
     console.log('Current item coordinates : ' + 'y = ' + y + '  x = ' + x)
@@ -58,13 +58,13 @@ function checkAdjacentCellsForSimilarItem(gameBoard, y, x) {
 
         // Check if calculated coordinates exist (not out of the game board)
         if (
-            (verticalCoordinates >= 0 && verticalCoordinates < gameBoardSize) &&
-            (horizontalCoordinates >= 0 && horizontalCoordinates < gameBoardSize)
+            (verticalCoordinates >= 0 && verticalCoordinates < gameGridSize) &&
+            (horizontalCoordinates >= 0 && horizontalCoordinates < gameGridSize)
         ) {
-            console.log('Checking if gameBoard [' + verticalCoordinates + ', ' + horizontalCoordinates + '] = ' + currentItem)
+            console.log('Checking if gameGrid [' + verticalCoordinates + ', ' + horizontalCoordinates + '] = ' + currentItem)
             // Check if the item in the adjacent cell is the same as in the current cell (currentItem)
             // If it is the case, add the coordinates of the matching item in the matchingItems array
-            if (gameBoard[verticalCoordinates][horizontalCoordinates] == currentItem) {
+            if (gameGrid[verticalCoordinates][horizontalCoordinates] == currentItem) {
                 matchingItems.push([verticalCoordinates, horizontalCoordinates])
             }
         }
@@ -77,21 +77,44 @@ function checkAdjacentCellsForSimilarItem(gameBoard, y, x) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 // Build the game board of given size as a multidimensional array
+// and populate it with random integers between 0 and numberOfDifferentValues
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function buildGameGrid(size, numberOfDifferentValues) {
+    let gameGrid = []
+
+    for (let i = 0; i < size; i++) {
+        let row = []
+        for (let j = 0; j < size; j++) {
+            const randomInteger = Math.floor(Math.random() * numberOfDifferentValues)
+            row.push(randomInteger)
+        }
+        gameGrid.push(row)
+    }
+    return gameGrid
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Build the game board of given size as a multidimensional array
 // and populate it with random elements of the items array
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function buildGameBoard(items, size) {
-    let gameBoard = []
+function buildGameGridWithItems(items, size) {
+    let gameGrid = []
 
     for (let i = 0; i < size; i++) {
         let row = []
         for (let j = 0; j < size; j++) {
             row.push(getRandomItemFromArray(items))
         }
-        gameBoard.push(row)
+        gameGrid.push(row)
     }
-    return gameBoard
+    return gameGrid
 }
 
 
@@ -106,3 +129,25 @@ function getRandomItemFromArray(array) {
     let randomIndex = Math.floor(Math.random() * array.length)
     return array[randomIndex]
 }
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Check if there are any alignments of matching items on the game grid
+// Return an array for each alignement with coordinates of each matching cell
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function checkGameGridForAlignments(gameGrid) {
+
+    for (const [rowIndex, rowValue] of gameGrid.entries()) {
+        console.log(`For row index ${rowIndex} value is ${rowValue}`)
+        for (const [colIndex, cellValue] of rowValue.entries()) {
+            console.log(`>>> Col ${colIndex} value ${cellValue}`)
+        }
+    }
+}
+
+
+
+checkGameGridForAlignments(exampleGameGrid)
