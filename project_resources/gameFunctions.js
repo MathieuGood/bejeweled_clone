@@ -2,7 +2,7 @@ let jewels = ['🧡', '💛', '💚', '💙', '💜', '🖤', '❤️']
 let gb = buildGameGrid(jewels, 8)
 
 
-exampleGameGrid = [
+let exampleGameGrid = [
     ['❤️', '💚', '💙', '🧡', '🧡', '🧡', '🧡', '💜'],
     ['💙', '🖤', '💙', '🖤', '💛', '🖤', '💜', '🖤'],
     ['🖤', '❤️', '💙', '💙', '💚', '🖤', '❤️', '💙'],
@@ -15,12 +15,14 @@ exampleGameGrid = [
 
 
 
-checkGameGridForAlignments(exampleGameGrid)
+let foundMatches = checkGameGridForAlignments(exampleGameGrid)
 
-switchTwoItemsOnGrid(exampleGameGrid, 8, [-1, 1], [0, 2])
+// switchTwoItemsOnGrid(exampleGameGrid, [-1, 1], [0, 2])
 
 // let result = checkAdjacentCellsForSimilarItem(exampleGameGrid, 5, 6)
 // console.log(result)
+
+removeMatchesFromGrid(exampleGameGrid, foundMatches)
 
 
 
@@ -88,6 +90,7 @@ function checkAdjacentCellsForSimilarItem(gameGrid, y, x) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function buildGameGrid(size, numberOfDifferentValues) {
+
     let gameGrid = []
 
     for (let i = 0; i < size; i++) {
@@ -98,6 +101,7 @@ function buildGameGrid(size, numberOfDifferentValues) {
         }
         gameGrid.push(row)
     }
+
     return gameGrid
 }
 
@@ -111,6 +115,7 @@ function buildGameGrid(size, numberOfDifferentValues) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function buildGameGridWithItems(items, size) {
+
     let gameGrid = []
 
     for (let i = 0; i < size; i++) {
@@ -120,6 +125,7 @@ function buildGameGridWithItems(items, size) {
         }
         gameGrid.push(row)
     }
+
     return gameGrid
 }
 
@@ -154,7 +160,7 @@ function checkGameGridForAlignments(gameGrid) {
         checkForMatchesOneWay(gameGrid, 'row', i, allMatches)
         checkForMatchesOneWay(gameGrid, 'col', i, allMatches)
     }
-
+    console.log('Matches found :')
     console.log(allMatches)
     return allMatches
 
@@ -247,25 +253,49 @@ function checkForMatchesOneWay(gameGrid, direction, i, allMatches) {
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function switchTwoItemsOnGrid(gameGrid, gridSize, coordinatesItem1, coordinatesItem2) {
+// function switchTwoItemsOnGrid(gameGrid, gridSize, [coordinatesItem1], coordinatesItem2) {
 
-    // Check if the coordinates are not out of the grid
-    const validCoordinates = (coord) => coord[0] >= 0 && coord[0] < gridSize && coord[1] >= 0 && coord[1] < gridSize
+//     // Check if the coordinates are not out of the grid
+//     const validCoordinates = (coord) => coord[0] >= 0 && coord[0] < gridSize && coord[1] >= 0 && coord[1] < gridSize
 
-    if (validCoordinates(coordinatesItem1) && validCoordinates(coordinatesItem2)) {
+//     if (validCoordinates(coordinatesItem1) && validCoordinates(coordinatesItem2)) {
+//         // Switch values between two items
+//         const tempCoordinates = gameGrid[coordinatesItem1[0]][coordinatesItem1[1]]
+//         gameGrid[coordinatesItem1[0]][coordinatesItem1[1]] = gameGrid[coordinatesItem2[0]][coordinatesItem2[1]]
+//         gameGrid[coordinatesItem2[0]][coordinatesItem2[1]] = tempCoordinates
+//         console.log(gameGrid)
+//         // Return the updated gameGrid after switch
+//         return gameGrid
+//     } else {
+//         // Return false if move is out of the grid
+//         console.log(`! Out of the grid move : cannot switch ${coordinatesItem1} with ${coordinatesItem2}`)
+//         return false
+//     }
+// }
+
+
+function switchTwoItemsOnGrid(gameGrid, [y1, x1], [y2, x2]) {
+    // Check if the coordinates are within the grid bounds
+    const gridSize = gameGrid[0].length
+    const isValidCoordinate = (coord) => coord[0] >= 0 && coord[0] < gridSize && coord[1] >= 0 && coord[1] < gridSize;
+
+    if (isValidCoordinate([y1, x1]) && isValidCoordinate([y2, x2])) {
         // Switch values between two items
-        const tempCoordinates = gameGrid[coordinatesItem1[0]][coordinatesItem1[1]]
-        gameGrid[coordinatesItem1[0]][coordinatesItem1[1]] = gameGrid[coordinatesItem2[0]][coordinatesItem2[1]]
-        gameGrid[coordinatesItem2[0]][coordinatesItem2[1]] = tempCoordinates
-        console.log(gameGrid)
+        const temp = gameGrid[y1][x1];
+        gameGrid[y1][x1] = gameGrid[y2][x2];
+        gameGrid[y2][x2] = temp;
+        console.log(gameGrid);
         // Return the updated gameGrid after switch
-        return gameGrid
+        return gameGrid;
     } else {
         // Return false if move is out of the grid
-        console.log(`! Out of the grid move : cannot switch ${coordinatesItem1} with ${coordinatesItem2}`)
-        return false
+        console.log(`! Out of the grid move: cannot switch [${y1}, ${x1}] with [${y2}, ${x2}]`);
+        return false;
     }
 }
 
 
+function removeMatchesFromGrid(gameGrid, allMatches) {
+    allMatches.forEach((match) => match.forEach((cell) => gameGrid[cell[0]][cell[1]] = ''))
+}
 
