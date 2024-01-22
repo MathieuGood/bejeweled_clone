@@ -15,8 +15,9 @@
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-let jewels = ['🧡', '💛', '💚', '💙', '💜', '🖤', '❤️']
-let gb = buildGameGrid(jewels, 8)
+let jewels = ['🧡', '💛', '💚', '💙', '💜', '🖤', '💖']
+let gb = buildGameGridWithItems(jewels, 8)
+console.log(gb)
 
 function buildGameGridWithItems(items, size) {
 
@@ -32,6 +33,7 @@ function buildGameGridWithItems(items, size) {
 
     return gameGrid
 }
+
 
 
 

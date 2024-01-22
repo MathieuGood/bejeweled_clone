@@ -1,13 +1,25 @@
 let = examplegameGrid = [
-    [1, 7, 7, 6, 0, 0, 3, 2],
+    [7, 7, 7, 6, 0, 0, 3, 4],
     [7, 6, 1, 7, 2, 5, 2, 5],
-    [4, 6, 2, 3, 6, 4, 2, 0],
-    [7, 0, 7, 5, 7, 4, 0, 3],
+    [4, 6, 2, 3, 6, 4, 2, 5],
+    [7, 0, 7, 5, 7, 4, 0, 5],
     [1, 3, 0, 7, 1, 5, 2, 2],
-    [0, 7, 5, 6, 6, 4, 2, 5],
+    [0, 7, 5, 6, 6, 4, 2, 2],
     [3, 3, 3, 1, 4, 0, 7, 2],
-    [6, 7, 2, 1, 2, 7, 7, 7]
+    [6, 7, 2, 1, 2, 7, 7, 2]
 ]
+
+
+// examplegameGrid = [
+//     ['💙', '🧡', '💛', '💚', '🖤', '🧡', '💛', '💛'],
+//     ['💛', '💖', '💜', '🧡', '💖', '🧡', '🧡', '💜'],
+//     ['🖤', '💚', '💜', '💖', '💖', '💖', '💖', '💚'],
+//     ['💚', '💛', '🧡', '🖤', '💛', '💙', '🖤', '💚'],
+//     ['💚', '💙', '💛', '💛', '💜', '💙', '🧡', '🖤'],
+//     ['💖', '💜', '💚', '🖤', '💙', '💙', '💚', '🧡'],
+//     ['🧡', '🧡', '💛', '💙', '🖤', '🧡', '💛', '💚'],
+//     ['🧡', '🧡', '💜', '💜', '💚', '💜', '💚', '🧡']
+// ]
 
 
 // switchTwoItemsOnGrid(exampleGameGrid, [-1, 1], [0, 2])
@@ -19,17 +31,7 @@ let = examplegameGrid = [
 // updateGridCellValue(exampleGameGrid, foundMatches, '')
 // updateGridCellValue(exampleGameGrid, foundMatches, 'random')
 
-let results = []
-
-for (let counter = 0; counter < 100000; counter++) {
-    results.push(buildGameGridWithNoMatches(8, 8))
-}
-
-// console.log(results)
-const sum = results.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-const average = sum / results.length;
-
-console.log('Average:', average);
+playGame()
 
 
 
@@ -40,26 +42,55 @@ console.log('Average:', average);
 ////////
 
 
-function buildGameGridWithNoMatches(size, numberOfDifferentValues) {
+function playGame() {
 
-    // let gameGrid = buildGameGrid(8, 8)
+    // Generate inital gameGrid
+    gameGrid = examplegameGrid
+    // let gameGrid = buildGameGridWithNoMatches(8, 8)
+    showGameGrid(gameGrid)
 
-    let i = 1
 
-    while (true) {
-        gameGrid = buildGameGrid(size, numberOfDifferentValues)
-        showGameGrid(gameGrid)
-        if (checkGameGridForAlignments(gameGrid) == '') {
-            break
-        } else {
-            console.log('Regenerating grid')
-        }
-        i++
+    // Make a move : switch two items
+    // TO DO
+
+    // Check if there is a match consequently to the switch
+    let matches = checkGameGridForAlignments(gameGrid)
+
+    if (matches != '') {
+        gameGrid = updateGridCellValue(gameGrid, matches, '')
     }
 
     showGameGrid(gameGrid)
-    console.log('Obtained after ' + i + ' iterations')
-    return i
+
+    pushItemsDown(gameGrid)
+
+    showGameGrid(gameGrid)
+
+    fillEmptyCells(gameGrid)
+
+    showGameGrid(gameGrid)
+
+
+
+}
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Build gameGrid until it has no matches
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function buildGameGridWithNoMatches(size, numberOfDifferentValues) {
+
+    while (true) {
+        gameGrid = buildGameGrid(size, numberOfDifferentValues)
+        if (checkGameGridForAlignments(gameGrid) == '') {
+            return gameGrid
+        }
+    }
 }
 
 
@@ -82,7 +113,6 @@ function buildGameGrid(size, numberOfDifferentValues) {
             row.push(randomInteger)
         }
         gameGrid.push(row)
-
     }
 
     return gameGrid
@@ -92,19 +122,57 @@ function buildGameGrid(size, numberOfDifferentValues) {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-// Display the game grid
+// Display and color the game grid
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function showGameGrid(gameGrid) {
-    let formattedGameGrid = JSON.stringify(gameGrid)
-        .replace(/\[/, '[\n')
-        .replace(/\],\[/g, ']\n[')
-        .replace(/[\[\]]/g, '')
-        .replace(/\]$/, '\n]')
-    console.log(`[${formattedGameGrid}]`)
+    console.log('    0 1 2 3 4 5 6 7')
+    console.log('    - - - - - - - -')
+
+    gameGrid.forEach((row, index) => {
+        rowDisplay = ''
+        for (let value of row) {
+            let colorCode = getColorCode(value);
+            let coloredValue = `\x1b[${colorCode}m${value}\x1b[0m`
+            rowDisplay += (value !== '') ? coloredValue + ' ' : '* '
+        }
+        console.log(index + ' | ' + rowDisplay)
+    })
+    console.log('')
 }
 
+function getColorCode(value) {
+    // You can customize this function to assign different color codes based on the integer value
+    switch (value) {
+        case 1:
+            return 31; // Red
+        case 2:
+            return 32; // Green
+        case 3:
+            return 33; // Yellow
+        case 4:
+            return 34; // Blue
+        case 5:
+            return 35; // Magenta
+        case 6:
+            return 36; // Cyan
+        case 7:
+            return 37; // White
+        // Add more cases for additional integer values and corresponding colors
+        default:
+            return 0; // Default color (reset)
+    }
+}
+
+
+function fillEmptyCells(gameGrid) {
+    gameGrid.forEach((row, i) => row.forEach((cellValue, j) => {
+        if (cellValue === '') {
+            gameGrid[i][j] = Math.floor(Math.random() * gameGrid.length)
+        }
+    }))
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -228,7 +296,7 @@ function switchTwoItemsOnGrid(gameGrid, [y1, x1], [y2, x2]) {
         const temp = gameGrid[y1][x1];
         gameGrid[y1][x1] = gameGrid[y2][x2];
         gameGrid[y2][x2] = temp;
-        console.log(gameGrid);
+        console.log(`Switching ${gameGrid[y1][x1]} and ${gameGrid[y2][x2]}`)
         // Return the updated gameGrid after switch
         return gameGrid;
     } else {
@@ -254,8 +322,45 @@ function updateGridCellValue(gameGrid, cellCoordinates, value) {
             value === '' ? updatedValue = '' : updatedValue = Math.floor(Math.random() * gameGrid.length)
             gameGrid[cell[0]][cell[1]] = updatedValue
         }))
-    console.log(gameGrid)
     return gameGrid
 }
 
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// On a gameGrid with deleted items, push all the items down
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function pushItemsDown(gameGrid) {
+
+    let colsContent = []
+
+    for (let i = 0; i < gameGrid.length; i++) {
+        let colContent = []
+        for (let j = 0; j < gameGrid.length; j++) {
+            const cellValue = gameGrid[j][i]
+            if (cellValue !== '') {
+                colContent.push(cellValue)
+            }
+        }
+        colsContent[i] = colContent
+    }
+
+    for (let i = 0; i < gameGrid.length; i++) {
+
+        // if 7 values in colsContent
+        // start i at 1
+        let colValuesCount = 0
+        for (let j = 0; j < gameGrid.length; j++) {
+            if (j < gameGrid.length - colsContent[i].length) {
+                gameGrid[j][i] = ''
+            } else {
+                gameGrid[j][i] = colsContent[i][colValuesCount]
+                colValuesCount++
+            }
+
+        }
+    }
+}
