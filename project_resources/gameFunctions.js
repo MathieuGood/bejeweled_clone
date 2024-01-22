@@ -1,18 +1,13 @@
-
-
-
-let exampleGameGrid = [
-    ['❤️', '💚', '💙', '🧡', '🧡', '🧡', '🧡', '💜'],
-    ['💙', '🖤', '💙', '🖤', '💛', '🖤', '💜', '🖤'],
-    ['🖤', '❤️', '💙', '💙', '💚', '🖤', '❤️', '💙'],
-    ['💜', '💜', '💜', '🖤', '🧡', '💛', '💚', '🖤'],
-    ['💚', '🖤', '💜', '💜', '🧡', '💚', '💜', '💙'],
-    ['🧡', '❤️', '💜', '🖤', '💜', '❤️', '❤️', '❤️'],
-    ['🧡', '🖤', '💛', '🖤', '💛', '💙', '🧡', '🖤'],
-    ['💛', '🖤', '💛', '💚', '💚', '💚', '🖤', '💜']
+let = examplegameGrid = [
+    [1, 7, 7, 6, 0, 0, 3, 2],
+    [7, 6, 1, 7, 2, 5, 2, 5],
+    [4, 6, 2, 3, 6, 4, 2, 0],
+    [7, 0, 7, 5, 7, 4, 0, 3],
+    [1, 3, 0, 7, 1, 5, 2, 2],
+    [0, 7, 5, 6, 6, 4, 2, 5],
+    [3, 3, 3, 1, 4, 0, 7, 2],
+    [6, 7, 2, 1, 2, 7, 7, 7]
 ]
-
-
 
 
 // switchTwoItemsOnGrid(exampleGameGrid, [-1, 1], [0, 2])
@@ -24,7 +19,18 @@ let exampleGameGrid = [
 // updateGridCellValue(exampleGameGrid, foundMatches, '')
 // updateGridCellValue(exampleGameGrid, foundMatches, 'random')
 
-playGame()
+let results = []
+
+for (let counter = 0; counter < 100000; counter++) {
+    results.push(buildGameGridWithNoMatches(8, 8))
+}
+
+// console.log(results)
+const sum = results.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+const average = sum / results.length;
+
+console.log('Average:', average);
+
 
 
 ////////
@@ -34,18 +40,26 @@ playGame()
 ////////
 
 
-function playGame() {
+function buildGameGridWithNoMatches(size, numberOfDifferentValues) {
 
-    let gameGrid = buildGameGrid(8, 8)
+    // let gameGrid = buildGameGrid(8, 8)
 
-    console.log(gameGrid)
-    checkGameGridForAlignments(gameGrid)
+    let i = 1
 
-    // while (checkGameGridForAlignments(gameGrid) != []) {
-    //     console.log('Regenerating grid')
-    //     gameGrid = buildGameGrid(8, 8)
-    // }
+    while (true) {
+        gameGrid = buildGameGrid(size, numberOfDifferentValues)
+        showGameGrid(gameGrid)
+        if (checkGameGridForAlignments(gameGrid) == '') {
+            break
+        } else {
+            console.log('Regenerating grid')
+        }
+        i++
+    }
 
+    showGameGrid(gameGrid)
+    console.log('Obtained after ' + i + ' iterations')
+    return i
 }
 
 
@@ -73,6 +87,24 @@ function buildGameGrid(size, numberOfDifferentValues) {
 
     return gameGrid
 }
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Display the game grid
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function showGameGrid(gameGrid) {
+    let formattedGameGrid = JSON.stringify(gameGrid)
+        .replace(/\[/, '[\n')
+        .replace(/\],\[/g, ']\n[')
+        .replace(/[\[\]]/g, '')
+        .replace(/\]$/, '\n]')
+    console.log(`[${formattedGameGrid}]`)
+}
+
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -109,7 +141,7 @@ function checkGameGridForAlignments(gameGrid) {
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function checkForMatchesOneWay(gameGrid, direction, i, allMatches) {
+function checkForMatchesOneWay(gameGrid, direction, index, allMatches) {
 
     // previousItem records what item was before current entry
     let previousItem = ''
@@ -123,7 +155,7 @@ function checkForMatchesOneWay(gameGrid, direction, i, allMatches) {
     // Loop through rows/columns of gameGrid
     for (let j = 0; j < gameGrid.length; j++) {
 
-        // value of the item
+        // Intialize variable for value of the item
         let value = ''
 
         // y/x coordinates of previous item
@@ -134,19 +166,18 @@ function checkForMatchesOneWay(gameGrid, direction, i, allMatches) {
 
         // Set coordinates accordingly for the result regarding the direction chosen
         if (direction == 'row') {
-            value = gameGrid[i][j]
-            previousCoordinates = [i, j - 1]
-            currentCoordinates = [i, j]
+            value = gameGrid[index][j]
+            previousCoordinates = [index, j - 1]
+            currentCoordinates = [index, j]
         } else {
-            value = gameGrid[j][i]
-            previousCoordinates = [j - 1, i]
-            currentCoordinates = [j, i]
+            value = gameGrid[j][index]
+            previousCoordinates = [j - 1, index]
+            currentCoordinates = [j, index]
         }
 
         // If it is the first occurence of the list, initalize previousItem to current value
         if (previousItem === '') {
             previousItem = value
-
         } else {
             // For all other items
             // Check if current value matches previous item
@@ -159,18 +190,21 @@ function checkForMatchesOneWay(gameGrid, direction, i, allMatches) {
                 matches.push(currentCoordinates)
                 // Increase match count 
                 count++
-
+                // If the value is the last item in the row/column and is winning match, add coordinates to matches
+                if (j === gameGrid.length - 1 && count > 2) {
+                    allMatches.push(matches)
+                }
             } else {
                 // If the value does not match and if count is at least 3, record matches to allMatches array
                 if (count > 2) {
                     allMatches.push(matches)
-                    matches = []
-                    count = 1
                 }
-
-                // Set previousItem to current value before next iteration
-                previousItem = value
+                // Reset matches and count to default values
+                matches = []
+                count = 1
             }
+            // Set previousItem to current value before next iteration
+            previousItem = value
         }
     }
 }
@@ -223,129 +257,5 @@ function updateGridCellValue(gameGrid, cellCoordinates, value) {
     console.log(gameGrid)
     return gameGrid
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-////////////////////////////////////
-//
-//
-// UNUSED FUNCTIONS
-//
-//
-////////////////////////////////////
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-//
-// Build the game board of given size as a multidimensional array
-// and populate it with random elements of the items array
-//
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-let jewels = ['🧡', '💛', '💚', '💙', '💜', '🖤', '❤️']
-let gb = buildGameGrid(jewels, 8)
-
-function buildGameGridWithItems(items, size) {
-
-    let gameGrid = []
-
-    for (let i = 0; i < size; i++) {
-        let row = []
-        for (let j = 0; j < size; j++) {
-            row.push(getRandomItemFromArray(items))
-        }
-        gameGrid.push(row)
-    }
-
-    return gameGrid
-}
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-//
-// Get random item from a given array
-//
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-function getRandomItemFromArray(array) {
-    let randomIndex = Math.floor(Math.random() * array.length)
-    return array[randomIndex]
-}
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-//
-// Based on a gameGrid array and the y, x coordinates of one cell,
-// check if there are similar items in any of the adjacent cells
-// and return their coordinates in an array
-//
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-function checkAdjacentCellsForSimilarItem(gameGrid, y, x) {
-
-    matchingItems = []
-
-    // y = horizontal position of current item
-    // x = vertical position of current item
-
-    let currentItem = gameGrid[y][x]
-    let gameGridSize = gameGrid.length
-
-    console.log('Current item : ' + currentItem)
-    console.log('Current item coordinates : ' + 'y = ' + y + '  x = ' + x)
-
-    // adjacentCellsCoordinatesOffset array contains the offset values of y and x to find adjacent cells
-    adjacentCellsCoordinatesOffset = [
-        [-1, 0],
-        [1, 0],
-        [0, -1],
-        [0, 1]
-    ]
-
-    // Loop through the coordinates of adjacent cells
-    for (let adjacentCellOffset of adjacentCellsCoordinatesOffset) {
-
-        let verticalCoordinates = y + adjacentCellOffset[0]
-        let horizontalCoordinates = x + adjacentCellOffset[1]
-
-        // For debug
-        // console.log('Checking adjacent cell : ' + 'y = ' + verticalCoordinates + '  x = ' + horizontalCoordinates)
-
-        // Check if calculated coordinates exist (not out of the game board)
-        if (
-            (verticalCoordinates >= 0 && verticalCoordinates < gameGridSize) &&
-            (horizontalCoordinates >= 0 && horizontalCoordinates < gameGridSize)
-        ) {
-            console.log('Checking if gameGrid [' + verticalCoordinates + ', ' + horizontalCoordinates + '] = ' + currentItem)
-            // Check if the item in the adjacent cell is the same as in the current cell (currentItem)
-            // If it is the case, add the coordinates of the matching item in the matchingItems array
-            if (gameGrid[verticalCoordinates][horizontalCoordinates] == currentItem) {
-                matchingItems.push([verticalCoordinates, horizontalCoordinates])
-            }
-        }
-    }
-    return matchingItems
-}
-
 
 
