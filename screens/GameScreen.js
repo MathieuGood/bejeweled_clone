@@ -1,7 +1,9 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import { StyleSheet, View, Text } from 'react-native'
 import TouchButton from '../components/TouchButton'
 import GameGrid from '../components/GameGrid'
+import { buildGameGrid } from '../project_resources/exportGameFunctions'
+
 
 
 export default function GameScreen({ navigation }) {
@@ -18,22 +20,9 @@ export default function GameScreen({ navigation }) {
     ]
 
 
-    // const [gameGrid, setGameGrid] = useState(buildInitialGameGrid(8, 7))
-    const [gameGrid, setGameGrid] = useState(exampleGrid)
+    const [gameGrid, setGameGrid] = useState(buildGameGrid(8, 8))
+    // const [gameGrid, setGameGrid] = useState(exampleGrid)
 
-
-    function buildInitialGameGrid(size, numberOfDifferentValues) {
-        let grid = []
-        for (let i = 0; i < size; i++) {
-            let row = []
-            for (let j = 0; j < size; j++) {
-                const randomInteger = Math.floor(Math.random() * (numberOfDifferentValues + 1))
-                row.push(randomInteger)
-            }
-            grid.push(row)
-        }
-        return grid
-    }
 
 
     return (
@@ -48,7 +37,7 @@ export default function GameScreen({ navigation }) {
                 }}
             />
 
-            <GameGrid gridContent={gameGrid}/>
+            <GameGrid gridContent={gameGrid} />
 
         </View>
     )
