@@ -1,12 +1,12 @@
 let = examplegameGrid = [
     [7, 7, 7, 6, 0, 0, 3, 4],
-    [7, 6, 1, 7, 2, 5, 2, 5],
-    [4, 6, 2, 3, 6, 4, 2, 5],
-    [7, 0, 7, 5, 7, 4, 0, 5],
-    [1, 3, 0, 7, 1, 5, 2, 2],
-    [0, 7, 5, 6, 6, 4, 2, 2],
+    [1, 6, 1, 7, 2, 0, 2, 5],
+    [1, 6, 2, 3, 6, 4, 2, 5],
+    [2, 0, 7, 5, 7, 4, 0, 5],
+    [1, 3, 1, 7, 1, 5, 5, 5],
+    [0, 7, 5, 0, 0, 4, 2, 2],
     [3, 3, 3, 1, 4, 0, 7, 2],
-    [6, 7, 2, 1, 2, 7, 7, 2]
+    [6, 7, 2, 1, 2, 0, 7, 2]
 ]
 
 
@@ -22,54 +22,55 @@ let = examplegameGrid = [
 // ]
 
 
-// switchTwoItemsOnGrid(exampleGameGrid, [-1, 1], [0, 2])
-
-// let result = checkAdjacentCellsForSimilarItem(exampleGameGrid, 5, 6)
-// console.log(result)
-
-// let foundMatches = checkGameGridForAlignments(exampleGameGrid)
-// updateGridCellValue(exampleGameGrid, foundMatches, '')
-// updateGridCellValue(exampleGameGrid, foundMatches, 'random')
+/////////////////
+////////
+//
+// Main
+// 
+////////
+/////////////////
 
 playGame()
 
 
 
+/////////////////
 ////////
 //
 // Game
 // 
 ////////
-
+/////////////////
 
 function playGame() {
 
-    // Generate inital gameGrid
-    gameGrid = examplegameGrid
+    // Generate inital gameGrid making sure there are no matches
     // let gameGrid = buildGameGridWithNoMatches(8, 8)
-    showGameGrid(gameGrid)
 
+    // For testing
+    gameGrid = examplegameGrid
+    console.log('\n**** INITAL GRID')
+
+    showGameGrid(gameGrid)
 
     // Make a move : switch two items
-    // TO DO
 
-    // Check if there is a match consequently to the switch
-    let matches = checkGameGridForAlignments(gameGrid)
-
-    if (matches != '') {
-        gameGrid = updateGridCellValue(gameGrid, matches, '')
-    }
-
+    // Find matches and delete values
+    findAndDeleteMatchingValuesFromGrid(gameGrid)
+    console.log('\n**** MATCHES DELETED')
     showGameGrid(gameGrid)
 
-    pushItemsDown(gameGrid)
 
+    // Push the remaining values down to the bottom of the grid
+    // Affects columns with empty values that are erased matches
+    console.log('\n**** PUSH DOWN VALUES AND ERASE ALIGNMENTS')
+    pushDownValuesAndEraseAlignments(gameGrid)
+
+
+    // Fill empty cells with new random values
+    gameGrid = fillEmptyCellsWithNoMatches(gameGrid)
+    console.log('\n**** EMPTY CELLS FILLED')
     showGameGrid(gameGrid)
-
-    fillEmptyCells(gameGrid)
-
-    showGameGrid(gameGrid)
-
 
 
 }
@@ -127,6 +128,7 @@ function buildGameGrid(size, numberOfDifferentValues) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function showGameGrid(gameGrid) {
+    console.log('')
     console.log('    0 1 2 3 4 5 6 7')
     console.log('    - - - - - - - -')
 
@@ -166,12 +168,71 @@ function getColorCode(value) {
 }
 
 
-function fillEmptyCells(gameGrid) {
-    gameGrid.forEach((row, i) => row.forEach((cellValue, j) => {
-        if (cellValue === '') {
-            gameGrid[i][j] = Math.floor(Math.random() * gameGrid.length)
-        }
-    }))
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Check a grid for matches and delete them replacing value with ''
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function findAndDeleteMatchingValuesFromGrid(gameGrid) {
+
+    // Check if there is a match consequently to the switch
+    let matches = checkGameGridForAlignments(gameGrid)
+
+    // If there are matches, updates values of the matches cells to ''
+    if (matches != '') {
+        updateGridCellValue(gameGrid, matches, '')
+    }
+
+    return (gameGrid)
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Fill all empty cells with new random values
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function fillEmptyCellsWithNoMatches(gameGrid) {
+    console.log('------------ STARTING FILLING FUNCTION ------------')
+    // Make a copy of gameGrid before it is altered
+    const initialGrid = [...gameGrid]
+    const emptyValuesCoordinates = findEmptyValuesCoordinates(gameGrid)
+    let matchesAfter = []
+
+    console.log('SHOWING INITIAL GAMEGRID :')
+    showGameGrid(gameGrid)
+
+    do {
+        // Reset gameGrid to its value when the function was called (without the new random values)
+        gameGrid = initialGrid.map(row => [...row])
+
+        console.log('REINITIALIZED GAMEGRID : ')
+        showGameGrid(gameGrid)
+
+        updateGridCellValue(gameGrid, emptyValuesCoordinates, '')
+        updateGridCellValue(gameGrid, emptyValuesCoordinates, 'random')
+        console.log('Filling empty values with RANDOM : ')
+        showGameGrid(gameGrid)
+
+        // Fill empty values with random values
+        // gameGrid.forEach((row, i) => row.forEach((cellValue, j) => {
+        //     if (cellValue === '') {
+        //         gameGrid[i][j] = Math.floor(Math.random() * gameGrid.length)
+        //         emptyValuesCoordinates.push([[i, j]])
+        //     }
+        // }))
+        // Check for matches
+        matchesAfter = checkGameGridForAlignments(gameGrid)
+        console.log("matchesAfter length : " + matchesAfter.length)
+
+        // If no matches, break out of the loop
+    } while (matchesAfter.length !== 0)
+    console.log('------------ ENDING FILLING FUNCTION ------------')
+    return gameGrid
 }
 
 
@@ -363,4 +424,59 @@ function pushItemsDown(gameGrid) {
 
         }
     }
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Push down all the values until there are no matches
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function pushDownValuesAndEraseAlignments(gameGrid) {
+    let matches = ''
+    // Push the remaining values down to the bottom of the grid
+    pushItemsDown(gameGrid)
+    console.log('**** ITEMS PUSHED DOWN')
+    showGameGrid(gameGrid)
+
+    do {
+        // Check for matches and delete them
+        findAndDeleteMatchingValuesFromGrid(gameGrid)
+        console.log('**** ITEMS DELETED')
+        showGameGrid(gameGrid)
+
+        // Push values down
+        pushItemsDown(gameGrid)
+        console.log('**** ITEMS PUSHED DOWN')
+        showGameGrid(gameGrid)
+
+        // Check if there are matches after values have been pushed down
+        matches = checkGameGridForAlignments(gameGrid)
+        console.log('Matches length : ' + matches.length)
+
+        // While there are still matches, rerun the loop
+    } while (matches.length != 0)
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Find all empty values and add their coordinates to an array
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function findEmptyValuesCoordinates(gameGrid) {
+    let result = []
+    gameGrid.forEach((row, y) => row.forEach(
+        (value, x) => {
+            if (value === '') {
+                result.push([[y, x]])
+            }
+        }
+    ))
+    console.log("Empty cells coordinates : ")
+    console.log(result)
+    return result
 }
