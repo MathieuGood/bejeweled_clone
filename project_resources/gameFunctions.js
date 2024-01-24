@@ -9,17 +9,40 @@ let = examplegameGrid = [
     [6, 7, 2, 1, 2, 0, 7, 2]
 ]
 
+let = grid2 = [
+    [7, 2, 2, 1, 7, 4, 3, 0],
+    [6, 7, 1, 6, 0, 2, 3, 6],
+    [1, 6, 1, 7, 2, 4, 2, 4],
+    [1, 6, 2, 3, 6, 0, 2, 1],
+    [2, 0, 7, 5, 7, 6, 0, 0],
+    [1, 3, 1, 7, 1, 0, 2, 4],
+    [0, 7, 5, 1, 4, 3, 7, 3],
+    [6, 7, 2, 1, 2, 4, 7, 4]
 
-// examplegameGrid = [
-//     ['💙', '🧡', '💛', '💚', '🖤', '🧡', '💛', '💛'],
-//     ['💛', '💖', '💜', '🧡', '💖', '🧡', '🧡', '💜'],
-//     ['🖤', '💚', '💜', '💖', '💖', '💖', '💖', '💚'],
-//     ['💚', '💛', '🧡', '🖤', '💛', '💙', '🖤', '💚'],
-//     ['💚', '💙', '💛', '💛', '💜', '💙', '🧡', '🖤'],
-//     ['💖', '💜', '💚', '🖤', '💙', '💙', '💚', '🧡'],
-//     ['🧡', '🧡', '💛', '💙', '🖤', '🧡', '💛', '💚'],
-//     ['🧡', '🧡', '💜', '💜', '💚', '💜', '💚', '🧡']
-// ]
+]
+
+let exampleGameGrid3 = [
+    [6, 7, 7, 2, 0, 0, 3, 4],
+    [1, 6, 1, 7, 2, 0, 2, 5],
+    [1, 6, 2, 3, 6, 4, 2, 5],
+    [2, 0, 7, 5, 7, 4, 0, 5],
+    [1, 3, 1, 7, 1, 5, 5, 5],
+    [0, 7, 5, 0, 0, 4, 2, 2],
+    [3, 3, 3, 1, 4, 0, 7, 2],
+    [6, 7, 2, 1, 2, 0, 7, 2]
+]
+
+
+let examplegameGridHearts = [
+    ['💙', '🧡', '💛', '💚', '🖤', '🧡', '💛', '💛'],
+    ['💛', '💖', '💜', '🧡', '💖', '🧡', '🧡', '💜'],
+    ['🖤', '💚', '💜', '💖', '💖', '💖', '💖', '💚'],
+    ['💚', '💛', '🧡', '🖤', '💛', '💙', '🖤', '💚'],
+    ['💚', '💙', '💛', '💛', '💜', '💙', '🧡', '🖤'],
+    ['💖', '💜', '💚', '🖤', '💙', '💙', '💚', '🧡'],
+    ['🧡', '🧡', '💛', '💙', '🖤', '🧡', '💛', '💚'],
+    ['🧡', '🧡', '💜', '💜', '💚', '💜', '💚', '🧡']
+]
 
 
 /////////////////
@@ -30,8 +53,22 @@ let = examplegameGrid = [
 ////////
 /////////////////
 
-playGame()
+main()
 
+
+function main() {
+
+    showGameGrid(grid2)
+    // playGame()
+
+    const resultHints = getAllHints(grid2)
+    console.log('All the hints :')
+    console.log(resultHints)
+
+    showGameGrid(grid2)
+
+
+}
 
 
 /////////////////
@@ -165,6 +202,44 @@ function getColorCode(value) {
         default:
             return 0; // Default color (reset)
     }
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Based on given coordinates, get the coordinates of all adjacent cells
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function getAdjacentCells(gameGrid, [y, x]) {
+    // Initialize empty array to store adjacent cells coordinates
+    let adjacentCells = []
+
+    // console.log('Current item : ' + currentItem)
+    // console.log('Current item coordinates : ' + 'y = ' + y + '  x = ' + x)
+
+    // adjacentCellsCoordinatesOffset array contains the offset values of y and x to find adjacent cells
+    adjacentCellsCoordinatesOffset = [
+        [-1, 0],
+        [1, 0],
+        [0, -1],
+        [0, 1]
+    ]
+
+    // Loop through the coordinates of possible adjacent cells
+    for (let adjacentCellOffset of adjacentCellsCoordinatesOffset) {
+        // Add offset to coordinates
+        let verticalCoordinates = y + adjacentCellOffset[0]
+        let horizontalCoordinates = x + adjacentCellOffset[1]
+        // console.log('Checking coordinates : ' + 'y = ' + verticalCoordinates + '  x = ' + horizontalCoordinates)
+
+        // Check if calculated coordinates exist (not out of the game board)
+        if (isValidCoordinate(gameGrid, [verticalCoordinates, horizontalCoordinates])) {
+            adjacentCells.push([verticalCoordinates, horizontalCoordinates])
+        }
+    }
+    return adjacentCells
 }
 
 
@@ -342,17 +417,30 @@ function checkForMatchesOneWay(gameGrid, direction, index, allMatches) {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
+// Check if coordinates are not out of the grid
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function isValidCoordinate(gameGrid, coord) {
+    const gridSize = gameGrid.length
+    return coord[0] >= 0 && coord[0] < gridSize && coord[1] >= 0 && coord[1] < gridSize
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
 // Switch two items (coordinatesItem1, coordinatesItem2) on the grid
 // Returns the updated gameGrid
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function switchTwoItemsOnGrid(gameGrid, [y1, x1], [y2, x2]) {
+function swapTwoItemsOnGrid(gameGrid, [y1, x1], [y2, x2]) {
     // Check if the coordinates are within the grid bounds
-    const gridSize = gameGrid[0].length
-    const isValidCoordinate = (coord) => coord[0] >= 0 && coord[0] < gridSize && coord[1] >= 0 && coord[1] < gridSize;
+    // const gridSize = gameGrid.length
+    // const isValidCoordinate = (coord) => coord[0] >= 0 && coord[0] < gridSize && coord[1] >= 0 && coord[1] < gridSize;
 
-    if (isValidCoordinate([y1, x1]) && isValidCoordinate([y2, x2])) {
+    if (isValidCoordinate(gameGrid, [y1, x1]) && isValidCoordinate(gameGrid, [y2, x2])) {
         // Switch values between two items
         const temp = gameGrid[y1][x1];
         gameGrid[y1][x1] = gameGrid[y2][x2];
@@ -368,13 +456,13 @@ function switchTwoItemsOnGrid(gameGrid, [y1, x1], [y2, x2]) {
 }
 
 
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 // Update the values of the given coordinates from gameGrid
 // value can either be '' (deleting cell value) or 'random' (new random value)
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 function updateGridCellValue(gameGrid, cellCoordinates, value) {
 
@@ -461,6 +549,7 @@ function pushDownValuesAndEraseAlignments(gameGrid) {
 }
 
 
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 // Find all empty values and add their coordinates to an array
@@ -480,3 +569,78 @@ function findEmptyValuesCoordinates(gameGrid) {
     console.log(result)
     return result
 }
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Check if an array contains a specified given sub-array 
+// Disregard the order of the arrays contained in the sub-array
+// Example : containsArray([ [[2, 3], [1, 3]] ], [[1, 3], [2, 3]]) returns true
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function containsArray(array, subArray) {
+    const subArrayString = JSON.stringify(subArray);
+    const invertedSubArray = [subArray[1], subArray[0]];
+    const invertedSubArrayString = JSON.stringify(invertedSubArray)
+    return array.some(
+        (item) =>
+            JSON.stringify(item) === subArrayString || JSON.stringify(item) === invertedSubArrayString
+    )
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// getAllHints
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function getAllHints(gameGrid) {
+
+    // Initialize empty arrays for cells that have been checked and hints to return
+    let checkedPairs = []
+    let allHints = []
+
+    gameGrid.forEach(
+        (row, y) => row.forEach(
+            (value, x) => {
+                // Iterating over every cell in the grid
+                const currentCell = [y, x]
+                console.log(currentCell)
+                // Get the adjacent cells of current cell
+                const adjacentCells = getAdjacentCells(gameGrid, currentCell)
+                console.log('')
+                console.log('All adjacent cells :')
+                console.log(adjacentCells)
+                console.log('-----------------')
+
+                // Iterate over each adjacent cell
+                adjacentCells.forEach((adjacentCell) => {
+                    console.log('adjacentCell:', adjacentCell)
+                    // If cell has not been already checked
+                    if (!containsArray(checkedPairs, [currentCell, adjacentCell])) {
+                        // Make a copy of gameGrid to prevent altering original grid
+                        let testGrid = gameGrid.map(row => [...row])
+                        // Swap values of current cell and adjacent cell
+                        swapTwoItemsOnGrid(testGrid, currentCell, adjacentCell)
+                        // Add adjacent cell coordinates to checkedCells array to avoid rechecking it later
+                        checkedPairs.push([currentCell, adjacentCell])
+                        // Check if there are alignments consequently to the swap
+                        const matches = checkGameGridForAlignments(testGrid)
+                        // If there are alignements, push their coordinates to allHints array
+                        if (matches.length > 0) {
+                            console.log('*************Match to display as hint :')
+                            console.log(currentCell, adjacentCell)
+                            allHints.push([currentCell, adjacentCell])
+                        }
+                    }
+                })
+            }))
+    showGameGrid(gameGrid)
+    return allHints
+}
+
+
