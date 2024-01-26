@@ -5,6 +5,9 @@ import Artifact from './Artifact'
 
 export default function GameGrid({ gridContent, press }) {
 
+    function onCellPress(row, col) {
+        console.log(`Cell pressed: ${row}, ${col}`);
+    }
 
     function renderGrid(gameGrid) {
         return gameGrid.map((row, rowIndex) => (
@@ -18,7 +21,6 @@ export default function GameGrid({ gridContent, press }) {
                         style={styles.cell}
                         onPress={() => onCellPress(rowIndex, colIndex)}
                     >
-                        {/* <Text>{artefact}</Text> */}
                         <Artifact artifactNumber={artefact} />
                     </TouchableOpacity>
 
@@ -27,12 +29,6 @@ export default function GameGrid({ gridContent, press }) {
             </View>
         ))
     }
-
-    function onCellPress(row, col) {
-        console.log(`Cell pressed: ${row}, ${col}`);
-    }
-
-
 
     return (
         // <View>
