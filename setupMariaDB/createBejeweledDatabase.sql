@@ -43,7 +43,7 @@ INSERT INTO players (
     player_password,
     last_game_id
     ) VALUES
-    ('Mathieu', 'bon.mathieu@gmail.com', 'mb', 2),
+    ('Mathieu', 'bon.mathieu@gmail.com', 'mathieubon', 2),
     ('Testeur', 'mathieu.bon@uha.fr', 'test', 3),
     ('Guru', 'gurumatmat@gmail.com', 'guru', 0),
     ('John', 'john@john.com', 'john', 0),
