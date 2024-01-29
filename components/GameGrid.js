@@ -10,7 +10,7 @@ export default function GameGrid({ gridContent, pressCellCallback }) {
     }
 
     const pressCellFunction = (row, col) => {
-        console.log("Row " + row + "  Col " + col)
+        // console.log("Row " + row + "  Col " + col)
         pressCellCallback(row, col)
 
     }
