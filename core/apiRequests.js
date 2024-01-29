@@ -68,7 +68,7 @@ export const checkCredentials = (email, password, navigation) => {
                 console.log('Password OK')
                 navigation.navigate('PlayerScreen')
             } else {
-                console.log('Password wrong')
+                console.log('E-mail or password wrong')
                 Alert.alert(
                     'Error',
                     'E-mail or password are incorrect',
