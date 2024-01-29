@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import { StyleSheet, View, SafeAreaView, ImageBackground } from 'react-native'
+import React, { useState } from 'react'
+import { StyleSheet, View, Alert, ImageBackground } from 'react-native'
 import TouchButton from '../components/TouchButton'
 import TextField from '../components/TextField'
 import Header from '../components/Header'
 import { checkCredentials } from '../core/apiRequests'
+import { checkEmailFormat, checkIfStringIsNotEmpty, checkPasswordFormat } from '../core/userEntryCheck'
 
 export default function HomeScreen({ navigation }) {
 
@@ -49,8 +50,26 @@ export default function HomeScreen({ navigation }) {
                     <TouchButton
                         title='Login'
                         press={() => {
-                            // On click, check if e-mail and password match
-                            checkCredentials(email, password, navigation)
+                            // On click, check if fields are not empty
+                            //check if e-mail and password match
+                            if (
+                                checkIfStringIsNotEmpty(email) &&
+                                checkIfStringIsNotEmpty(password) &&
+                                checkEmailFormat(email) &&
+                                checkPasswordFormat(password)
+                            ) {
+                                checkCredentials(email, password, navigation)
+                            } else {
+                                console.log('E-mail or password wrong')
+                                Alert.alert(
+                                    'Error',
+                                    'E-mail or password are incorrect',
+                                    [
+                                        { text: 'OK' }
+                                    ],
+                                    { cancelable: false }
+                                );
+                            }
                         }}
                     />
 
