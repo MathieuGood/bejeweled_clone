@@ -23,6 +23,24 @@ export default function GameScreen({ navigation }) {
     const [gameGrid, setGameGrid] = useState(buildGameGrid(8, 8))
     // const [gameGrid, setGameGrid] = useState(exampleGrid)
 
+    const [firstPress, setFirstPress] = useState([null, null])
+    const [secondPress, setSecondPress] = useState([null, null])
+
+
+    
+
+    const getCellCoordinates = (row, col) => {
+        console.log(`Cell pressed: ${row}, ${col}`)
+
+        if (firstPress == [row, col]) {
+            console.log("Same cell as before!")
+        }
+        console.log("firstPress before updating state : " + firstPress)
+        setFirstPress([row, col])
+
+        console.log("firstPress after updating state : " + firstPress)
+
+    }
 
 
     return (
@@ -37,7 +55,10 @@ export default function GameScreen({ navigation }) {
                 }}
             />
 
-            <GameGrid gridContent={gameGrid} />
+            <GameGrid
+                gridContent={gameGrid}
+                pressCellCallback={getCellCoordinates}
+            />
 
         </View>
     )
