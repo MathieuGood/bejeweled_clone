@@ -227,6 +227,9 @@ function isValidCoordinate(gameGrid, coord) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const swapTwoItemsOnGrid = (gameGrid, [y1, x1], [y2, x2]) => {
+    // Make a deep copy of the gameGrid
+    gameGrid = JSON.parse(JSON.stringify(gameGrid))
+    
 
     // Check if the coordinates are within the grid bounds
     if (isValidCoordinate(gameGrid, [y1, x1]) && isValidCoordinate(gameGrid, [y2, x2])) {

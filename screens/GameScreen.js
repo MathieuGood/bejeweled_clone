@@ -71,11 +71,33 @@ export default function GameScreen({ navigation }) {
 
                 // Player has selected two cells
                 // NOW DO SOMETHING !
-                //
+                
                 showGameGrid(grid)
 
-                swapTwoItemsOnGrid(grid, firstPress, lastPress)
-                checkGameGridForAlignments(grid)
+                if (swapTwoItemsOnGrid(grid, firstPress, lastPress) != false) {
+
+                    if (checkGameGridForAlignments(swapTwoItemsOnGrid(grid, firstPress, lastPress)).length > 0) {
+
+                        console.log("OK TO SWAP")
+                        grid = swapTwoItemsOnGrid(grid, firstPress, lastPress)
+                        console.log(grid)
+                    } else {
+                        setAttempts(attempts - 1)
+                        if (attempts - 1 === 0) {
+                            Alert.alert(
+                                'End of game',
+                                'Loser! Game is over!',
+                                [
+                                    { text: 'OK' }
+                                ],
+                                { cancelable: false }
+                            );
+                            navigation.navigate('PlayerScreen')
+                        }
+                    }
+
+                }
+
                 showGameGrid(grid)
                 setGameGrid(grid)
 
