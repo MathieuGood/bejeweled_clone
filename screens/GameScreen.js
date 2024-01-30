@@ -6,7 +6,8 @@ import {
     buildGameGridWithNoMatches,
     showGameGrid,
     checkGameGridForAlignments,
-    swapTwoItemsOnGrid
+    swapTwoItemsOnGrid,
+    updateGridCellValue
 } from '../project_resources/exportGameFunctions'
 
 
@@ -62,54 +63,29 @@ export default function GameScreen({ navigation }) {
             setFirstPress(lastPress)
             console.log("useEffect : firstPress recorded >>> " + lastPress)
         } else {
-            if (secondPress === null) {
-                setSecondPress(lastPress)
-                console.log("useEffect : secondPress recorded >>> " + lastPress)
+            setSecondPress(lastPress)
+            console.log("useEffect : secondPress recorded >>> " + lastPress)
 
-                console.log("firstPress is " + firstPress)
-                console.log("secondPress is " + lastPress)
+            console.log("firstPress is " + firstPress)
+            console.log("secondPress is " + lastPress)
 
-                // Player has selected two cells
-                // NOW DO SOMETHING !
-                
-                showGameGrid(grid)
+            // Player has selected two cells
+            // NOW DO SOMETHING !
 
-                if (swapTwoItemsOnGrid(grid, firstPress, lastPress) != false) {
+            showGameGrid(grid)
 
-                    if (checkGameGridForAlignments(swapTwoItemsOnGrid(grid, firstPress, lastPress)).length > 0) {
-
-                        console.log("OK TO SWAP")
-                        grid = swapTwoItemsOnGrid(grid, firstPress, lastPress)
-                        console.log(grid)
-                    } else {
-                        setAttempts(attempts - 1)
-                        if (attempts - 1 === 0) {
-                            Alert.alert(
-                                'End of game',
-                                'Loser! Game is over!',
-                                [
-                                    { text: 'OK' }
-                                ],
-                                { cancelable: false }
-                            );
-                            navigation.navigate('PlayerScreen')
-                        }
-                    }
-
-                }
-
-                showGameGrid(grid)
-                setGameGrid(grid)
-
-                setFirstPress(null)
-                setSecondPress(null)
-
-                if (firstPress.toString() === lastPress.toString()) {
-                    console.log("CELLS ARE THE SAME!!!!!!")
-
-                    // Decrement attempts
+            if (swapTwoItemsOnGrid(grid, firstPress, lastPress) != false) {
+                let testGrid = swapTwoItemsOnGrid(grid, firstPress, lastPress)
+                let matches = checkGameGridForAlignments(testGrid)
+                console.log("Matches found after swap test", matches)
+                if (matches.length > 0) {
+                    console.log("OK TO SWAP ", firstPress, 'and', lastPress)
+                    grid = testGrid
+                    showGameGrid(grid)
+                    grid = updateGridCellValue(grid, matches, '')
+                    showGameGrid(grid)
+                } else {
                     setAttempts(attempts - 1)
-                    // If it is the last attempt, show alert and stop game
                     if (attempts - 1 === 0) {
                         Alert.alert(
                             'End of game',
@@ -123,6 +99,31 @@ export default function GameScreen({ navigation }) {
                     }
                 }
 
+            }
+
+            showGameGrid(grid)
+            setGameGrid(grid)
+
+            setFirstPress(null)
+            setSecondPress(null)
+
+            if (firstPress.toString() === lastPress.toString()) {
+                console.log("CELLS ARE THE SAME!!!!!!")
+
+                // Decrement attempts
+                setAttempts(attempts - 1)
+                // If it is the last attempt, show alert and stop game
+                if (attempts - 1 === 0) {
+                    Alert.alert(
+                        'End of game',
+                        'Loser! Game is over!',
+                        [
+                            { text: 'OK' }
+                        ],
+                        { cancelable: false }
+                    );
+                    navigation.navigate('PlayerScreen')
+                }
             }
         }
     }, [lastPress])

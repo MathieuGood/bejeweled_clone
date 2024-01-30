@@ -229,7 +229,7 @@ function isValidCoordinate(gameGrid, coord) {
 export const swapTwoItemsOnGrid = (gameGrid, [y1, x1], [y2, x2]) => {
     // Make a deep copy of the gameGrid
     gameGrid = JSON.parse(JSON.stringify(gameGrid))
-    
+
 
     // Check if the coordinates are within the grid bounds
     if (isValidCoordinate(gameGrid, [y1, x1]) && isValidCoordinate(gameGrid, [y2, x2])) {
@@ -245,4 +245,23 @@ export const swapTwoItemsOnGrid = (gameGrid, [y1, x1], [y2, x2]) => {
         // console.log(`! Out of the grid move: cannot swap [${y1}, ${x1}] with [${y2}, ${x2}]`)
         return false
     }
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Update the values of the given coordinates from gameGrid
+// value can either be '' (deleting cell value) or 'random' (new random value)
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const updateGridCellValue = (gameGrid, cellCoordinates, value) => {
+
+    cellCoordinates.forEach(
+        (match) => match.forEach((cell) => {
+            value === '' ? updatedValue = '' : updatedValue = Math.floor(Math.random() * gameGrid.length)
+            gameGrid[cell[0]][cell[1]] = updatedValue
+        }))
+    return gameGrid
 }
