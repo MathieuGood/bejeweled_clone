@@ -7,7 +7,9 @@ import {
     showGameGrid,
     checkGameGridForAlignments,
     swapTwoItemsOnGrid,
-    updateGridCellValue
+    updateGridCellValue,
+    pushDownValuesAndEraseAlignments,
+    fillEmptyCellsWithNoMatches
 } from '../project_resources/exportGameFunctions'
 
 
@@ -75,15 +77,22 @@ export default function GameScreen({ navigation }) {
             showGameGrid(grid)
 
             if (swapTwoItemsOnGrid(grid, firstPress, lastPress) != false) {
-                let testGrid = swapTwoItemsOnGrid(grid, firstPress, lastPress)
-                let matches = checkGameGridForAlignments(testGrid)
+                let swapGrid = swapTwoItemsOnGrid(grid, firstPress, lastPress)
+                let matches = checkGameGridForAlignments(swapGrid)
                 console.log("Matches found after swap test", matches)
                 if (matches.length > 0) {
                     console.log("OK TO SWAP ", firstPress, 'and', lastPress)
-                    grid = testGrid
+
+                    grid = swapGrid
                     showGameGrid(grid)
+
                     grid = updateGridCellValue(grid, matches, '')
                     showGameGrid(grid)
+
+                    pushDownValuesAndEraseAlignments(grid)
+
+                    grid = fillEmptyCellsWithNoMatches(grid)
+
                 } else {
                     setAttempts(attempts - 1)
                     if (attempts - 1 === 0) {
