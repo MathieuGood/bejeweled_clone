@@ -4,6 +4,7 @@ import { StyleSheet, TouchableOpacity, View, Image } from 'react-native'
 export default function Artifact({ artifactNumber, press }) {
 
     const artifactsImages = {
+        '': require('../assets/brickwall.png'),
         0: require('../assets/1.png'),
         1: require('../assets/2.png'),
         2: require('../assets/3.png'),
