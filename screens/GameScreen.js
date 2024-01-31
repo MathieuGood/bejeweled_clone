@@ -95,9 +95,6 @@ export default function GameScreen({ navigation }) {
                         showGameGrid(grid);
                         setGameGrid(grid);
                     }, 500);
-                    // pushDownValuesAndEraseAlignments(grid)
-
-                    // grid = fillEmptyCellsWithNoMatches(grid)
 
                 } else {
                     setAttempts(attempts - 1)
