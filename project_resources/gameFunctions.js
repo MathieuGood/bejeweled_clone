@@ -287,6 +287,7 @@ function fillEmptyCellsWithNoMatches(gameGrid) {
         // If no matches, break out of the loop
     } while (matchesAfter.length !== 0)
     console.log('------------ ENDING FILLING FUNCTION ------------')
+    
     return gameGrid
 }
 

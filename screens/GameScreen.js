@@ -89,9 +89,15 @@ export default function GameScreen({ navigation }) {
                     grid = updateGridCellValue(grid, matches, '')
                     showGameGrid(grid)
 
-                    pushDownValuesAndEraseAlignments(grid)
+                    setTimeout(() => {
+                        pushDownValuesAndEraseAlignments(grid);
+                        grid = fillEmptyCellsWithNoMatches(grid);
+                        showGameGrid(grid);
+                        setGameGrid(grid);
+                    }, 500);
+                    // pushDownValuesAndEraseAlignments(grid)
 
-                    grid = fillEmptyCellsWithNoMatches(grid)
+                    // grid = fillEmptyCellsWithNoMatches(grid)
 
                 } else {
                     setAttempts(attempts - 1)
