@@ -34,11 +34,17 @@ export default function GameScreen({ navigation }) {
     // Set the number of attempts to 3
     const [attempts, setAttempts] = useState(3)
 
+    // Set timer start
+    const [timer, setTimer] = useState("")
+
+    // Set score and level
+    const [score, setScore] = useState(0)
+    const [level, setLevel] = useState(1)
+
     // Set states to record user entry
     const [firstPress, setFirstPress] = useState(null)
     const [secondPress, setSecondPress] = useState(null)
     const [lastPress, setLastPress] = useState(null)
-
 
 
 
@@ -57,14 +63,18 @@ export default function GameScreen({ navigation }) {
     // Record last cell pressed in either firstPress or secondPress
     useEffect(() => {
 
-        // let grid = gameGrid
-        let grid = JSON.parse(JSON.stringify(gameGrid));
+        // Get current score, level and grid from states
+        let currentScore = score
+        let currentLevel = level
+        let grid = gameGrid
 
         console.log("useEffect : lastPress is " + lastPress)
         if (firstPress === null) {
+            // If it user's first press on jewel, record press to firstPress state
             setFirstPress(lastPress)
             console.log("useEffect : firstPress recorded >>> " + lastPress)
         } else {
+
             setSecondPress(lastPress)
             console.log("useEffect : secondPress recorded >>> " + lastPress)
 
@@ -88,6 +98,22 @@ export default function GameScreen({ navigation }) {
 
                     grid = updateGridCellValue(grid, matches, '')
                     showGameGrid(grid)
+
+                    let pointsPerMatch
+                    let pointsToAdd = 0
+                    matches.forEach((matchingCells) => {
+                        if (matchingCells.length === 3) {
+                            pointsPerMatch = 50
+                        } else if (matchingCells.length === 4) {
+                            pointsPerMatch = 150
+                        } else if (matchingCells.length > 4) {
+                            pointsPerMatch = 500
+                        }
+                        pointsToAdd += pointsPerMatch * level
+                    })
+                    console.log("Points to add to score : " + pointsToAdd)
+                    setScore(score + pointsToAdd)
+
 
                     setTimeout(() => {
                         pushDownValuesAndEraseAlignments(grid);
@@ -144,22 +170,24 @@ export default function GameScreen({ navigation }) {
     return (
         <View style={styles.mainContainer}>
 
-            <Text>GameScreen</Text>
             <Text>Number of tries left : {attempts}</Text>
+            <Text></Text>
+            <Text>Level : {level}</Text>
+            <Text>Score : {score}</Text>
             <Text></Text>
             <Text>firstPress : {firstPress}</Text>
             <Text>secondPress : {secondPress}</Text>
+
+            <GameGrid
+                gridContent={gameGrid}
+                pressCellCallback={getCellCoordinates}
+            />
 
             <TouchButton
                 title='Back to player screen'
                 press={() => {
                     navigation.navigate('PlayerScreen')
                 }}
-            />
-
-            <GameGrid
-                gridContent={gameGrid}
-                pressCellCallback={getCellCoordinates}
             />
 
         </View>
