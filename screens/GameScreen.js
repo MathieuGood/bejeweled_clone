@@ -9,7 +9,8 @@ import {
     swapTwoItemsOnGrid,
     updateGridCellValue,
     pushDownValuesAndEraseAlignments,
-    fillEmptyCellsWithNoMatches
+    fillEmptyCellsWithNoMatches,
+    addPoints
 } from '../project_resources/exportGameFunctions'
 
 
@@ -26,10 +27,24 @@ export default function GameScreen({ navigation }) {
     //     [5, 4, 0, 3, 0, 2, 2, 1],
     //     [7, 4, 6, 4, 1, 0, 5, 4],
     // ]
-    // const [gameGrid, setGameGrid] = useState(exampleGrid)
+
+
+    let exampleGrid = [
+        [5, 1, 2, 3, 2, 0, 5, 0],
+        [4, 0, 6, 0, 5, 0, 2, 1],
+        [1, 7, 7, 1, 7, 3, 7, 7],
+        [3, 5, 6, 4, 2, 6, 1, 1],
+        [0, 5, 6, 3, 4, 7, 5, 1],
+        [3, 7, 4, 0, 3, 2, 3, 0],
+        [2, 2, 0, 4, 5, 4, 7, 0],
+        [4, 0, 3, 6, 0, 5, 2, 6]
+    ]
+
+
+    const [gameGrid, setGameGrid] = useState(exampleGrid)
 
     // Build a 8*8 grid with no matches
-    const [gameGrid, setGameGrid] = useState(() => buildGameGridWithNoMatches(8, 8))
+    // const [gameGrid, setGameGrid] = useState(() => buildGameGridWithNoMatches(8, 8))
 
     // Set the number of attempts to 3
     const [attempts, setAttempts] = useState(3)
@@ -86,41 +101,119 @@ export default function GameScreen({ navigation }) {
 
             showGameGrid(grid)
 
+            // If the two selected cells are ok for swapping (result in new match)
             if (swapTwoItemsOnGrid(grid, firstPress, lastPress) != false) {
+
+                // Swap cells
                 let swapGrid = swapTwoItemsOnGrid(grid, firstPress, lastPress)
+
+                // Check if there are matches
                 let matches = checkGameGridForAlignments(swapGrid)
                 console.log("Matches found after swap test", matches)
+
+
+                // Alternative
+
+                // /////////////////////////////////////////////////////////////////////////////////////
+                //
+                //
+                // if (matches.length > 0) {
+
+                //     while (matches.length > 0) {
+
+
+                //         console.log("OK TO SWAP ", firstPress, 'and', lastPress)
+
+                //         // Apply grid with swapped cells to the game grid
+                //         grid = swapGrid
+                //         showGameGrid(grid)
+
+                //         // Remove matches from grid
+                //         grid = updateGridCellValue(grid, matches, '')
+                //         showGameGrid(grid)
+
+                //         // Count points and add them to the score
+                //         let pointsPerMatch
+                //         let pointsToAdd = 0
+                //         matches.forEach((matchingCells) => {
+                //             if (matchingCells.length === 3) {
+                //                 pointsPerMatch = 50
+                //             } else if (matchingCells.length === 4) {
+                //                 pointsPerMatch = 150
+                //             } else if (matchingCells.length > 4) {
+                //                 pointsPerMatch = 500
+                //             }
+                //             pointsToAdd += pointsPerMatch * level
+                //         })
+                //         console.log("Points to add to score : " + pointsToAdd)
+                //         setScore(score + pointsToAdd)
+
+                //         // Delay the execution of pushDownValuesAndEraseAlignments(grid) by 500ms
+                //         setTimeout(() => {
+                //             // Push down cells
+                //             pushDownValuesAndEraseAlignments(grid)
+
+                //             // Recheck for matches
+                //             matches = checkGameGridForAlignments(grid)
+
+                //         }, 500)
+
+                //         // // Push down cells
+                //         // pushDownValuesAndEraseAlignments(grid)
+
+                //         // // Recheck for matches
+                //         // matches = checkGameGridForAlignments(swapGrid)
+
+                //     }
+
+                //     // When all possible matches have been cleared
+                //     // Fill the empty cells with random values, checking there are no matches
+                //     grid = fillEmptyCellsWithNoMatches(grid)
+                //     showGameGrid(grid)
+                //     setGameGrid(grid)
+
+                // } else {
+                //     setAttempts(attempts - 1)
+                //     if (attempts - 1 === 0) {
+                //         Alert.alert(
+                //             'End of game',
+                //             'Loser! Game is over!',
+                //             [
+                //                 { text: 'OK' }
+                //             ],
+                //             { cancelable: false }
+                //         );
+                //         navigation.navigate('PlayerScreen')
+                //     }
+                // }
+                // /////////////////////////////////////////////////////////////////////////////////////
+                //
+                //
+
+
+
+                // If 1 or more matches have been found
                 if (matches.length > 0) {
                     console.log("OK TO SWAP ", firstPress, 'and', lastPress)
 
+                    // Apply grid with swapped cells to the game grid
                     grid = swapGrid
                     showGameGrid(grid)
 
+                    // Remove matches from grid
                     grid = updateGridCellValue(grid, matches, '')
                     showGameGrid(grid)
 
-                    let pointsPerMatch
-                    let pointsToAdd = 0
-                    matches.forEach((matchingCells) => {
-                        if (matchingCells.length === 3) {
-                            pointsPerMatch = 50
-                        } else if (matchingCells.length === 4) {
-                            pointsPerMatch = 150
-                        } else if (matchingCells.length > 4) {
-                            pointsPerMatch = 500
-                        }
-                        pointsToAdd += pointsPerMatch * level
-                    })
-                    console.log("Points to add to score : " + pointsToAdd)
-                    setScore(score + pointsToAdd)
 
+                    addPoints(matches, level, score, setScore)
 
-                    setTimeout(() => {
-                        pushDownValuesAndEraseAlignments(grid);
-                        grid = fillEmptyCellsWithNoMatches(grid);
-                        showGameGrid(grid);
-                        setGameGrid(grid);
-                    }, 500);
+                    pushDownValuesAndEraseAlignments(grid)
+
+                    // Fill the empty cells with random values, checking there are no matches
+                    grid = fillEmptyCellsWithNoMatches(grid)
+                    showGameGrid(grid)
+                    setGameGrid(grid)
+
 
                 } else {
                     setAttempts(attempts - 1)

@@ -276,10 +276,6 @@ export const updateGridCellValue = (gameGrid, cellCoordinates, value) => {
 
 export const pushDownValuesAndEraseAlignments = (gameGrid) => {
     let matches = ''
-    // Push the remaining values down to the bottom of the grid
-    pushItemsDown(gameGrid)
-    console.log('**** ITEMS PUSHED DOWN')
-    showGameGrid(gameGrid)
 
     do {
         // Check for matches and delete them
@@ -299,7 +295,6 @@ export const pushDownValuesAndEraseAlignments = (gameGrid) => {
         // While there are still matches, rerun the loop
     } while (matches.length != 0)
 }
-
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -424,3 +419,28 @@ function findEmptyValuesCoordinates(gameGrid) {
 }
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Add points to the score according to the number of matches and the level
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const addPoints = (matches, level, score, setScore) => {
+    let pointsToAdd = 0
+
+    if (matches.length !== 0) {
+        let pointsPerMatch
+        matches.forEach((matchingCells) => {
+            if (matchingCells.length === 3) {
+                pointsPerMatch = 50
+            } else if (matchingCells.length === 4) {
+                pointsPerMatch = 150
+            } else if (matchingCells.length > 4) {
+                pointsPerMatch = 500
+            }
+            pointsToAdd += pointsPerMatch * level
+        })
+    }
+    console.log("Points to add to score : " + pointsToAdd)
+    return setScore(score + pointsToAdd)
+}
