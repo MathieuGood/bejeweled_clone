@@ -21,8 +21,6 @@ export default function RegisterScreen({ navigation }) {
     function checkUserEntryAndAddPlayer(name, email, password) {
         // Check if entered e-mail does not already exist in the database
         checkIfEmailDoesNotExist(email, () => {
-            console.log('EMAIL TES$T OK')
-
             // Initalize errorMessage to empty string
             let errorMessage = ''
 
