@@ -95,7 +95,16 @@ export default function GameScreen({ navigation }) {
             )
         } else {
             let hint = getOneRandomHint(resultHints)
+            
             console.log("Hint : ", hint)
+            Alert.alert(
+                "Hint",
+                `Swap cells ${hint[0]} and ${hint[1]}`,
+                [
+                    { text: "OK", onPress: () => console.log("OK Pressed") }
+                ],
+                { cancelable: false }
+            )
             return hint
         }
 
