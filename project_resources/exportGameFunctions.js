@@ -8,6 +8,8 @@
 // #################################################################################################
 // #################################################################################################
 
+import { Alert } from "react-native"
+
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -377,15 +379,12 @@ export const fillEmptyCellsWithNoMatches = (gameGrid) => {
     const emptyValuesCoordinates = findEmptyValuesCoordinates(gameGrid)
     let matchesAfter = []
 
-    console.log('SHOWING INITIAL GAMEGRID :')
+    console.log('GAMEGRID BEFORE FILLING :')
     showGameGrid(gameGrid)
 
     do {
         // Reset gameGrid to its value when the function was called (without the new random values)
         gameGrid = initialGrid.map(row => [...row])
-
-        console.log('REINITIALIZED GAMEGRID : ')
-        showGameGrid(gameGrid)
 
         updateGridCellValue(gameGrid, emptyValuesCoordinates, '')
         updateGridCellValue(gameGrid, emptyValuesCoordinates, 'random')
@@ -396,6 +395,7 @@ export const fillEmptyCellsWithNoMatches = (gameGrid) => {
         matchesAfter = checkGameGridForAlignments(gameGrid)
         console.log("matchesAfter length : " + matchesAfter.length)
 
+        // While there are still matches, rerun the loop
         // If no matches, break out of the loop
     } while (matchesAfter.length !== 0)
     console.log('------------ ENDING FILLING FUNCTION ------------')
@@ -423,6 +423,45 @@ function findEmptyValuesCoordinates(gameGrid) {
     console.log(result)
     return result
 }
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Based on given coordinates, get the coordinates of all adjacent cells
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function getAdjacentCells(gameGrid, [y, x]) {
+    // Initialize empty array to store adjacent cells coordinates
+    let adjacentCells = []
+
+    // console.log('Current item : ' + currentItem)
+    // console.log('Current item coordinates : ' + 'y = ' + y + '  x = ' + x)
+
+    // adjacentCellsCoordinatesOffset array contains the offset values of y and x to find adjacent cells
+    adjacentCellsCoordinatesOffset = [
+        [-1, 0],
+        [1, 0],
+        [0, -1],
+        [0, 1]
+    ]
+
+    // Loop through the coordinates of possible adjacent cells
+    for (let adjacentCellOffset of adjacentCellsCoordinatesOffset) {
+        // Add offset to coordinates
+        let verticalCoordinates = y + adjacentCellOffset[0]
+        let horizontalCoordinates = x + adjacentCellOffset[1]
+        // console.log('Checking coordinates : ' + 'y = ' + verticalCoordinates + '  x = ' + horizontalCoordinates)
+
+        // Check if calculated coordinates exist (not out of the game board)
+        if (isValidCoordinate(gameGrid, [verticalCoordinates, horizontalCoordinates])) {
+            adjacentCells.push([verticalCoordinates, horizontalCoordinates])
+        }
+    }
+    return adjacentCells
+}
+
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -454,4 +493,89 @@ export const addPoints = (matches, level) => {
     }
     console.log("Points to add to score : " + pointsToAdd)
     return pointsToAdd
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Check if an array contains a specified given sub-array 
+// Disregard the order of the arrays contained in the sub-array
+// Example : containsArray([ [[2, 3], [1, 3]] ], [[1, 3], [2, 3]]) returns true
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function containsArray(array, subArray) {
+    const subArrayString = JSON.stringify(subArray)
+    const invertedSubArray = [subArray[1], subArray[0]]
+    const invertedSubArrayString = JSON.stringify(invertedSubArray)
+    return array.some(
+        (item) =>
+            JSON.stringify(item) === subArrayString || JSON.stringify(item) === invertedSubArrayString
+    )
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Find every swap between two cells that results in a match
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const getAllHints = (gameGrid) => {
+
+    // Initialize empty arrays for cells that have been checked and hints to return
+    let checkedPairs = []
+    let allHints = []
+
+    gameGrid.forEach(
+        (row, y) => row.forEach(
+            (value, x) => {
+                // Iterating over every cell in the grid
+                const currentCell = [y, x]
+                // Get the adjacent cells of current cell
+                const adjacentCells = getAdjacentCells(gameGrid, currentCell)
+
+                // Iterate over each adjacent cell
+                adjacentCells.forEach((adjacentCell) => {
+
+                    // If cell has not been already checked
+                    if (!containsArray(checkedPairs, [currentCell, adjacentCell])) {
+                        // Make a copy of gameGrid to prevent altering original grid
+                        let swapGrid = gameGrid.map(row => [...row])
+
+                        // Swap values of current cell and adjacent cell
+                        swapGrid = swapTwoItemsOnGrid(swapGrid, currentCell, adjacentCell)
+                        console.log('Swapping ' + currentCell + ' and ' + adjacentCell)
+
+                        // Add adjacent cell coordinates to checkedCells array to avoid rechecking it more than once
+                        checkedPairs.push([currentCell, adjacentCell])
+                        // Check if there are alignments consequently to the swap
+                        const matches = checkGameGridForAlignments(swapGrid)
+                        // If there are alignements, push their coordinates to allHints array
+                        if (matches.length > 0) {
+                            console.log('*************Match to display as hint :')
+                            console.log(currentCell, adjacentCell)
+                            allHints.push([currentCell, adjacentCell])
+                        }
+                    }
+                })
+            }))
+    console.log('All hints :', allHints)
+    return allHints
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Get a random hint from the allHints array
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const getOneRandomHint = (allHints) => {
+
+    let randomIndex = Math.floor(Math.random() * allHints.length)
+    return allHints[randomIndex]
 }

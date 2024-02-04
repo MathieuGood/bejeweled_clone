@@ -9,6 +9,8 @@ import {
     swapTwoItemsOnGrid,
     pushDownValuesAndEraseAlignments,
     fillEmptyCellsWithNoMatches,
+    getAllHints,
+    getOneRandomHint
 } from '../project_resources/exportGameFunctions'
 
 
@@ -50,9 +52,12 @@ export default function GameScreen({ navigation }) {
     // Set timer start
     const [timer, setTimer] = useState(0)
 
-    // Set score and level
+    // Set score, level, progress bar and hint to starting values
     const [score, setScore] = useState(0)
     const [level, setLevel] = useState(1)
+    const [progressBar, setProgressBar] = useState(50)
+    const [progressBarMax, setProgressBarMax] = useState(100)
+    const [hint, setHint] = useState(null)
 
     // Set states to record user entry
     const [firstPress, setFirstPress] = useState(null)
@@ -73,6 +78,29 @@ export default function GameScreen({ navigation }) {
         setLastPress([row, col])
 
     }
+
+    // Show hint
+    function showHint(gameGrid) {
+        let resultHints = getAllHints(gameGrid)
+
+        if (resultHints.length === 0) {
+            console.log("No hints available")
+            Alert.alert(
+                "No hints available",
+                "No matches found on the grid",
+                [
+                    { text: "OK", onPress: () => console.log("OK Pressed") }
+                ],
+                { cancelable: false }
+            )
+        } else {
+            let hint = getOneRandomHint(resultHints)
+            console.log("Hint : ", hint)
+            return hint
+        }
+
+    }
+
 
     // Timer
     useEffect(() => {
@@ -140,7 +168,7 @@ export default function GameScreen({ navigation }) {
                     // Save the new grid to the gameGrid state
                     setGameGrid(grid)
 
-                    
+
                 } else {
                     // If the cells are not ok for swapping, decrement attempts counter
                     setAttempts(attempts - 1)
@@ -155,7 +183,7 @@ export default function GameScreen({ navigation }) {
                             ],
                             { cancelable: false }
                         );
-                        
+
                         // Navigate back to player screen
                         navigation.navigate('PlayerScreen')
                     }
@@ -198,9 +226,9 @@ export default function GameScreen({ navigation }) {
             <Text></Text>
             <Text>Level : {level}</Text>
             <Text>Score : {score}</Text>
+            <Text>Progress bar : {progressBar} / {progressBarMax}</Text>
             <Text></Text>
-            <Text>firstPress : {firstPress}</Text>
-            <Text>secondPress : {secondPress}</Text>
+            <Text>firstPress : {firstPress}     secondPress : {secondPress}</Text>
             <Text></Text>
             <Text>Timer : {timer}</Text>
 
@@ -208,14 +236,21 @@ export default function GameScreen({ navigation }) {
                 gridContent={gameGrid}
                 pressCellCallback={getCellCoordinates}
             />
-
             <TouchButton
-                title='Back to player screen'
+                title={'Hint'}
                 press={() => {
-                    navigation.navigate('PlayerScreen')
+                    console.log("Hint button pressed")
+                    showHint(gameGrid)
                 }}
             />
-
+            <View style={styles.bottomContainer}>
+                <TouchButton
+                    title='Back to player screen'
+                    press={() => {
+                        navigation.navigate('PlayerScreen')
+                    }}
+                />
+            </View>
         </View>
     )
 }
@@ -226,5 +261,11 @@ let styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center'
+    },
+    bottomContainer: {
+        flex: 0.15,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
     }
 })
