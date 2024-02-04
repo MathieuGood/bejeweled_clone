@@ -48,7 +48,7 @@ export default function GameScreen({ navigation }) {
     const [attempts, setAttempts] = useState(3)
 
     // Set timer start
-    const [timer, setTimer] = useState("")
+    const [timer, setTimer] = useState(0)
 
     // Set score and level
     const [score, setScore] = useState(0)
@@ -58,6 +58,7 @@ export default function GameScreen({ navigation }) {
     const [firstPress, setFirstPress] = useState(null)
     const [secondPress, setSecondPress] = useState(null)
     const [lastPress, setLastPress] = useState(null)
+    const startTime = new Date()
 
 
 
@@ -73,12 +74,24 @@ export default function GameScreen({ navigation }) {
 
     }
 
+    // Timer
+    useEffect(() => {
+        setInterval(() => {
+            const currentTime = new Date()
+            const timeDifference = currentTime - startTime
+            const seconds = timeDifference / 1000
+            // const timeAsString = `${seconds} seconds`
+            // console.log("Time : " + timeAsString)
+            setTimer(seconds.toFixed(0))
+        }, 1000)
+    }, [])
+
+
+
     // Record last cell pressed in either firstPress or secondPress
     useEffect(() => {
 
-        // Get current score, level and grid from states
-        let currentScore = score
-        let currentLevel = level
+        // Get current grid from state
         let grid = gameGrid
 
         console.log("useEffect : lastPress is " + lastPress)
@@ -117,11 +130,14 @@ export default function GameScreen({ navigation }) {
                     grid = swapGrid
                     showGameGrid(grid)
 
+                    // Find matches, erase matches and push down values until there are no more matches
                     pushDownValuesAndEraseAlignments(grid, level, setScore)
 
                     // Fill the empty cells with random values, checking there are no matches
                     grid = fillEmptyCellsWithNoMatches(grid)
                     showGameGrid(grid)
+
+                    // Save the new grid to the gameGrid state
                     setGameGrid(grid)
 
 
@@ -130,7 +146,7 @@ export default function GameScreen({ navigation }) {
                     if (attempts - 1 === 0) {
                         Alert.alert(
                             'End of game',
-                            'Loser! Game is over!',
+                            `Loser! Game is over! You scored ${score} points and the game lasted ${timer} seconds`,
                             [
                                 { text: 'OK' }
                             ],
@@ -180,6 +196,8 @@ export default function GameScreen({ navigation }) {
             <Text></Text>
             <Text>firstPress : {firstPress}</Text>
             <Text>secondPress : {secondPress}</Text>
+            <Text></Text>
+            <Text>Timer : {timer}</Text>
 
             <GameGrid
                 gridContent={gameGrid}
