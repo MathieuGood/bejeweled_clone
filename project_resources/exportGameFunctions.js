@@ -270,35 +270,6 @@ export const updateGridCellValue = (gameGrid, cellCoordinates, value) => {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-// Push down all the values until there are no matches
-//
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const pushDownValuesAndEraseAlignments = (gameGrid) => {
-    let matches = ''
-
-    do {
-        // Check for matches and delete them
-        findAndDeleteMatchingValuesFromGrid(gameGrid)
-        console.log('**** ITEMS DELETED')
-        showGameGrid(gameGrid)
-
-        // Push values down
-        pushItemsDown(gameGrid)
-        console.log('**** ITEMS PUSHED DOWN')
-        showGameGrid(gameGrid)
-
-        // Check if there are matches after values have been pushed down
-        matches = checkGameGridForAlignments(gameGrid)
-        console.log('Matches length : ' + matches.length)
-
-        // While there are still matches, rerun the loop
-    } while (matches.length != 0)
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-//
 // On a gameGrid with deleted items, push all the items down
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -339,18 +310,53 @@ export const pushItemsDown = (gameGrid) => {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
+// Push down all the values until there are no matches
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const pushDownValuesAndEraseAlignments = (gameGrid, level, setScore) => {
+    let matches = ''
+
+    do {
+        // Check for matches and delete them
+        findAndDeleteMatchingValuesFromGrid(gameGrid, level, setScore)
+        console.log('**** ITEMS DELETED')
+        showGameGrid(gameGrid)
+
+        // Push values down
+        pushItemsDown(gameGrid)
+        console.log('**** ITEMS PUSHED DOWN')
+        showGameGrid(gameGrid)
+
+        // Check if there are matches after values have been pushed down
+        matches = checkGameGridForAlignments(gameGrid)
+        console.log('Matches length : ' + matches.length)
+
+        // While there are still matches, rerun the loop
+    } while (matches.length != 0)
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
 // Check a grid for matches and delete them replacing value with ''
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const findAndDeleteMatchingValuesFromGrid = (gameGrid) => {
+export const findAndDeleteMatchingValuesFromGrid = (gameGrid, level, setScore) => {
 
     // Check if there is a match consequently to the swap
     let matches = checkGameGridForAlignments(gameGrid)
 
     // If there are matches, updates values of the matches cells to ''
-    if (matches != '') {
+    if (matches.length > 0) {
         updateGridCellValue(gameGrid, matches, '')
+        const pointsToAdd = addPoints(matches, level)
+        // Assuming you have a state variable called 'score' and a setter function called 'setScore'
+
+        // Update the 'score' state using the 'setState' function
+        setScore(prevScore => prevScore + pointsToAdd);
     }
 
     return (gameGrid)
@@ -425,22 +431,27 @@ function findEmptyValuesCoordinates(gameGrid) {
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const addPoints = (matches, level, score, setScore) => {
+export const addPoints = (matches, level) => {
     let pointsToAdd = 0
-
+    // If there are matches
     if (matches.length !== 0) {
+        // Points per match depend on the number of matching cells
         let pointsPerMatch
         matches.forEach((matchingCells) => {
             if (matchingCells.length === 3) {
+                // 50 points per match for 3 matching cells
                 pointsPerMatch = 50
             } else if (matchingCells.length === 4) {
+                // 150 points per match for 4 matching cells
                 pointsPerMatch = 150
             } else if (matchingCells.length > 4) {
+                // 500 points per match for 5 or more matching cells
                 pointsPerMatch = 500
             }
+            // Multiply points per match by the level to get the total points to add
             pointsToAdd += pointsPerMatch * level
         })
     }
     console.log("Points to add to score : " + pointsToAdd)
-    return setScore(score + pointsToAdd)
+    return pointsToAdd
 }
