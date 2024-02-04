@@ -7,10 +7,8 @@ import {
     showGameGrid,
     checkGameGridForAlignments,
     swapTwoItemsOnGrid,
-    updateGridCellValue,
     pushDownValuesAndEraseAlignments,
     fillEmptyCellsWithNoMatches,
-    addPoints
 } from '../project_resources/exportGameFunctions'
 
 
