@@ -140,9 +140,12 @@ export default function GameScreen({ navigation }) {
                     // Save the new grid to the gameGrid state
                     setGameGrid(grid)
 
-
+                    
                 } else {
+                    // If the cells are not ok for swapping, decrement attempts counter
                     setAttempts(attempts - 1)
+
+                    // If the attempts counter is 0, show alert and stop game
                     if (attempts - 1 === 0) {
                         Alert.alert(
                             'End of game',
@@ -152,6 +155,8 @@ export default function GameScreen({ navigation }) {
                             ],
                             { cancelable: false }
                         );
+                        
+                        // Navigate back to player screen
                         navigation.navigate('PlayerScreen')
                     }
                 }
