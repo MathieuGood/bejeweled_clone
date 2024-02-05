@@ -3,7 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Artifact from './Artifact'
 
 
-export default function GameGrid({ gridContent, pressCellCallback }) {
+export default function GameGrid({ gridContent, pressCellCallback , disableTouchCapacity}) {
 
     function onCellPress(row, col) {
         console.log(`Cell pressed: ${row}, ${col}`);
@@ -22,10 +22,11 @@ export default function GameGrid({ gridContent, pressCellCallback }) {
 
                 {row.map((artefact, colIndex) => (
 
-                    <TouchableOpacity
+                    <TouchableOpacity                                
                         key={colIndex}
                         style={styles.cell}
                         onPress={() => pressCellFunction(rowIndex, colIndex)}
+                        disabled={disableTouchCapacity}
                     >
                         <Artifact artifactNumber={artefact} />
                     </TouchableOpacity>
