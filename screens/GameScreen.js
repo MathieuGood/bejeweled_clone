@@ -18,6 +18,12 @@ import {
 
 export default function GameScreen({ navigation }) {
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // States and variables
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+
     // const exampleGrid = [
     //     [4, 5, 6, 6, 5, 1, 7, 2],
     //     [1, 5, 6, 7, 7, 1, 3, 3],
@@ -40,7 +46,6 @@ export default function GameScreen({ navigation }) {
         [2, 2, 0, 4, 5, 4, 7, 0],
         [4, 0, 3, 6, 0, 5, 2, 6]
     ]
-
 
     // const [gameGrid, setGameGrid] = useState(exampleGrid)
 
@@ -68,9 +73,14 @@ export default function GameScreen({ navigation }) {
     const [firstPress, setFirstPress] = useState(null)
     const [secondPress, setSecondPress] = useState(null)
     const [lastPress, setLastPress] = useState(null)
-    const startTime = new Date()
 
 
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Functions
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
 
     const getCellCoordinates = (row, col) => {
         console.log(`\nPRESS: row ${row}, col ${col}`)
@@ -117,6 +127,13 @@ export default function GameScreen({ navigation }) {
 
     }
 
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // useEffect functions
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Timer
     // Trigger actions when the timerPause state is updated
@@ -229,7 +246,6 @@ export default function GameScreen({ navigation }) {
                         navigation.navigate('PlayerScreen')
                     }
                 }
-
             }
 
             showGameGrid(grid)
@@ -259,6 +275,13 @@ export default function GameScreen({ navigation }) {
         }
     }, [lastPress])
 
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Component return
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
 
     return (
         <View style={styles.mainContainer}>
@@ -321,6 +344,14 @@ export default function GameScreen({ navigation }) {
         </View>
     )
 }
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Stylesheet
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 let styles = StyleSheet.create({
     mainContainer: {
