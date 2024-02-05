@@ -16,7 +16,7 @@ export default function TouchButton({ title, press }) {
 const styles = StyleSheet.create({
     buttonText: {
         color: '#e8b923',
-        fontSize: 18,
+        fontSize: 15,
         fontWeight: 'bold',
         textTransform: 'uppercase',
         //fontFamily: 'Egyptian Hieroglyphs Bold' (voir comment l'intégrer cf module caméra, la logique est à peu près identique)
@@ -25,10 +25,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#2b50c8',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: 10,
-        borderRadius: 25,
-        width: 250,
-        height: 61,
+        paddingHorizontal: 15,
+        borderRadius: 9,
+        height: 50,
         alignSelf: 'center',
         margin: 5
     }
