@@ -211,6 +211,9 @@ export default function GameScreen({ navigation }) {
 
                         // Show alert and stop game
                         endGameAlert("No more valid move possible.", score, timer,)
+
+                        // Navigate back to player screen
+                        navigation.navigate('PlayerScreen')
                     }
 
                 } else {
@@ -246,8 +249,10 @@ export default function GameScreen({ navigation }) {
                     // Norah :
                     // INSERER MODAL DE FIN DE JEU À LA PLACE DE L'ALERT
 
-                    // Show alert and stop game
+                    // Show alert
                     endGameAlert("You used all your attempts.", score, timer,)
+
+                    // Navigate back to player screen
                     navigation.navigate('PlayerScreen')
                 }
             }
@@ -279,16 +284,20 @@ export default function GameScreen({ navigation }) {
 
             <View style={styles.bottomContainer}>
                 <TouchButton
+                    // Show 'Pause' button if the game is running
+                    // Else, show 'Resume' button
                     title={timerPause === false ? 'Pause' : 'Resume'}
+                    // On click, pause or resume the game
                     press={() => {
+                        // If the game is running, pause it
                         if (timerPause === false) {
                             console.log("Pause button pressed")
                             setTimerPause(true)
                             setGameGrid(buildEmptyGrid)
                             // Make a deep copy of the gameGrid to gridBackup
                             setGridBackup(JSON.parse(JSON.stringify(gameGrid)))
-
                         } else {
+                            // If the game is paused, resume it
                             console.log("Resume button pressed")
                             setTimerPause(false)
                             setGameGrid(gridBackup)
