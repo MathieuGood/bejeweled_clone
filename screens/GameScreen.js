@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, View, Text, Alert } from 'react-native'
+import { StyleSheet, View, SafeAreaView, Text, Alert} from 'react-native'
 import TouchButton from '../components/TouchButton'
+import ScoreBoard from '../components/ScoreBoard'
 import GameGrid from '../components/GameGrid'
 import {
     buildGameGridWithNoMatches,
@@ -11,6 +12,8 @@ import {
     pushDownValuesAndEraseAlignments,
     fillEmptyCellsWithNoMatches
 } from '../project_resources/exportGameFunctions'
+import ProgressBar from '../components/ProgressBar'
+import ModalScore from '../components/ModalScore'
 
 
 
@@ -37,9 +40,10 @@ export default function GameScreen({ navigation }) {
     // Set timer start
     const [timer, setTimer] = useState("")
 
-    // Set score and level
+    // Set score and level (progress added by Norah)
     const [score, setScore] = useState(0)
     const [level, setLevel] = useState(1)
+    const [progress, setProgress] = useState(50); 
 
     // Set states to record user entry
     const [firstPress, setFirstPress] = useState(null)
@@ -59,6 +63,12 @@ export default function GameScreen({ navigation }) {
         setLastPress([row, col])
 
     }
+    const  [isModalvisible, setisModalVisible] = useState(false);
+
+    const handleGameOver = () => {
+        setisModalVisible(true); 
+      };
+
 
     // Record last cell pressed in either firstPress or secondPress
     useEffect(() => {
@@ -125,15 +135,15 @@ export default function GameScreen({ navigation }) {
                 } else {
                     setAttempts(attempts - 1)
                     if (attempts - 1 === 0) {
-                        Alert.alert(
-                            'End of game',
-                            'Loser! Game is over!',
-                            [
-                                { text: 'OK' }
-                            ],
-                            { cancelable: false }
-                        );
-                        navigation.navigate('PlayerScreen')
+                        // Alert.alert(r
+                        //     'End of game',
+                        //     'Loser! Game is over!',
+                        //     [
+                        //         { text: 'OK' }
+                        //     ],
+                        //     { cancelable: false }
+                        // );
+                        // navigation.navigate('PlayerScreen')
                     }
                 }
 
@@ -152,43 +162,83 @@ export default function GameScreen({ navigation }) {
                 setAttempts(attempts - 1)
                 // If it is the last attempt, show alert and stop game
                 if (attempts - 1 === 0) {
-                    Alert.alert(
-                        'End of game',
-                        'Loser! Game is over!',
-                        [
-                            { text: 'OK' }
-                        ],
-                        { cancelable: false }
-                    );
-                    navigation.navigate('PlayerScreen')
+
+
+
+                    // Alert.alert(
+                    //     'End of game',
+                    //     'Loser! Game is over!',
+                    //     [
+                    //         { text: 'OK' }
+                    //     ],
+                    //     { cancelable: false }
+                    // );
+                    // navigation.navigate('PlayerScreen')
                 }
             }
         }
     }, [lastPress])
+    const resetGame = () => {
+        // Réinitialiser l'état du jeu à ses valeurs par défaut
+        setGameGrid(buildGameGridWithNoMatches(8, 8));
+        setAttempts(3);
+        setScore(0);
+        setLevel(1);
+        setProgress(50);
+      };
+      
+    useEffect(() => {
+        // Checks if game over conditions are met (no more attempts or progress reached 0)
+        if (attempts <= 0 || progress <= 0) {
+          handleGameOver(); // Function to handle game over logic
+        }
+      }, [attempts, progress]); // This useEffect runs whenever `attempts` or `progress` changes
+      
 
 
     return (
         <View style={styles.mainContainer}>
 
-            <Text>Number of tries left : {attempts}</Text>
+
+         <SafeAreaView style={styles.safeArea}>
+            
+            {/* <Text>Number of tries left : {attempts}</Text>
             <Text></Text>
             <Text>Level : {level}</Text>
-            <Text>Score : {score}</Text>
-            <Text></Text>
+           <Text>Score : {score}</Text> 
+            <Text></Text>*/} 
+
             <Text>firstPress : {firstPress}</Text>
             <Text>secondPress : {secondPress}</Text>
+
+            <ModalScore 
+                visible={isModalvisible}
+                changeModalVisible= {setisModalVisible}
+                navigation={navigation}
+                resetGame={resetGame}
+                score = {score}
+           />
+
+            <ScoreBoard level={level} score={score}  attempts={attempts}/>
+
 
             <GameGrid
                 gridContent={gameGrid}
                 pressCellCallback={getCellCoordinates}
             />
+            
+            {/* nextLevel à ne pas tenir compte car pas forcément level + 1 */}
+            <ProgressBar level={level} nextLevel={level + 1} progress={progress} /> 
 
+          
             <TouchButton
                 title='Back to player screen'
                 press={() => {
                     navigation.navigate('PlayerScreen')
                 }}
             />
+              
+        </SafeAreaView>
 
         </View>
     )
@@ -200,5 +250,9 @@ let styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center'
-    }
+    },
+    safeArea: {
+        flex: 1,
+         justifyContent: 'space-around'
+       }
 })
