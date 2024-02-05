@@ -10,7 +10,8 @@ import {
     pushDownValuesAndEraseAlignments,
     fillEmptyCellsWithNoMatches,
     getAllHints,
-    getOneRandomHint
+    getOneRandomHint,
+    endGameAlert
 } from '../project_resources/exportGameFunctions'
 
 
@@ -41,19 +42,23 @@ export default function GameScreen({ navigation }) {
     ]
 
 
-    const [gameGrid, setGameGrid] = useState(exampleGrid)
+    // const [gameGrid, setGameGrid] = useState(exampleGrid)
 
-    // Build a 8*8 grid with no matches
-    // const [gameGrid, setGameGrid] = useState(() => buildGameGridWithNoMatches(8, 8))
+    // Build a grid with no matches
+    const gridSize = 8
+    const gridNumberOfDifferentItems = 8
+    const [gameGrid, setGameGrid] = useState(() => buildGameGridWithNoMatches(gridSize, gridNumberOfDifferentItems))
+    const [gridBackup, setGridBackup] = useState([])
 
     // Set the number of attempts to 3
     const [attempts, setAttempts] = useState(3)
 
     // Set timer start
     const [timer, setTimer] = useState(0)
+    const [timerPause, setTimerPause] = useState(false)
 
     // Set score, level, progress bar and hint to starting values
-    const [score, setScore] = useState(0)
+    const [score, setScore] = useState(50)
     const [level, setLevel] = useState(1)
     const [progressBar, setProgressBar] = useState(50)
     const [progressBarMax, setProgressBarMax] = useState(100)
@@ -73,11 +78,12 @@ export default function GameScreen({ navigation }) {
         if (firstPress == [row, col]) {
             console.log("Same cell as before!")
         }
-
         // console.log("firstPress before updating state : " + firstPress)
         setLastPress([row, col])
-
     }
+
+    // Build a grid with empty values
+    const buildEmptyGrid = Array(gridSize).fill(Array(gridSize).fill(''))
 
     // Show hint
     function showHint(gameGrid) {
@@ -95,13 +101,14 @@ export default function GameScreen({ navigation }) {
             )
         } else {
             let hint = getOneRandomHint(resultHints)
-            
+            // Norah :
+            // INTEGRER CODE POUR AFFICHER LE HINT SUR LE GRID
             console.log("Hint : ", hint)
             Alert.alert(
                 "Hint",
                 `Swap cells ${hint[0]} and ${hint[1]}`,
                 [
-                    { text: "OK", onPress: () => console.log("OK Pressed") }
+                    { text: "OK", onPress: () => console.log("OK Pressed after hint") }
                 ],
                 { cancelable: false }
             )
@@ -112,20 +119,38 @@ export default function GameScreen({ navigation }) {
 
 
     // Timer
+    // Trigger actions when the timerPause state is updated
     useEffect(() => {
-        setInterval(() => {
-            const currentTime = new Date()
-            const timeDifference = currentTime - startTime
-            const seconds = timeDifference / 1000
-            // const timeAsString = `${seconds} seconds`
-            // console.log("Time : " + timeAsString)
-            setTimer(seconds.toFixed(0))
+        // If the timer is not paused, increment the timer every second
+        const intervalId = setInterval(() => {
+            if (timerPause === false) {
+                setTimer(prevTimer => {
+                    const newTimer = prevTimer + 1
+                    return newTimer
+                })
+            }
         }, 1000)
-    }, [])
+        return () => clearInterval(intervalId)
+    }, [timerPause])
 
 
+    // Decrement progress bar every 3 seconds
+    // Trigger actions when the progressBar state is updated
+    useEffect(() => {
+        const intervalId = setInterval(() => {
+            setProgressBar(prevProgressBar => {
+                const newProgressBar = prevProgressBar - 1;
+                // Make sure the progress bar doesn't go below 0
+                return Math.max(0, newProgressBar)
+            });
+        }, 3000);
 
-    // Record last cell pressed in either firstPress or secondPress
+        // Clean up function to clear the interval when the component unmounts or the effect is re-run
+        return () => clearInterval(intervalId);
+    }, [progressBar]);
+
+
+    // Trigger actions when the lastPress state is updated
     useEffect(() => {
 
         // Get current grid from state
@@ -135,9 +160,11 @@ export default function GameScreen({ navigation }) {
         if (firstPress === null) {
             // If it user's first press on jewel, record press to firstPress state
             setFirstPress(lastPress)
+            // Norah :
+            // INTEGRER CODE POUR METTRE EN SURBRILLANCE LA PREMIERER CELLULE SELECTIONNEE SUR LE GRID
+            // Coordoonnées de la première cellule sélectionnée : firstPress
             console.log("useEffect : firstPress recorded >>> " + lastPress)
         } else {
-
             setSecondPress(lastPress)
             console.log("useEffect : secondPress recorded >>> " + lastPress)
 
@@ -177,6 +204,14 @@ export default function GameScreen({ navigation }) {
                     // Save the new grid to the gameGrid state
                     setGameGrid(grid)
 
+                    if (getAllHints(grid).length === 0) {
+                        console.log("No more valid move possible. End of game.")
+                        // Norah :
+                        // INSERER MODAL DE FIN DE JEU À LA PLACE DE L'ALERT
+
+                        // Show alert and stop game
+                        endGameAlert("No more valid move possible.", score, timer,)
+                    }
 
                 } else {
                     // If the cells are not ok for swapping, decrement attempts counter
@@ -184,14 +219,8 @@ export default function GameScreen({ navigation }) {
 
                     // If the attempts counter is 0, show alert and stop game
                     if (attempts - 1 === 0) {
-                        Alert.alert(
-                            'End of game',
-                            `Loser! Game is over! You scored ${score} points and the game lasted ${timer} seconds`,
-                            [
-                                { text: 'OK' }
-                            ],
-                            { cancelable: false }
-                        );
+
+                        endGameAlert("You used all your attempts.", score, timer,)
 
                         // Navigate back to player screen
                         navigation.navigate('PlayerScreen')
@@ -203,6 +232,7 @@ export default function GameScreen({ navigation }) {
             showGameGrid(grid)
             setGameGrid(grid)
 
+            // Reset firstPress and secondPress
             setFirstPress(null)
             setSecondPress(null)
 
@@ -213,14 +243,11 @@ export default function GameScreen({ navigation }) {
                 setAttempts(attempts - 1)
                 // If it is the last attempt, show alert and stop game
                 if (attempts - 1 === 0) {
-                    Alert.alert(
-                        'End of game',
-                        'Loser! Game is over!',
-                        [
-                            { text: 'OK' }
-                        ],
-                        { cancelable: false }
-                    );
+                    // Norah :
+                    // INSERER MODAL DE FIN DE JEU À LA PLACE DE L'ALERT
+
+                    // Show alert and stop game
+                    endGameAlert("You used all your attempts.", score, timer,)
                     navigation.navigate('PlayerScreen')
                 }
             }
@@ -243,16 +270,38 @@ export default function GameScreen({ navigation }) {
 
             <GameGrid
                 gridContent={gameGrid}
+                // If timer is paused, do not allow cell press
+                // Else, return the coordinates of the cell pressed through getCellCoordinates()
                 pressCellCallback={getCellCoordinates}
+                // If timer is paused, disable touch capacity
+                disableTouchCapacity={timerPause === false ? false : true}
             />
-            <TouchButton
-                title={'Hint'}
-                press={() => {
-                    console.log("Hint button pressed")
-                    showHint(gameGrid)
-                }}
-            />
+
             <View style={styles.bottomContainer}>
+                <TouchButton
+                    title={timerPause === false ? 'Pause' : 'Resume'}
+                    press={() => {
+                        if (timerPause === false) {
+                            console.log("Pause button pressed")
+                            setTimerPause(true)
+                            setGameGrid(buildEmptyGrid)
+                            // Make a deep copy of the gameGrid to gridBackup
+                            setGridBackup(JSON.parse(JSON.stringify(gameGrid)))
+
+                        } else {
+                            console.log("Resume button pressed")
+                            setTimerPause(false)
+                            setGameGrid(gridBackup)
+                        }
+                    }}
+                />
+                <TouchButton
+                    title={'Hint'}
+                    press={() => {
+                        console.log("Hint button pressed")
+                        showHint(gameGrid)
+                    }}
+                />
                 <TouchButton
                     title='Back to player screen'
                     press={() => {
@@ -272,7 +321,7 @@ let styles = StyleSheet.create({
         justifyContent: 'center'
     },
     bottomContainer: {
-        flex: 0.15,
+        flex: 0.22,
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',

@@ -355,12 +355,9 @@ export const findAndDeleteMatchingValuesFromGrid = (gameGrid, level, setScore) =
     if (matches.length > 0) {
         updateGridCellValue(gameGrid, matches, '')
         const pointsToAdd = addPoints(matches, level)
-        // Assuming you have a state variable called 'score' and a setter function called 'setScore'
-
         // Update the 'score' state using the 'setState' function
         setScore(prevScore => prevScore + pointsToAdd);
     }
-
     return (gameGrid)
 }
 
@@ -579,3 +576,21 @@ export const getOneRandomHint = (allHints) => {
     let randomIndex = Math.floor(Math.random() * allHints.length)
     return allHints[randomIndex]
 }
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Show alert with game recap when game over
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const endGameAlert = (alertText, score, timer) =>
+    Alert.alert(
+        "Game over!",
+        alertText + `You scored ${score} points and the game lasted ${timer} seconds`,
+        [
+            { text: "OK", onPress: () => console.log("OK Pressed") }
+        ],
+        { cancelable: false }
+    )
