@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, View, Text, Alert } from 'react-native'
+import { StyleSheet, View, SafeAreaView, Text, Alert } from 'react-native'
 import TouchButton from '../components/TouchButton'
 import GameGrid from '../components/GameGrid'
+import ScoreBoard from '../components/ScoreBoard'
+import ProgressBar from '../components/ProgressBar'
+import ModalScore from '../components/ModalScore'
 import {
     buildGameGridWithNoMatches,
     showGameGrid,
@@ -62,17 +65,19 @@ export default function GameScreen({ navigation }) {
     const [timer, setTimer] = useState(0)
     const [timerPause, setTimerPause] = useState(false)
 
-    // Set score, level, progress bar and hint to starting values
+    // Set score, level, progress bar to starting values
     const [score, setScore] = useState(50)
     const [level, setLevel] = useState(1)
     const [progressBar, setProgressBar] = useState(50)
     const [progressBarMax, setProgressBarMax] = useState(100)
-    const [hint, setHint] = useState(null)
 
     // Set states to record user entry
     const [firstPress, setFirstPress] = useState(null)
     const [secondPress, setSecondPress] = useState(null)
     const [lastPress, setLastPress] = useState(null)
+
+    // Set the modal visibility to false
+    const  [isModalvisible, setisModalVisible] = useState(false)
 
 
 
@@ -248,30 +253,15 @@ export default function GameScreen({ navigation }) {
                 }
             }
 
-            showGameGrid(grid)
+            // Update gameGrid state with the new grid
             setGameGrid(grid)
+
+            showGameGrid(grid)
 
             // Reset firstPress and secondPress
             setFirstPress(null)
             setSecondPress(null)
 
-            if (firstPress.toString() === lastPress.toString()) {
-                console.log("CELLS ARE THE SAME!!!!!!")
-
-                // Decrement attempts
-                setAttempts(attempts - 1)
-                // If it is the last attempt, show alert and stop game
-                if (attempts - 1 === 0) {
-                    // Norah :
-                    // INSERER MODAL DE FIN DE JEU À LA PLACE DE L'ALERT
-
-                    // Show alert
-                    endGameAlert("You used all your attempts.", score, timer,)
-
-                    // Navigate back to player screen
-                    navigation.navigate('PlayerScreen')
-                }
-            }
         }
     }, [lastPress])
 
