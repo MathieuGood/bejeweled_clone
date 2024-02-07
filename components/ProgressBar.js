@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React from 'react'
+import { View, StyleSheet } from 'react-native'
 
 const ProgressBar = ({ level, nextLevel, progress }) => {
   return (
@@ -18,8 +18,8 @@ const ProgressBar = ({ level, nextLevel, progress }) => {
         probablement à supprimer les deux cercles car pas forcément level + 1 
       </View>  */}
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -58,4 +58,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProgressBar;
+export default ProgressBar

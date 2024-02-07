@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React from 'react'
+import { View, Text, StyleSheet } from 'react-native'
 
 const ScoreBoard = ({ score, level, attempts }) => {
   return (
@@ -18,8 +18,8 @@ const ScoreBoard = ({ score, level, attempts }) => {
       </View>
 
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   mainContainer: {
@@ -41,4 +41,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ScoreBoard;
+export default ScoreBoard
