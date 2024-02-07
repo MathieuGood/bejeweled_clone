@@ -14,7 +14,7 @@ const ScoreBoard = ({ score, level, attempts }) => {
       </View>
 
       <View style={styles.Container}>
-          <Text style={styles.info}> Tries left : {attempts} </Text>
+        <Text style={styles.info}> Tries left : {attempts} </Text>
       </View>
 
     </View>
@@ -23,8 +23,8 @@ const ScoreBoard = ({ score, level, attempts }) => {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    flexDirection : 'row',
-    justifyContent: 'space-between', 
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   Container: {
     backgroundColor: '#2b50c8',

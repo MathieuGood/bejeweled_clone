@@ -5,7 +5,7 @@ const ProgressBar = ({ level, nextLevel, progress }) => {
   return (
     <View style={styles.container}>
 
-      
+
       {/* <View style={styles.levelCircle}>
          probablement à supprimer  les deux cercles car possibilité de sauter des niveaux 
         <Text style={styles.levelText}>{level}</Text> 
@@ -31,9 +31,9 @@ const styles = StyleSheet.create({
   levelCircle: {
     width: 58,
     height: 58,
-    borderRadius: 29, 
+    borderRadius: 29,
     backgroundColor: '#2b50c8',
-    borderWidth:  1,
+    borderWidth: 1,
     borderColor: '#e8b923',
     alignItems: 'center',
     justifyContent: 'center',
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
   levelText: {
     color: '#e8b923',
     fontWeight: 'bold',
-    fontSize : 19
+    fontSize: 19
   },
   progressBarContainer: {
     height: 30,
