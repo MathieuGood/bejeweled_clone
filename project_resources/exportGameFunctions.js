@@ -316,12 +316,12 @@ export const pushItemsDown = (gameGrid) => {
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const pushDownValuesAndEraseAlignments = (gameGrid, level, setScore) => {
+export const pushDownValuesAndEraseAlignments = (gameGrid, level, setScore, score, setLevel, setProgressBar, setProgressBarMax) => {
     let matches = ''
 
     do {
         // Check for matches and delete them
-        findAndDeleteMatchingValuesFromGrid(gameGrid, level, setScore)
+        findAndDeleteMatchingValuesFromGrid(gameGrid, level, setScore, score, setLevel, setProgressBar, setProgressBarMax)
         console.log('**** ITEMS DELETED')
         showGameGrid(gameGrid)
 
@@ -346,17 +346,29 @@ export const pushDownValuesAndEraseAlignments = (gameGrid, level, setScore) => {
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const findAndDeleteMatchingValuesFromGrid = (gameGrid, level, setScore) => {
+export const findAndDeleteMatchingValuesFromGrid = (gameGrid, level, setScore, score, setLevel, setProgressBar, setProgressBarMax) => {
 
     // Check if there is a match consequently to the swap
     let matches = checkGameGridForAlignments(gameGrid)
 
     // If there are matches, updates values of the matches cells to ''
+    // Updates the score with 
     if (matches.length > 0) {
         updateGridCellValue(gameGrid, matches, '')
+
+        // Update score 
         const pointsToAdd = addPoints(matches, level)
-        // Update the 'score' state using the 'setState' function
-        setScore(prevScore => prevScore + pointsToAdd);
+        const newScore = score + pointsToAdd
+
+        setScore(newScore)
+        // Update level
+        const newLevel = Math.floor(newScore / 100) + 1
+        setLevel(newLevel)
+
+        //Update progress bar
+        setProgressBar(newScore)
+        setProgressBarMax(newLevel * 100)
+
     }
     return (gameGrid)
 }

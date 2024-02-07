@@ -151,16 +151,16 @@ export default function GameScreen({ navigation }) {
     }, [timerPause])
 
 
-    // Decrement progress bar every 3 seconds
+    // Decrement progress bar every 3 seconds by the level value
     // Trigger actions when the progressBar state is updated
     useEffect(() => {
         const intervalId = setInterval(() => {
             setProgressBar(prevProgressBar => {
-                const newProgressBar = prevProgressBar - 1;
+                const newProgressBar = prevProgressBar - level;
                 // Make sure the progress bar doesn't go below 0
                 return Math.max(0, newProgressBar)
             });
-        }, 3000);
+        }, 3000)
 
         // Clean up function to clear the interval when the component unmounts or the effect is re-run
         return () => clearInterval(intervalId);
@@ -212,7 +212,7 @@ export default function GameScreen({ navigation }) {
                     showGameGrid(grid)
 
                     // Find matches, erase matches and push down values until there are no more matches
-                    pushDownValuesAndEraseAlignments(grid, level, setScore)
+                    pushDownValuesAndEraseAlignments(grid, level, setScore, score, setLevel, setProgressBar, setProgressBarMax)
 
                     // Fill the empty cells with random values, checking there are no matches
                     grid = fillEmptyCellsWithNoMatches(grid)
@@ -288,8 +288,7 @@ export default function GameScreen({ navigation }) {
 
             <Text>Number of tries left : {attempts}</Text>
             <Text></Text>
-            <Text>Level : {level}</Text>
-            <Text>Score : {score}</Text>
+            <Text>Level : {level}   Score : {score}</Text>
             <Text>Progress bar : {progressBar} / {progressBarMax}</Text>
             <Text></Text>
             <Text>firstPress : {firstPress}     secondPress : {secondPress}</Text>
@@ -361,7 +360,7 @@ let styles = StyleSheet.create({
         justifyContent: 'center'
     },
     bottomContainer: {
-        flex: 0.22,
+        flex: 0.20,
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
