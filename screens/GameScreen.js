@@ -189,7 +189,7 @@ export default function GameScreen({ navigation }) {
       
     useEffect(() => {
         // Checks if game over conditions are met (no more attempts or progress reached 0)
-        if (attempts <= 0 || progress <= 0) {
+        if (attempts === 0 || progress === 0) {
           handleGameOver(); // Function to handle game over logic
         }
       }, [attempts, progress]); // This useEffect runs whenever `attempts` or `progress` changes
