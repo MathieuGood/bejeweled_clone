@@ -346,6 +346,8 @@ export const pushDownValuesAndEraseAlignments = (gameGrid, level, setScore, scor
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// TO DO : delete setProgressBarMax paramater if not used
+
 export const findAndDeleteMatchingValuesFromGrid = (gameGrid, level, setScore, score, setLevel, setProgressBar, setProgressBarMax) => {
 
     // Check if there is a match consequently to the swap
@@ -365,15 +367,14 @@ export const findAndDeleteMatchingValuesFromGrid = (gameGrid, level, setScore, s
         const newLevel = Math.floor(newScore / 100) + 1
         setLevel(newLevel)
 
-        // Update progress bar
-        // progressBarMax = newLevel * 100
-        // Progress bar % = ( score / (newLevel * 100) ) * 100
-        setProgressBar(Math.floor((newScore / (newLevel * 100)) * 100))
+        // If a new level has been reached, update progressBar to new value
+        if (newLevel > level) {
+            // Update progress bar
+            // progressBarMax = newLevel * 100
+            // Progress bar % = ( score / (newLevel * 100) ) * 100
+            setProgressBar(Math.floor((newScore / (newLevel * 100)) * 100))
+        }
 
-        // TO DELETE :
-        // Old version of algorithm
-        // setProgressBar(newScore)
-        // setProgressBarMax(newLevel * 100)
     }
     return (gameGrid)
 }
