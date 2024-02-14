@@ -66,7 +66,7 @@ export default function GameScreen({ navigation }) {
     const [timerPause, setTimerPause] = useState(false)
 
     // Set score, level, progress bar to starting values
-    const [score, setScore] = useState(50)
+    const [score, setScore] = useState(0)
     const [level, setLevel] = useState(1)
     const [progressBar, setProgressBar] = useState(50)
     const [progressBarMax, setProgressBarMax] = useState(100)
@@ -77,7 +77,7 @@ export default function GameScreen({ navigation }) {
     const [lastPress, setLastPress] = useState(null)
 
     // Set the modal visibility to false
-    const  [isModalvisible, setisModalVisible] = useState(false)
+    const [isModalvisible, setisModalVisible] = useState(false)
 
 
 
@@ -129,7 +129,17 @@ export default function GameScreen({ navigation }) {
             )
             return hint
         }
+    }
 
+    function endGame(message, score, timer) {
+        console.log("Game over : " + message)
+
+        // Display endgame alert
+        // REPLACE WITH MODAL
+        endGameAlert(message, score, timer,)
+
+        // Navigate back to player screen
+        navigation.navigate('PlayerScreen')
     }
 
 
@@ -159,17 +169,24 @@ export default function GameScreen({ navigation }) {
     // Decrement progress bar every 3 seconds by the level value
     // Trigger actions when the progressBar state is updated
     useEffect(() => {
-        const intervalId = setInterval(() => {
-            setProgressBar(prevProgressBar => {
-                const newProgressBar = prevProgressBar - level;
-                // Make sure the progress bar doesn't go below 0
-                return Math.max(0, newProgressBar)
-            });
-        }, 3000)
-
-        // Clean up function to clear the interval when the component unmounts or the effect is re-run
-        return () => clearInterval(intervalId);
-    }, [progressBar]);
+        // If progressBar reaches 0, end the game
+        if (progressBar < 1) {
+            // ENDGAME
+            endGame("Time is up!", score, timer)
+        } else {
+            const intervalId = setInterval(() => {
+                if (timerPause === false) {
+                    setProgressBar(prevProgressBar => {
+                        const newProgressBar = prevProgressBar - 1
+                        // Make sure the progress bar doesn't go below 0
+                        return Math.max(0, newProgressBar)
+                    })
+                }
+            }, 3000)
+            // Clean up function to clear the interval when the component unmounts or the effect is re-run
+            return () => clearInterval(intervalId)
+        }
+    }, [progressBar])
 
 
     // Trigger actions when the lastPress state is updated
@@ -226,29 +243,18 @@ export default function GameScreen({ navigation }) {
                     // Save the new grid to the gameGrid state
                     setGameGrid(grid)
 
+                    // If no hints can be found, end the game
                     if (getAllHints(grid).length === 0) {
-                        console.log("No more valid move possible. End of game.")
-                        // Norah :
-                        // INSERER MODAL DE FIN DE JEU À LA PLACE DE L'ALERT
-
-                        // Show alert and stop game
-                        endGameAlert("No more valid move possible.", score, timer,)
-
-                        // Navigate back to player screen
-                        navigation.navigate('PlayerScreen')
+                        endGame("No more valid move possible. End of game.", score, timer)
                     }
 
                 } else {
                     // If the cells are not ok for swapping, decrement attempts counter
                     setAttempts(attempts - 1)
 
-                    // If the attempts counter is 0, show alert and stop game
+                    // If the attempts counter is 0, end the game
                     if (attempts - 1 === 0) {
-
-                        endGameAlert("You used all your attempts.", score, timer,)
-
-                        // Navigate back to player screen
-                        navigation.navigate('PlayerScreen')
+                        endGame("You used all your attempts.", score, timer)
                     }
                 }
             }

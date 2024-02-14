@@ -359,16 +359,21 @@ export const findAndDeleteMatchingValuesFromGrid = (gameGrid, level, setScore, s
         // Update score 
         const pointsToAdd = addPoints(matches, level)
         const newScore = score + pointsToAdd
-
         setScore(newScore)
+
         // Update level
         const newLevel = Math.floor(newScore / 100) + 1
         setLevel(newLevel)
 
-        //Update progress bar
-        setProgressBar(newScore)
-        setProgressBarMax(newLevel * 100)
+        // Update progress bar
+        // progressBarMax = newLevel * 100
+        // Progress bar % = ( score / (newLevel * 100) ) * 100
+        setProgressBar(Math.floor((newScore / (newLevel * 100)) * 100))
 
+        // TO DELETE :
+        // Old version of algorithm
+        // setProgressBar(newScore)
+        // setProgressBarMax(newLevel * 100)
     }
     return (gameGrid)
 }
@@ -600,7 +605,7 @@ export const getOneRandomHint = (allHints) => {
 export const endGameAlert = (alertText, score, timer) =>
     Alert.alert(
         "Game over!",
-        alertText + `You scored ${score} points and the game lasted ${timer} seconds`,
+        alertText + ` You scored ${score} points and the game lasted ${timer} seconds`,
         [
             { text: "OK", onPress: () => console.log("OK Pressed") }
         ],
