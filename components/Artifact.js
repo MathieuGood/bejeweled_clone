@@ -15,11 +15,6 @@ export default function Artifact({ artifactNumber, press }) {
         7: require('../assets/30.png'),
     }
 
-
-    function onCellPress(row, col) {
-        console.log(`Cell pressed: ${row}, ${col}`);
-    }
-
     return (
 
         <View style={styles.artifactContainer}>
