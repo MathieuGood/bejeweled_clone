@@ -515,7 +515,7 @@ export const addPoints = (matches, level) => {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
 // Check if an array contains a specified given sub-array 
-// Disregard the order of the arrays contained in the sub-array
+// Disregards the order of the arrays contained in the sub-array
 // Example : containsArray([ [[2, 3], [1, 3]] ], [[1, 3], [2, 3]]) returns true
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
