@@ -157,6 +157,21 @@ app.get('/topscores', (req, res) => {
 
 
 
+// Add new score
+app.post('/addscore', (req, res) => {
+    const { player_id, score, duration, end_time} = req.body
+    db.query('INSERT INTO games (player_id, score, duration, end_time) VALUES (?, ?, ?, ?)',
+        [player_id, score, duration, end_time],
+        (err, result) => {
+            if (err) throw err
+            res.json({ message: 'Score added successfuly', id: result.insertId })
+        })
+})
+// Test /addscore route
+// curl -X POST -H "Content-Type: application/json" -d '{"player_id": "1", "score": "6666", "duration": "666", "end_time": "1999-01-01 12:00:00"}' http://mathieubon.com:3001/addscore
+
+
+
 // Get all players IDs
 app.get('/playerlist', (req, res) => {
     db.query('SELECT player_id FROM players', (err, results) => {
