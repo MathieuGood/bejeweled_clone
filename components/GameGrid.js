@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import Artifact from './Artifact'
 
 
@@ -38,17 +38,10 @@ export default function GameGrid({ gridContent, pressCellCallback , disableTouch
     }
 
     return (
-        // <View>
-        //     <TouchableOpacity style={styles.buttonContainer} onPress={press}>
-        //         <Image source='' style={styles.artifactImage} />
-        //     </TouchableOpacity>
-
-        // </View>
 
         <View style={styles.grid}>
             {renderGrid(gridContent)}
         </View>
-
 
     )
 }
