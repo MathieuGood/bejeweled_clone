@@ -44,8 +44,6 @@ const ModalScore = ({ visible, changeModalVisible, navigation, resetGame, score 
 
                     </View>
 
-
-
                 </View>
 
             </BlurView>
