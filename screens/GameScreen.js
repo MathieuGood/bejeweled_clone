@@ -101,7 +101,7 @@ export default function GameScreen({ navigation }) {
     const buildEmptyGrid = Array(gridSize).fill(Array(gridSize).fill(''))
 
     // Show hint
-    function showHint(gameGrid) {
+    const showHint = (gameGrid) => {
         let resultHints = getAllHints(gameGrid)
 
         if (resultHints.length === 0) {
@@ -131,17 +131,31 @@ export default function GameScreen({ navigation }) {
         }
     }
 
-    function endGame(message, score, timer) {
+
+
+    const endGame = (message, score, timer) => {
         console.log("Game over : " + message)
 
         // Display endgame alert
         // REPLACE WITH MODAL
-        endGameAlert(message, score, timer,)
+        endGameAlert(message, score, timer)
+
+        // Show scores Modal
+        setisModalVisible(true);
 
         // Navigate back to player screen
         navigation.navigate('PlayerScreen')
     }
 
+
+    const resetGame = () => {
+        // Réinitialiser l'état du jeu à ses valeurs par défaut
+        setGameGrid(buildGameGridWithNoMatches(gridSize, gridNumberOfDifferentItems));
+        setAttempts(3);
+        setScore(0);
+        setLevel(1);
+        setProgressBar(50);
+    }
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -169,24 +183,31 @@ export default function GameScreen({ navigation }) {
     // Decrement progress bar every 3 seconds by the level value
     // Trigger actions when the progressBar state is updated
     useEffect(() => {
-        // If progressBar reaches 0, end the game
-        if (progressBar < 1) {
-            // ENDGAME
-            endGame("Time is up!", score, timer)
-        } else {
-            const intervalId = setInterval(() => {
-                if (timerPause === false) {
-                    setProgressBar(prevProgressBar => {
-                        const newProgressBar = prevProgressBar - 1
-                        // Make sure the progress bar doesn't go below 0
-                        return Math.max(0, newProgressBar)
-                    })
-                }
-            }, 3000)
-            // Clean up function to clear the interval when the component unmounts or the effect is re-run
-            return () => clearInterval(intervalId)
-        }
+        const intervalId = setInterval(() => {
+            if (timerPause === false) {
+                setProgressBar(prevProgressBar => {
+                    const newProgressBar = prevProgressBar - 1
+                    // Make sure the progress bar doesn't go below 0
+                    return Math.max(0, newProgressBar)
+                })
+            }
+        }, 3000)
+        // Clean up function to clear the interval when the component unmounts or the effect is re-run
+        return () => clearInterval(intervalId)
     }, [progressBar])
+
+
+
+    // End the game if attemps or progressBar reach 0
+    useEffect(() => {
+        // Checks if game over conditions are met (no more attempts or progress reached 0)
+        if (attempts < 1) {
+            endGame("You used all your attempts.", score, timer)
+        } else if (progressBar < 1) {
+            endGame("Time is up!", score, timer)
+        }
+    }, [attempts, progressBar])
+
 
 
     // Trigger actions when the lastPress state is updated
@@ -251,11 +272,6 @@ export default function GameScreen({ navigation }) {
                 } else {
                     // If the cells are not ok for swapping, decrement attempts counter
                     setAttempts(attempts - 1)
-
-                    // If the attempts counter is 0, end the game
-                    if (attempts - 1 === 0) {
-                        endGame("You used all your attempts.", score, timer)
-                    }
                 }
             }
 
