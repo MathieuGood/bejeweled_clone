@@ -138,13 +138,13 @@ export default function GameScreen({ navigation }) {
 
         // Display endgame alert
         // REPLACE WITH MODAL
-        endGameAlert(message, score, timer)
+        // endGameAlert(message, score, timer)
 
         // Show scores Modal
         setisModalVisible(true);
 
         // Navigate back to player screen
-        navigation.navigate('PlayerScreen')
+        // navigation.navigate('PlayerScreen')
     }
 
 
@@ -297,61 +297,87 @@ export default function GameScreen({ navigation }) {
 
     return (
         <View style={styles.mainContainer}>
+            <SafeAreaView style={styles.safeArea}>
+                {/* <Text>Number of tries left : {attempts}</Text>
+                <Text></Text>
+                <Text>Level : {level}   Score : {score}</Text>
+                <Text>Progress bar : {progressBar} / {progressBarMax}</Text>
+                <Text></Text>
+                <Text>firstPress : {firstPress}     secondPress : {secondPress}</Text>
+                <Text></Text>
+                <Text>Timer : {timer}</Text> */}
 
-            <Text>Number of tries left : {attempts}</Text>
-            <Text></Text>
-            <Text>Level : {level}   Score : {score}</Text>
-            <Text>Progress bar : {progressBar} / {progressBarMax}</Text>
-            <Text></Text>
-            <Text>firstPress : {firstPress}     secondPress : {secondPress}</Text>
-            <Text></Text>
-            <Text>Timer : {timer}</Text>
+                <ModalScore
+                    visible={isModalvisible}
+                    changeModalVisible={setisModalVisible}
+                    navigation={navigation}
+                    resetGame={resetGame}
+                    score={score}
+                />
 
-            <GameGrid
-                gridContent={gameGrid}
-                // If timer is paused, do not allow cell press
-                // Else, return the coordinates of the cell pressed through getCellCoordinates()
-                pressCellCallback={getCellCoordinates}
-                // If timer is paused, disable touch capacity
-                disableTouchCapacity={timerPause === false ? false : true}
-            />
+                <ScoreBoard
+                    level={level}
+                    score={score}
+                    attempts={attempts}
+                />
 
-            <View style={styles.bottomContainer}>
-                <TouchButton
-                    // Show 'Pause' button if the game is running
-                    // Else, show 'Resume' button
-                    title={timerPause === false ? 'Pause' : 'Resume'}
-                    // On click, pause or resume the game
-                    press={() => {
-                        // If the game is running, pause it
-                        if (timerPause === false) {
-                            console.log("Pause button pressed")
-                            setTimerPause(true)
-                            setGameGrid(buildEmptyGrid)
-                            // Make a deep copy of the gameGrid to gridBackup
-                            setGridBackup(JSON.parse(JSON.stringify(gameGrid)))
-                        } else {
-                            // If the game is paused, resume it
-                            console.log("Resume button pressed")
-                            setTimerPause(false)
-                            setGameGrid(gridBackup)
-                        }
-                    }}
+                <GameGrid
+                    gridContent={gameGrid}
+                    // If timer is paused, do not allow cell press
+                    // Else, return the coordinates of the cell pressed through getCellCoordinates()
+                    pressCellCallback={getCellCoordinates}
+                    // If timer is paused, disable touch capacity
+                    disableTouchCapacity={timerPause === false ? false : true}
                 />
-                <TouchButton
-                    title={'Hint'}
-                    press={() => {
-                        console.log("Hint button pressed")
-                        showHint(gameGrid)
-                    }}
+
+                <ProgressBar
+                    level={level}
+                    nextLevel={level + 1}
+                    progress={progressBar}
                 />
-                <TouchButton
-                    title='Back to player screen'
-                    press={() => {
-                        navigation.navigate('PlayerScreen')
-                    }}
-                />
-            </View>
+
+
+                {/* <View style={styles.bottomContainer}> */}
+
+                    {/* <TouchButton
+                        // Show 'Pause' button if the game is running
+                        // Else, show 'Resume' button
+                        title={timerPause === false ? 'Pause' : 'Resume'}
+                        // On click, pause or resume the game
+                        press={() => {
+                            // If the game is running, pause it
+                            if (timerPause === false) {
+                                console.log("Pause button pressed")
+                                setTimerPause(true)
+                                setGameGrid(buildEmptyGrid)
+                                // Make a deep copy of the gameGrid to gridBackup
+                                setGridBackup(JSON.parse(JSON.stringify(gameGrid)))
+                            } else {
+                                // If the game is paused, resume it
+                                console.log("Resume button pressed")
+                                setTimerPause(false)
+                                setGameGrid(gridBackup)
+                            }
+                        }}
+                    />
+
+                    <TouchButton
+                        title={'Hint'}
+                        press={() => {
+                            console.log("Hint button pressed")
+                            showHint(gameGrid)
+                        }}
+                    /> */}
+
+                    <TouchButton
+                        title='Back to player screen'
+                        press={() => {
+                            navigation.navigate('PlayerScreen')
+                        }}
+                    />
+
+                {/* </View> */}
+            </SafeAreaView>
         </View>
     )
 }
@@ -371,6 +397,10 @@ let styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center'
     },
+    safeArea: {
+        flex: 1,
+         justifyContent: 'space-around'
+       },
     bottomContainer: {
         flex: 0.20,
         flexDirection: 'column',
