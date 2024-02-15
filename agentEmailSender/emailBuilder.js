@@ -20,7 +20,7 @@ function buildRankingUpdateEmail(player_email, player_name, apiResponseResults) 
                 TextPart:
                     `Dear ${player_name},
                     
-                    You went down from #${previousRank} to #${currentRank}.
+                    You went down from #${previousRank} to ${currentRank}.
 
                     Come play again to reclaim your spot!
 

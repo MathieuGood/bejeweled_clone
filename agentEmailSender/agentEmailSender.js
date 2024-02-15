@@ -80,8 +80,14 @@ function sendRankingDifferences() {
                     // Run function to send recap by e-mail if last played game has ended for an hour at least
                     // console.log(ranking)
                     if (ranking.rank > ranking.prev_rank || ranking.rank === null) {
-                        console.log(`>>>>>>${ranking.player_name} was rank #${ranking.prev_rank}, now he is rank #${ranking.rank} `)
-                        const email = buildRankingUpdateEmail(ranking.player_email, ranking.player_name, [{ prev: ranking.prev_rank, current: ranking.rank }])
+                        if (ranking.rank === null) {
+                            const rank = 'unranked'
+                        } else {
+                            const rank = `#${ranking.rank}`
+                        }
+
+                        console.log(`>>>>>>${ranking.player_name} was rank #${ranking.prev_rank}, now he is ${rank} `)
+                        const email = buildRankingUpdateEmail(ranking.player_email, ranking.player_name, [{ prev: ranking.prev_rank, current: rank }])
                         sendMail(email)
                     }
                 })
