@@ -198,6 +198,20 @@ app.get('/lastgames/:player_id', (req, res) => {
 
 
 
+// Get total play time in seconds by player_id
+app.get('/playtime/:player_id', (req, res) => {
+    const { player_id } = req.params
+    db.query('SELECT SUM(duration) AS play_time FROM games WHERE games.player_id = ?;',
+        [player_id], (err, results) => {
+            if (err) throw err
+            res.json(results[0])
+        })
+})
+// Test /lastgames/player_id
+// curl -X GET "http://mathieubon.com:3001/playtime/1"
+
+
+
 // Update last_game_id based on player_id
 app.post('/updatelastgame', (req, res) => {
     const { player_id, last_game_id } = req.body
