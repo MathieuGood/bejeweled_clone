@@ -144,7 +144,7 @@ CREATE PROCEDURE getRanking()
 BEGIN
     SET @count := 0;
 
-    SELECT (@count:=@count+1) AS rank, games.player_id, player_name, score, prev_rank
+    SELECT (@count:=@count+1) AS rank, player_name, score
     FROM games
     INNER JOIN players ON games.player_id = players.player_id
     ORDER BY score DESC
