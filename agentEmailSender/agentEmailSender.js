@@ -74,15 +74,14 @@ function sendRankingDifferences() {
         .then(json => {
             // Get the response for ranking difference
             if (json) {
-                // console.log(json)
+                console.log(json)
                 // For each player in the database
                 json.forEach((ranking) => {
                     // Run function to send recap by e-mail if last played game has ended for an hour at least
                     // console.log(ranking)
+                    const rank = 'unranked'
                     if (ranking.rank > ranking.prev_rank || ranking.rank === null) {
-                        if (ranking.rank === null) {
-                            const rank = 'unranked'
-                        } else {
+                        if (ranking.rank !== null) {
                             const rank = `#${ranking.rank}`
                         }
 
@@ -97,30 +96,6 @@ function sendRankingDifferences() {
 
             } else {
                 console.log('File empty or no return from API call')
-                return null
-            }
-        })
-        .catch(error => {
-            console.error(error)
-            return null
-        });
-}
-
-
-
-
-
-function getLastGames(player_id) {
-    return fetch(`http://mathieubon.com:3001/lastgames/${player_id}`, {
-        method: 'GET',
-        headers: { "Content-Type": "application/json" }
-    })
-        .then(response => response.json())
-        .then(json => {
-            if (json) {
-                return json
-            } else {
-                console.log('No last games')
                 return null
             }
         })
@@ -160,59 +135,88 @@ function updateLastGameId(player_id, last_game_id) {
 
 
 
+function getLastGames(player_id) {
+    return fetch(`http://mathieubon.com:3001/lastgames/${player_id}`, {
+        method: 'GET',
+        headers: { "Content-Type": "application/json" }
+    })
+        .then(response => response.json())
+        .then(json => {
+            if (json) {
+                return json
+            } else {
+                console.log('No last games')
+                return null
+            }
+        })
+        .catch(error => {
+            console.error(error)
+            return null
+        });
+}
+
+
+
+function getPlayTime(player_id) {
+    return fetch(`http://mathieubon.com:3001/playtime/${player_id}`, {
+        method: 'GET',
+        headers: { "Content-Type": "application/json" }
+    })
+        .then(response => response.json())
+        .then(json => {
+            if (json) {
+                console.log('Play time : ' + json['play_time'])
+                console.log(json['play_time'])
+                return json
+            } else {
+                console.log('No duration data.')
+                return null
+            }
+        })
+        .catch(error => {
+            console.error(error)
+            return null
+        });
+}
+
+
+
 function sendRecapEmailIfTimeReached(player_id) {
-    // Get all the last games for one player
-    getLastGames(player_id)
-        .then(result => {
-            // Print last games
-            // console.log(result)
-            if (result != false) {
-
-                // console.log(result)
-
-                // Get current datetime
+    Promise.all([
+        getLastGames(player_id),
+        getPlayTime(player_id)])
+        .then(([last_games, play_time]) => {
+            // If there are last games (not empty array)
+            if (last_games != false) {
                 let now = new Date()
-                // Get end_time of last game played
-                let end_time = new Date(result[result.length - 1]['end_time'])
-                // Add one hour to the end_time of last game played
+                let end_time = new Date(last_games[last_games.length - 1]['end_time'])
                 end_time.setTime(end_time.getTime() + 60 * 60 * 1000)
 
-                // console.log('END : ' + end_time)
-                // console.log('NOW : ' + now)
-
-                // If it is time to notify the user
                 if (end_time < now) {
+                    const player_email = last_games[last_games.length - 1]['player_email']
+                    const player_name = last_games[last_games.length - 1]['player_name']
+                    const player_time = play_time['play_time']
 
-                    const player_email = result[result.length - 1]['player_email']
-                    const player_name = result[result.length - 1]['player_name']
-
-                    // Send e-mail
                     console.log('SEND E-MAIL NOW to ' + player_email)
-                    const email = buildRecapEmail(player_email, player_name, result)
+                    const email = buildRecapEmail(player_email, player_name, player_time, last_games)
                     sendMail(email)
 
-
-                    // Update last_game_id in player table
-                    const last_game_id = result[result.length - 1]['game_id']
+                    const last_game_id = last_games[last_games.length - 1]['game_id']
                     updateLastGameId(player_id, last_game_id)
                     console.log('-> Update last_game_id in player table')
-
-
                 } else {
-                    // Print how many minutes to wait in console
                     let waitTime = new Date(end_time - now)
                     waitTime = waitTime.getUTCMinutes()
                     console.log('DO NOT SEND E-MAIL NOW to ' + email)
                     console.log('-> Minutes to wait before sending : ' + waitTime)
                 }
-
             } else {
                 console.log('NOTHING TO SEND to player ID ' + player_id)
             }
         })
         .catch(error => {
-            console.error(error);
-        })
+            console.error(error)
+        });
 }
 
 
