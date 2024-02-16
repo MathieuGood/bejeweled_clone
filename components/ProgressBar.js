@@ -56,6 +56,6 @@ const styles = StyleSheet.create({
     height: '100%',
     backgroundColor: '#e8b923',
   },
-});
+})
 
 export default ProgressBar
