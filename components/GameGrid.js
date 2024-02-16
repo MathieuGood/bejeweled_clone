@@ -5,10 +5,6 @@ import Artifact from './Artifact'
 
 export default function GameGrid({ gridContent, pressCellCallback , disableTouchCapacity}) {
 
-    function onCellPress(row, col) {
-        console.log(`Cell pressed: ${row}, ${col}`);
-    }
-
     const pressCellFunction = (row, col) => {
         // console.log("Row " + row + "  Col " + col)
         pressCellCallback(row, col)
