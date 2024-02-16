@@ -4,10 +4,17 @@ import TouchButton from './TouchButton'
 import { BlurView } from 'expo-blur'
 
 
+const windowWidth = Dimensions.get('window').width
 
-const Width = Dimensions.get('window').width
-const ModalScore = ({ visible, changeModalVisible, navigation, resetGame, score }) => {
-
+const ModalScore = ({
+    visible,
+    changeModalVisible,
+    navigation,
+    resetGame,
+    title,
+    score,
+    highScores
+}) => {
 
     return (
         <Modal
@@ -17,27 +24,33 @@ const ModalScore = ({ visible, changeModalVisible, navigation, resetGame, score 
             onRequestClose={() => changeModalVisible(false)}
         >
             <BlurView
-                style={Styles.blur}
+                style={styles.blur}
                 tint='dark'
                 intensity={20}
             >
-                <View style={Styles.modal}>
-                    <Text style={Styles.modalText}>Leaderboard</Text>
+                <View style={styles.modal}>
+                    <Text style={styles.modalText}>{title}</Text>
 
                     <Text style={{ textAlign: 'center', marginBottom: 15, fontSize: 17 }}>
-                        Your score is <Text style={Styles.scoreStyle}>{score}</Text> points.
+                        You scored <Text style={styles.scoreStyle}>{score}</Text> points.
                     </Text>
 
-                    {/* logique  pour afficher la Flatlist des meilleurs scores */}
+{/* TO DO : write function to render item correctly in Flatlist */}
+                    <FlatList
+						data={highScores}
+						keyExtractor={(item) => item.id.toString()}
+						renderItem={({ item }) => <Text>item</Text>}
+						onEndReachedThreshold={0.5}
+					/>
 
                     <View style={{ flexDirection: "row", justifyContent: 'space-evenly' }}>
 
-                        <TouchButton title="Restart" press={() => {
+                        <TouchButton title="Restart game" press={() => {
                             changeModalVisible(false);
                             resetGame();
                         }} />
 
-                        <TouchButton title="Quit" press={() => {
+                        <TouchButton title="Back to menu" press={() => {
                             changeModalVisible(false);
                             navigation.navigate('PlayerScreen') //provisoirement retour à cette page
                         }} />
@@ -49,11 +62,10 @@ const ModalScore = ({ visible, changeModalVisible, navigation, resetGame, score 
             </BlurView>
         </Modal>
     )
-
-
 }
 
-const Styles = StyleSheet.create({
+
+const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
@@ -69,7 +81,7 @@ const Styles = StyleSheet.create({
     },
     modal: {
         marginTop: 300,
-        width: Width - 50,
+        width: windowWidth - 50,
         padding: 10,
         backgroundColor: 'white',
         borderRadius: 10,

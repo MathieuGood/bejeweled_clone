@@ -73,11 +73,13 @@ export default function GameScreen({ navigation }) {
 
     // Set states to record user entry
     const [firstPress, setFirstPress] = useState(null)
-    const [secondPress, setSecondPress] = useState(null)
     const [lastPress, setLastPress] = useState(null)
 
     // Set the modal visibility to false
     const [isModalvisible, setisModalVisible] = useState(false)
+
+    // Set high scores to null
+    const [highScores, setHighScores] = useState(null)
 
 
 
@@ -87,6 +89,11 @@ export default function GameScreen({ navigation }) {
     //
     ////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    // Build a grid with empty values
+    const buildEmptyGrid = Array(gridSize).fill(Array(gridSize).fill(''))
+
+
+    // Retrieve cell coordinates and record them to lastPress state
     const getCellCoordinates = (row, col) => {
         console.log(`\nPRESS: row ${row}, col ${col}`)
 
@@ -97,8 +104,6 @@ export default function GameScreen({ navigation }) {
         setLastPress([row, col])
     }
 
-    // Build a grid with empty values
-    const buildEmptyGrid = Array(gridSize).fill(Array(gridSize).fill(''))
 
     // Show hint
     const showHint = (gameGrid) => {
@@ -132,29 +137,56 @@ export default function GameScreen({ navigation }) {
     }
 
 
+    // Retrieve high scores
+    const getHighScores = () => {
+        return fetch(`http://mathieubon.com:3001/highscores/`, {
+            method: 'GET',
+            headers: { "Content-Type": "application/json" }
+        })
+            .then(response => response.json())
+            .then(json => {
+                if (json) {
+                    console.log(json)
 
-    const endGame = (message, score, timer) => {
-        console.log("Game over : " + message)
+                    json.forEach((ranking) => {
+                        console.log(ranking.rank, ranking.player_name, ranking.score)
+                    })
 
-        // Display endgame alert
-        // REPLACE WITH MODAL
-        // endGameAlert(message, score, timer)
+                    // TO DO : save json results to state to be reused in Modal
 
-        // Show scores Modal
-        setisModalVisible(true);
-
-        // Navigate back to player screen
-        // navigation.navigate('PlayerScreen')
+                    return json
+                } else {
+                    console.log('No top scores')
+                    return null
+                }
+            })
+            .catch(error => {
+                console.error(error)
+                return null
+            })
     }
 
 
+    // Handle end of game showing Modal with current score, top scores and add current score to database
+    const endGame = (message, score, timer) => {
+        console.log("Game over : " + message)
+
+        // Retrieve high scores
+        getHighScores()
+
+        // Show scores Modal
+        setisModalVisible(true)
+
+    }
+
+    // Reset all the states to default in order to start a new game
     const resetGame = () => {
         // Réinitialiser l'état du jeu à ses valeurs par défaut
-        setGameGrid(buildGameGridWithNoMatches(gridSize, gridNumberOfDifferentItems));
-        setAttempts(3);
-        setScore(0);
-        setLevel(1);
-        setProgressBar(50);
+        setGameGrid(buildGameGridWithNoMatches(gridSize, gridNumberOfDifferentItems))
+        setAttempts(3)
+        setScore(0)
+        setLevel(1)
+        setProgressBar(50)
     }
 
 
@@ -191,11 +223,10 @@ export default function GameScreen({ navigation }) {
                     return Math.max(0, newProgressBar)
                 })
             }
-        }, 3000)
+        }, 1000)
         // Clean up function to clear the interval when the component unmounts or the effect is re-run
         return () => clearInterval(intervalId)
     }, [progressBar])
-
 
 
     // End the game if attemps or progressBar reach 0
@@ -207,7 +238,6 @@ export default function GameScreen({ navigation }) {
             endGame("Time is up!", score, timer)
         }
     }, [attempts, progressBar])
-
 
 
     // Trigger actions when the lastPress state is updated
@@ -225,7 +255,6 @@ export default function GameScreen({ navigation }) {
             // Coordoonnées de la première cellule sélectionnée : firstPress
             console.log("useEffect : firstPress recorded >>> " + lastPress)
         } else {
-            setSecondPress(lastPress)
             console.log("useEffect : secondPress recorded >>> " + lastPress)
 
             console.log("firstPress is " + firstPress)
@@ -280,10 +309,8 @@ export default function GameScreen({ navigation }) {
 
             showGameGrid(grid)
 
-            // Reset firstPress and secondPress
+            // Reset firstPress
             setFirstPress(null)
-            setSecondPress(null)
-
         }
     }, [lastPress])
 
@@ -303,81 +330,83 @@ export default function GameScreen({ navigation }) {
                 style={styles.imageBackground}
             > */}
 
-                <SafeAreaView style={styles.safeArea}>
+            <SafeAreaView style={styles.safeArea}>
 
-                    <ModalScore
-                        visible={isModalvisible}
-                        changeModalVisible={setisModalVisible}
-                        navigation={navigation}
-                        resetGame={resetGame}
-                        score={score}
+                <ModalScore
+                    visible={isModalvisible}
+                    changeModalVisible={setisModalVisible}
+                    navigation={navigation}
+                    resetGame={resetGame}
+                    title={"Game is over"}
+                    score={score}
+
+                />
+
+                <ScoreBoard
+                    level={level}
+                    score={score}
+                    attempts={attempts}
+                />
+
+                <GameGrid
+                    gridContent={gameGrid}
+                    // If timer is paused, do not allow cell press
+                    // Else, return the coordinates of the cell pressed through getCellCoordinates()
+                    pressCellCallback={getCellCoordinates}
+                    // If timer is paused, disable touch capacity
+                    disableTouchCapacity={timerPause === false ? false : true}
+                />
+
+                <ProgressBar
+                    level={level}
+                    nextLevel={level + 1}
+                    progress={progressBar}
+                />
+
+
+                <View style={styles.bottomContainer}>
+
+                    <Text>Progress bar : {progressBar} / {progressBarMax}          Timer : {timer}</Text>
+                    {/* <Text>firstPress : {firstPress}     secondPress : {secondPress}</Text> */}
+
+                    <TouchButton
+                        // Show 'Pause' on button text if the game is running
+                        // Else, show 'Resume' on button text
+                        title={timerPause === false ? 'Pause' : 'Resume'}
+                        // On click, pause or resume the game
+                        press={() => {
+                            // If the game is running, pause it
+                            if (timerPause === false) {
+                                console.log("Pause button pressed")
+                                setTimerPause(true)
+                                setGameGrid(buildEmptyGrid)
+                                // Make a deep copy of the gameGrid to gridBackup
+                                setGridBackup(JSON.parse(JSON.stringify(gameGrid)))
+                            } else {
+                                // If the game is paused, resume it
+                                console.log("Resume button pressed")
+                                setTimerPause(false)
+                                setGameGrid(gridBackup)
+                            }
+                        }}
                     />
 
-                    <ScoreBoard
-                        level={level}
-                        score={score}
-                        attempts={attempts}
+                    <TouchButton
+                        title={'Hint'}
+                        press={() => {
+                            console.log("Hint button pressed")
+                            showHint(gameGrid)
+                        }}
                     />
 
-                    <GameGrid
-                        gridContent={gameGrid}
-                        // If timer is paused, do not allow cell press
-                        // Else, return the coordinates of the cell pressed through getCellCoordinates()
-                        pressCellCallback={getCellCoordinates}
-                        // If timer is paused, disable touch capacity
-                        disableTouchCapacity={timerPause === false ? false : true}
+                    <TouchButton
+                        title='Quit game'
+                        press={() => {
+                            navigation.navigate('PlayerScreen')
+                        }}
                     />
-
-                    <ProgressBar
-                        level={level}
-                        nextLevel={level + 1}
-                        progress={progressBar}
-                    />
-
-
-                    <View style={styles.bottomContainer}>
-
-                        <Text>Progress bar : {progressBar} / {progressBarMax}          Timer : {timer}</Text>
-                        {/* <Text>firstPress : {firstPress}     secondPress : {secondPress}</Text> */}
-
-                        <TouchButton
-                            // Show 'Pause' on button text if the game is running
-                            // Else, show 'Resume' on button text
-                            title={timerPause === false ? 'Pause' : 'Resume'}
-                            // On click, pause or resume the game
-                            press={() => {
-                                // If the game is running, pause it
-                                if (timerPause === false) {
-                                    console.log("Pause button pressed")
-                                    setTimerPause(true)
-                                    setGameGrid(buildEmptyGrid)
-                                    // Make a deep copy of the gameGrid to gridBackup
-                                    setGridBackup(JSON.parse(JSON.stringify(gameGrid)))
-                                } else {
-                                    // If the game is paused, resume it
-                                    console.log("Resume button pressed")
-                                    setTimerPause(false)
-                                    setGameGrid(gridBackup)
-                                }
-                            }}
-                        />
-
-                        <TouchButton
-                            title={'Hint'}
-                            press={() => {
-                                console.log("Hint button pressed")
-                                showHint(gameGrid)
-                            }}
-                        />
-
-                        <TouchButton
-                            title='Quit game'
-                            press={() => {
-                                navigation.navigate('PlayerScreen')
-                            }}
-                        />
-                    </View>
-                </SafeAreaView>
+                </View>
+            </SafeAreaView>
 
             {/* </ImageBackground> */}
 
@@ -392,6 +421,7 @@ export default function GameScreen({ navigation }) {
 // Stylesheet
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+
 let styles = StyleSheet.create({
     mainContainer: {
         // backgroundColor: 'rgba(255, 230, 128, 0.5)', // Background with 50% opacity
