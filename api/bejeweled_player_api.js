@@ -145,7 +145,7 @@ app.post('/updatepassword', (req, res) => {
 
 
 // Get top 6 scores
-app.get('/topscores', (req, res) => {
+app.get('/highscores', (req, res) => {
     db.query('CALL getRanking()',
         (err, results) => {
             if (err) throw err
