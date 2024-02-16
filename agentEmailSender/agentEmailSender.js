@@ -1,13 +1,25 @@
 const { buildRankingUpdateEmail, buildRecapEmail } = require('./emailBuilder');
-
 const Mailjet = require('node-mailjet')
 
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// RUN ON SCRIPT LAUNCH
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 sendGameRecapToAllPlayers()
 
 sendRankingDifferences()
 
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Send a recap e-mail to all the players whose last game has ended for an hour at least
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function sendGameRecapToAllPlayers() {
 
@@ -40,6 +52,12 @@ function sendGameRecapToAllPlayers() {
 
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Call stored procedure in database to update previous rankings
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
 function updateRankingInDatabase() {
 
     return fetch(`http://mathieubon.com:3001/updateranking`, {
@@ -63,6 +81,12 @@ function updateRankingInDatabase() {
 }
 
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Send e-mail to players that have been losing ranks in top 6
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function sendRankingDifferences() {
 
@@ -107,6 +131,12 @@ function sendRankingDifferences() {
 
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Update players table with last game ID played for a specific player
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
 function updateLastGameId(player_id, last_game_id) {
 
     const bodyData = {
@@ -135,6 +165,12 @@ function updateLastGameId(player_id, last_game_id) {
 
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Retrieve last games played (games with game_id greather than last_game_id)
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
 function getLastGames(player_id) {
     return fetch(`http://mathieubon.com:3001/lastgames/${player_id}`, {
         method: 'GET',
@@ -156,6 +192,12 @@ function getLastGames(player_id) {
 }
 
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Retrieve total play time for a specific player
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function getPlayTime(player_id) {
     return fetch(`http://mathieubon.com:3001/playtime/${player_id}`, {
@@ -181,7 +223,14 @@ function getPlayTime(player_id) {
 
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Send recap e-mail to one specific player with detail of last games and total play time
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
 function sendRecapEmailIfTimeReached(player_id) {
+    // Wait until the queries have been executed to get last games and total play time
     Promise.all([
         getLastGames(player_id),
         getPlayTime(player_id)])
@@ -189,28 +238,36 @@ function sendRecapEmailIfTimeReached(player_id) {
             // If there are last games (not empty array)
             if (last_games != false) {
                 let now = new Date()
+                // Set end_time as time of last game + 1 hour
                 let end_time = new Date(last_games[last_games.length - 1]['end_time'])
                 end_time.setTime(end_time.getTime() + 60 * 60 * 1000)
 
+                // Check if last game has been played for at least one hour
                 if (end_time < now) {
                     const player_email = last_games[last_games.length - 1]['player_email']
                     const player_name = last_games[last_games.length - 1]['player_name']
                     const player_time = play_time['play_time']
 
+                    // Build e-mail to send providing e-mail, name, total play time and last games
                     console.log('SEND E-MAIL NOW to ' + player_email)
                     const email = buildRecapEmail(player_email, player_name, player_time, last_games)
+                    
+                    // Send the e-mail
                     sendMail(email)
 
                     const last_game_id = last_games[last_games.length - 1]['game_id']
                     updateLastGameId(player_id, last_game_id)
                     console.log('-> Update last_game_id in player table')
                 } else {
+                    // For debugging purpose only
+                    // If it is not time to send the e-mail, display time to wait before it can be seny
                     let waitTime = new Date(end_time - now)
                     waitTime = waitTime.getUTCMinutes()
                     console.log('DO NOT SEND E-MAIL NOW to ' + email)
                     console.log('-> Minutes to wait before sending : ' + waitTime)
                 }
             } else {
+                // There are no last games to process
                 console.log('NOTHING TO SEND to player ID ' + player_id)
             }
         })
@@ -221,6 +278,12 @@ function sendRecapEmailIfTimeReached(player_id) {
 
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Send e-mail using Mailjet service API
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
 function sendMail(emailToSend) {
 
     const mailjet = Mailjet.apiConnect(
@@ -229,14 +292,12 @@ function sendMail(emailToSend) {
         // Secret Key
         '125ff23dba0087e2a32070553111bca5')
 
-
     const player_name = emailToSend.Messages[0].To[0].Name
     const player_email = emailToSend.Messages[0].To[0].Email
 
     const sendMailjet = mailjet
         .post('send', { version: 'v3.1' })
         .request(emailToSend)
-
 
     sendMailjet.then((result) => {
         console.log('Sending e-mail to ' + player_name + ' at ' + player_email + ' with subject ' + emailToSend.Messages[0].Subject)
