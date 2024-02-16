@@ -39,6 +39,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#e8b923',
   },
-});
+})
 
 export default ScoreBoard
