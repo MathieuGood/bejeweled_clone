@@ -594,21 +594,3 @@ export const getOneRandomHint = (allHints) => {
     let randomIndex = Math.floor(Math.random() * allHints.length)
     return allHints[randomIndex]
 }
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-//
-// Show alert with game recap when game over
-//
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const endGameAlert = (alertText, score, timer) =>
-    Alert.alert(
-        "Game over!",
-        alertText + ` You scored ${score} points and the game lasted ${timer} seconds`,
-        [
-            { text: "OK", onPress: () => console.log("OK Pressed") }
-        ],
-        { cancelable: false }
-    )
