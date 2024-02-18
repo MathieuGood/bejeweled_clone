@@ -47,12 +47,12 @@ export default function RegisterScreen({ navigation }) {
                 );
             }
 
-            if (checkEmailFormat(email)
-                && checkPasswordFormat(password)
-                && checkNameFormat(name)) {
-                console.log('Adding player')
-                addPlayer(name.trim(), email, password, navigation)
-            }
+            // if (checkEmailFormat(email)
+            //     && checkPasswordFormat(password)
+            //     && checkNameFormat(name)) {
+            //     console.log('Adding player')
+            //     addPlayer(name.trim(), email, password, navigation)
+            // }
         })
 
     }
