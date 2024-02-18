@@ -10,13 +10,12 @@ const ModalScore = ({
     visible,
     changeModalVisible,
     navigation,
-    routeParams,
+    route,
     resetGame,
     title,
     score,
     highScores
 }) => {
-    const { player_id, player_name } = routeParams.params
 
     return (
         <Modal
@@ -52,7 +51,9 @@ const ModalScore = ({
 
                         <TouchButton title="Back to menu" press={() => {
                             changeModalVisible(false)
-                            navigation.navigate('PlayerScreen', { player_id: player_id, player_name: player_name })
+                            route.params
+                                ? navigation.navigate('PlayerScreen', { player_id: route.params.player_id, player_name: route.params.player_name })
+                                : navigation.navigate('PlayerScreen')
                         }}
                         />
 

@@ -62,9 +62,6 @@ export default function GameScreen({ navigation, route }) {
 
   // const [gameGrid, setGameGrid] = useState(exampleGrid)
 
-  // Get player_id and player_name from route parameters
-  const { player_id, player_name } = route.params
-
   // Build a grid with no matches
   const gridSize = 8
   const gridNumberOfDifferentItems = 8
@@ -132,8 +129,7 @@ export default function GameScreen({ navigation, route }) {
       )
     } else {
       let hint = getOneRandomHint(resultHints)
-      // Norah :
-      // INTEGRER CODE POUR AFFICHER LE HINT SUR LE GRID
+      // TO DO : Display hint with animation
       console.log("Hint : ", hint)
       Alert.alert(
         "Hint",
@@ -156,8 +152,11 @@ export default function GameScreen({ navigation, route }) {
     // Get current time in GMT and format it into a DateTime string (YYYY-MM-DD HH:MM:SS)
     const endTime = new Date().toISOString().slice(0, 19).replace("T", " ")
 
-    // Add score, duration and endTime 
-    addScore(player_id, score, timer, endTime)
+    // If route parameters contain logged in user info, add score, duration and endTime in database
+    if (route.params) {
+      const player_id = route.params.player_id
+      addScore(player_id, score, timer, endTime)
+    }
 
     console.log("END TIME : " + endTime)
     console.log("TIMER : " + timer)
@@ -314,7 +313,7 @@ export default function GameScreen({ navigation, route }) {
           visible={isModalvisible}
           changeModalVisible={setisModalVisible}
           navigation={navigation}
-          routeParams={route}
+          route={route}
           resetGame={resetGame}
           title={"Game is over"}
           score={score}
@@ -377,7 +376,9 @@ export default function GameScreen({ navigation, route }) {
           <TouchButton
             title="Quit game"
             press={() => {
-              navigation.navigate('PlayerScreen', { player_id: player_id, player_name: player_name })
+              route.params
+                ? navigation.navigate('PlayerScreen', { player_id: route.params.player_id, player_name: route.params.player_name })
+                : navigation.navigate('PlayerScreen')
             }}
           />
         </View>
