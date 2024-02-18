@@ -376,7 +376,7 @@ export default function GameScreen({ navigation, route }) {
           <TouchButton
             title="Quit game"
             press={() => {
-              navigation.navigate("PlayerScreen")
+              navigation.navigate('PlayerScreen', { player_id: player_id, player_name: player_name })
             }}
           />
         </View>
