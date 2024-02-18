@@ -46,26 +46,27 @@ INSERT INTO players (
     player_password,
     last_game_id
     ) VALUES
-    ('Mathieu', 'bon.mathieu@gmail.com', 'mathieubon', 2),
-    ('Testeur', 'mathieu.bon@uha.fr', 'test', 3),
-    ('Guru', 'gurumatmat@gmail.com', 'guru', 0),
-    ('John', 'john@john.com', 'john', 0),
-    ('Alex', 'alex@alex.com', 'alex', 0),
-    ('Terry', 'terry@terry.com', 'terry', 0),
-    ('Graham', 'graham@graham.com', 'graham', 0),
-    ('Eric', 'eric@eric.com', 'eric', 0)
+    ('Mathieu', 'bon.mathieu@gmail.com', 'mathieubon', 1),
+    ('Osiris', 'osiris@egyptian-god.com', 'osiris', 2),
+    ('Anubis', 'anubis@egyptian-god.com', 'anubis', 3),
+    ('Horus', 'horus@egyptian-god.com', 'horusrocks', 4),
+    ('Bastet', 'bastet@egyptian-god.com', 'meowmeow', 5),
+    ('Cleopatra', 'cleopatra@pharaoh.com', 'queenofegypt', 6),
+    ('Ramses II', 'ramsestwo@pharaoh.com', 'ramsestwo', 7),
+    ('Tutankhamun', 'tutankhamun@pharaoh.com', 'kingtut', 8),
+    ('Norah', 'norah.essaih@uha.fr', 'Norah67', 0)
     ;
 
 
 
 CREATE TABLE games (
         game_id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-        player_id INT NOT NULL,
+        player_id INT UNSIGNED NOT NULL,
         score INT NOT NULL,
         duration INT NOT NULL,
         end_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (player_id) REFERENCES players(player_id),
-        INDEX(player_id),
+        INDEX(player_id)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
 INSERT INTO games (
@@ -74,44 +75,14 @@ INSERT INTO games (
     duration,
     end_time
     ) VALUES
-    (845, 1, 276, '2024-01-08 14:01:00'),
-    (204, 1, 230, '2024-01-08 14:08:00'),
-    (768, 2, 231, '2024-01-08 15:00:00'),
-    (302, 1, 456, '2024-01-08 17:00:00'),
-    (300, 1, 400, '2024-01-08 17:05:30'),
-    (287, 1, 340, '2024-01-08 17:12:00'),
-    (255, 1, 300, '2024-01-08 17:15:00'),
-    (156, 2, 124, '2024-01-09 06:00:00'),
-    (210, 3, 180, '2024-01-10 08:30:00'),
-    (189, 4, 200, '2024-01-10 09:15:00'),
-    (275, 5, 320, '2024-01-10 10:00:00'),
-    (312, 6, 400, '2024-01-10 10:45:00'),
-    (198, 7, 210, '2024-01-10 11:30:00'),
-    (245, 8, 260, '2024-01-10 12:15:00'),
-    (320, 8, 360, '2024-01-10 13:00:00'),
-    (180, 1, 150, '2024-01-10 13:45:00'),
-    (791, 3, 280, '2024-01-12 15:30:00'),
-    (310, 4, 330, '2024-01-12 16:15:00'),
-    (270, 5, 290, '2024-01-12 17:00:00'),
-    (320, 6, 400, '2024-01-12 17:45:00'),
-    (240, 7, 220, '2024-01-12 18:30:00'),
-    (290, 8, 320, '2024-01-12 19:15:00'),
-    (330, 8, 360, '2024-01-12 20:00:00'),
-    (245, 1, 280, '2024-01-13 08:30:00'),
-    (312, 2, 330, '2024-01-13 09:15:00'),
-    (278, 3, 290, '2024-01-13 10:00:00'),
-    (320, 4, 400, '2024-01-13 10:45:00'),
-    (225, 5, 190, '2024-01-13 11:30:00'),
-    (270, 6, 320, '2024-01-13 12:15:00'),
-    (340, 7, 380, '2024-01-13 13:00:00'),
-    (198, 8, 150, '2024-01-13 13:45:00'),
-    (310, 3, 290, '2024-01-15 15:30:00'),
-    (280, 4, 330, '2024-01-15 16:15:00'),
-    (330, 5, 290, '2024-01-15 17:00:00'),
-    (360, 6, 400, '2024-01-15 17:45:00'),
-    (240, 7, 220, '2024-01-15 18:30:00'),
-    (300, 8, 320, '2024-01-15 19:15:00'),
-    (350, 8, 360, '2024-01-15 20:00:00')
+    (500, 1, 276, '2024-01-08 14:01:00'),
+    (1050, 2, 230, '2024-01-08 14:08:00'),
+    (800, 3, 231, '2024-01-08 15:00:00'),
+    (300, 4, 456, '2024-01-08 17:00:00'),
+    (750, 5, 400, '2024-01-08 17:05:30'),
+    (900, 6, 340, '2024-01-08 17:12:00'),
+    (1450, 7, 300, '2024-01-08 17:15:00'),
+    (150, 8, 124, '2024-01-09 06:00:00')
     ;
 
 
