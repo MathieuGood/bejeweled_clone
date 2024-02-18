@@ -112,21 +112,25 @@ app.post('/addplayer', (req, res) => {
 
 
 // Check login validity
+// Return player_id if valid, false if not
 app.post('/checklogin', (req, res) => {
     const { player_email, player_password } = req.body
     console.log(req.body)
-    db.query('SELECT COUNT(player_id) FROM players WHERE player_email = ? AND player_password = ?', [player_email, player_password],
+    db.query('SELECT COUNT(player_id), player_id, player_name FROM players WHERE player_email = ? AND player_password = ?', [player_email, player_password],
         (err, result) => {
             if (err) throw err
             if (result[0]['COUNT(player_id)'] === 1) {
-                res.json(true)
+                res.json({
+                    "player_id": result[0]['player_id'],
+                    "player_name": result[0]['player_name']
+                })
             } else {
                 res.json(false)
             }
         })
 })
 // Test /checklogin route
-// curl -X POST -H "Content-Type: application/json" -d '{"player_email":"bon.mathieu@gmail.com", "player_password":"mb"}' http://mathieubon.com:3001/checklogin
+// curl -X POST -H "Content-Type: application/json" -d '{"player_email":"bon.mathieu@gmail.com", "player_password":"mathieubon"}' http://mathieubon.com:3001/checklogin
 
 
 
@@ -159,7 +163,7 @@ app.get('/highscores', (req, res) => {
 
 // Add new score
 app.post('/addscore', (req, res) => {
-    const { player_id, score, duration, end_time} = req.body
+    const { player_id, score, duration, end_time } = req.body
     db.query('INSERT INTO games (player_id, score, duration, end_time) VALUES (?, ?, ?, ?)',
         [player_id, score, duration, end_time],
         (err, result) => {
