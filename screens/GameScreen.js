@@ -12,7 +12,10 @@ import GameGrid from "../components/GameGrid"
 import ScoreBoard from "../components/ScoreBoard"
 import ProgressBar from "../components/ProgressBar"
 import ModalScore from "../components/ModalScore"
-import { getHighScores } from "../core/apiRequests"
+import {
+  getHighScores,
+  addScore
+} from "../core/apiRequests"
 import {
   buildGameGridWithNoMatches,
   showGameGrid,
@@ -26,7 +29,7 @@ import {
 
 
 
-export default function GameScreen({ navigation }) {
+export default function GameScreen({ navigation, route }) {
 
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -58,6 +61,9 @@ export default function GameScreen({ navigation }) {
   ]
 
   // const [gameGrid, setGameGrid] = useState(exampleGrid)
+
+  // Get player_id and player_name from route parameters
+  const { player_id, player_name } = route.params
 
   // Build a grid with no matches
   const gridSize = 8
@@ -146,6 +152,15 @@ export default function GameScreen({ navigation }) {
 
     // Pause the timer
     setTimerPause(true)
+
+    // Get current time in GMT and format it into a DateTime string (YYYY-MM-DD HH:MM:SS)
+    const endTime = new Date().toISOString().slice(0, 19).replace("T", " ")
+
+    // Add score, duration and endTime 
+    addScore(player_id, score, timer, endTime)
+
+    console.log("END TIME : " + endTime)
+    console.log("TIMER : " + timer)
 
     // Retrieve high scores
     getHighScores(setHighScores)
@@ -298,6 +313,7 @@ export default function GameScreen({ navigation }) {
           visible={isModalvisible}
           changeModalVisible={setisModalVisible}
           navigation={navigation}
+          routeParams={route}
           resetGame={resetGame}
           title={"Game is over"}
           score={score}

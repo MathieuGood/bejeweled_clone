@@ -1,28 +1,28 @@
 import React from 'react'
 import { StyleSheet, View, Text } from 'react-native'
 import TouchButton from '../components/TouchButton'
-import Artifact from '../components/Artifact'
 
-export default function PlayerScreen({ navigation }) {
+export default function PlayerScreen({ navigation, route }) {
+
+    // Get player_id and player_name from route parameters
+    const { player_id, player_name } = route.params
 
     return (
         <View style={styles.mainContainer}>
 
-            <Text>Player screen</Text>
+            <Text>Welcome {player_name} number {player_id}</Text>
             <TouchButton
                 title='Play game'
                 press={() => {
-                    navigation.navigate('GameScreen')
+                    navigation.navigate('GameScreen', { player_id: player_id, player_name: player_name })
                 }}
             />
             <TouchButton
                 title='Back to home screen'
                 press={() => {
-                    navigation.navigate('HomeScreen')
+                    navigation.navigate('Log out')
                 }}
             />
-
-            <Artifact artifactNumber={0} />
 
         </View>
     )

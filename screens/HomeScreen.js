@@ -51,7 +51,7 @@ export default function HomeScreen({ navigation }) {
                         title='Login'
                         press={() => {
                             // On click, check if fields are not empty
-                            //check if e-mail and password match
+                            // Check if e-mail and password match
                             if (
                                 checkIfStringIsNotEmpty(email) &&
                                 checkIfStringIsNotEmpty(password) &&
