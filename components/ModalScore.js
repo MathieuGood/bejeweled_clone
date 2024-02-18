@@ -38,8 +38,8 @@ const ModalScore = ({
                     {/* TO DO : write function to render item correctly in Flatlist */}
                     <FlatList
                         data={highScores}
-                        keyExtractor={(item) => { item.toString() }}
-                        renderItem={({ item }) => <Text key='key'>{item.rank} {item.score} {item.player_name}</Text>}
+                        keyExtractor={(item, index) => `${item.rank}-${item.score}-${item.player_name}-${index}`}
+                        renderItem={({ item }) => <Text>{item.rank} {item.score} {item.player_name}</Text>}
                         onEndReachedThreshold={0.5}
                     />
 
