@@ -46,13 +46,6 @@ export default function RegisterScreen({ navigation }) {
                     { cancelable: false }
                 );
             }
-
-            // if (checkEmailFormat(email)
-            //     && checkPasswordFormat(password)
-            //     && checkNameFormat(name)) {
-            //     console.log('Adding player')
-            //     addPlayer(name.trim(), email, password, navigation)
-            // }
         })
 
     }
