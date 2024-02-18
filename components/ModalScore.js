@@ -1,8 +1,8 @@
 import React from 'react'
 import { Modal, StyleSheet, Text, View, Dimensions, FlatList } from 'react-native'
-import TouchButton from './TouchButton'
 import { BlurView } from 'expo-blur'
-
+import TouchButton from './TouchButton'
+import HighScores from './HighScores'
 
 const windowWidth = Dimensions.get('window').width
 
@@ -37,12 +37,9 @@ const ModalScore = ({
                         You scored <Text style={styles.scoreStyle}>{score}</Text> points.
                     </Text>
 
-                    {/* TO DO : write function to render item correctly in Flatlist */}
-                    <FlatList
+                    <HighScores
                         data={highScores}
-                        keyExtractor={(item, index) => `${item.rank}-${item.score}-${item.player_name}-${index}`}
-                        renderItem={({ item }) => <Text>{item.rank} {item.score} {item.player_name}</Text>}
-                        onEndReachedThreshold={0.5}
+                        styles={{}}
                     />
 
                     <View style={{ flexDirection: "row", justifyContent: 'space-evenly' }}>
@@ -50,19 +47,21 @@ const ModalScore = ({
                         <TouchButton title="Restart game" press={() => {
                             changeModalVisible(false)
                             resetGame()
-                        }} />
+                        }}
+                        />
 
                         <TouchButton title="Back to menu" press={() => {
                             changeModalVisible(false)
                             navigation.navigate('PlayerScreen', { player_id: player_id, player_name: player_name })
-                        }} />
+                        }}
+                        />
 
                     </View>
 
                 </View>
 
             </BlurView>
-        </Modal>
+        </Modal >
     )
 }
 
@@ -102,7 +101,32 @@ const styles = StyleSheet.create({
     scoreStyle: {
         color: '#E53935', // Par exemple, une couleur rouge pour le score
         fontWeight: 'bold',
-    }
+    },
+    highScores: {
+        backgroundColor: '#f2f2f2',
+        width: '80%',
+        alignSelf: 'center',
+        paddingVertical: 10,
+    },
+    flatListRow: {
+        flexDirection: 'row',
+        marginBottom: 5,
+    },
+    flatListCol: {
+        flex: 1,
+        justifyContent: 'center',
+    },
+    leftCol: {
+        width: '50%',
+        textAlign: 'right',
+        marginEnd: 5
+    },
+    rightCol: {
+        width: '50%',
+        textAlign: 'left',
+        marginStart: 5
+    },
+
 
 })
 
