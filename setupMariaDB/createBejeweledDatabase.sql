@@ -34,7 +34,10 @@ CREATE TABLE players (
     player_email VARCHAR(255) NOT NULL,
     player_password VARCHAR(255) NOT NULL,
     last_game_id INT DEFAULT 0,
-    prev_rank INT DEFAULT NULL
+    prev_rank INT DEFAULT NULL,
+    INDEX(player_email),
+    CONSTRAINT UC_player_email UNIQUE (player_email)
+
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
 INSERT INTO players (
@@ -60,7 +63,9 @@ CREATE TABLE games (
         player_id INT NOT NULL,
         score INT NOT NULL,
         duration INT NOT NULL,
-        end_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+        end_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (player_id) REFERENCES players(player_id),
+        INDEX(player_id),
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
 INSERT INTO games (
