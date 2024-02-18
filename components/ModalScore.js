@@ -1,5 +1,5 @@
 import React from 'react'
-import { Modal, StyleSheet, Text, View, Dimensions } from 'react-native'
+import { Modal, StyleSheet, Text, View, Dimensions, FlatList } from 'react-native'
 import TouchButton from './TouchButton'
 import { BlurView } from 'expo-blur'
 
@@ -35,23 +35,23 @@ const ModalScore = ({
                         You scored <Text style={styles.scoreStyle}>{score}</Text> points.
                     </Text>
 
-{/* TO DO : write function to render item correctly in Flatlist */}
+                    {/* TO DO : write function to render item correctly in Flatlist */}
                     <FlatList
-						data={highScores}
-						keyExtractor={(item) => item.id.toString()}
-						renderItem={({ item }) => <Text>item</Text>}
-						onEndReachedThreshold={0.5}
-					/>
+                        data={highScores}
+                        keyExtractor={(item) => { item.toString() }}
+                        renderItem={({ item }) => <Text key='key'>{item.rank} {item.score} {item.player_name}</Text>}
+                        onEndReachedThreshold={0.5}
+                    />
 
                     <View style={{ flexDirection: "row", justifyContent: 'space-evenly' }}>
 
                         <TouchButton title="Restart game" press={() => {
-                            changeModalVisible(false);
-                            resetGame();
+                            changeModalVisible(false)
+                            resetGame()
                         }} />
 
                         <TouchButton title="Back to menu" press={() => {
-                            changeModalVisible(false);
+                            changeModalVisible(false)
                             navigation.navigate('PlayerScreen') //provisoirement retour à cette page
                         }} />
 
@@ -104,4 +104,4 @@ const styles = StyleSheet.create({
 
 })
 
-export default ModalScore;
+export default ModalScore

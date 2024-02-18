@@ -1,6 +1,8 @@
 /////////////////////////////////////////////////////////////////////////////////////
 //
 // apiRequests utils
+//
+// Host :
 // http://mathieubon.com:3001
 //
 /////////////////////////////////////////////////////////////////////////////////////
@@ -120,3 +122,32 @@ export const checkIfEmailDoesNotExist = (email, callbackFunction) => {
         });
 }
 
+// Using /highscores
+// Retrieve high scores
+export const getHighScores = (setHighScores) => {
+    return fetch(`http://mathieubon.com:3001/highscores/`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+    })
+        .then((response) => response.json())
+        .then((json) => {
+            if (json) {
+                console.log(json)
+
+                json.forEach((ranking) => {
+                    console.log(ranking.rank, ranking.player_name, ranking.score)
+                })
+
+                setHighScores(json)
+
+                return json
+            } else {
+                console.log("No top scores")
+                return null
+            }
+        })
+        .catch((error) => {
+            console.error(error)
+            return null
+        })
+}

@@ -316,12 +316,12 @@ export const pushItemsDown = (gameGrid) => {
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const pushDownValuesAndEraseAlignments = (gameGrid, level, setScore, score, setLevel, setProgressBar, setProgressBarMax) => {
+export const pushDownValuesAndEraseAlignments = (gameGrid, level, setScore, score, setLevel, setProgressBar) => {
     let matches = ''
 
     do {
         // Check for matches and delete them
-        findAndDeleteMatchingValuesFromGrid(gameGrid, level, setScore, score, setLevel, setProgressBar, setProgressBarMax)
+        findAndDeleteMatchingValuesFromGrid(gameGrid, level, setScore, score, setLevel, setProgressBar)
         console.log('**** ITEMS DELETED')
         showGameGrid(gameGrid)
 
@@ -348,7 +348,7 @@ export const pushDownValuesAndEraseAlignments = (gameGrid, level, setScore, scor
 
 // TO DO : delete setProgressBarMax paramater if not used
 
-export const findAndDeleteMatchingValuesFromGrid = (gameGrid, level, setScore, score, setLevel, setProgressBar, setProgressBarMax) => {
+export const findAndDeleteMatchingValuesFromGrid = (gameGrid, level, setScore, score, setLevel, setProgressBar) => {
 
     // Check if there is a match consequently to the swap
     let matches = checkGameGridForAlignments(gameGrid)
