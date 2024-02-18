@@ -14,7 +14,6 @@ import { Alert } from 'react-native'
 // Using /addplayer
 // Create entry in database for new account
 export const addPlayer = (name, email, password, navigation) => {
-    console.log('START OF addPlayer FUNCTION')
     const bodyData = {
         player_name: name,
         player_email: email,

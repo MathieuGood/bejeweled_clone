@@ -177,6 +177,7 @@ export default function GameScreen({ navigation, route }) {
     setScore(0)
     setLevel(1)
     setProgressBar(50)
+    setTimerPause(false)
   }
 
 

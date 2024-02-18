@@ -316,6 +316,29 @@ export const pushItemsDown = (gameGrid) => {
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// export const pushDownValuesAndEraseAlignments = (gameGrid, level, setScore, score, setLevel, setProgressBar) => {
+//     let matches = ''
+
+//     do {
+//         // Check for matches and delete them
+//         findAndDeleteMatchingValuesFromGrid(gameGrid, level, setScore, score, setLevel, setProgressBar)
+//         console.log('**** ITEMS DELETED')
+//         showGameGrid(gameGrid)
+
+//         // Push values down
+//         pushItemsDown(gameGrid)
+//         console.log('**** ITEMS PUSHED DOWN')
+//         showGameGrid(gameGrid)
+
+//         // Check if there are matches after values have been pushed down
+//         matches = checkGameGridForAlignments(gameGrid)
+//         console.log('Matches length : ' + matches.length)
+
+//         // While there are still matches, rerun the loop
+//     } while (matches.length != 0)
+// }
+
+
 export const pushDownValuesAndEraseAlignments = (gameGrid, level, setScore, score, setLevel, setProgressBar) => {
     let matches = ''
 
@@ -337,8 +360,6 @@ export const pushDownValuesAndEraseAlignments = (gameGrid, level, setScore, scor
         // While there are still matches, rerun the loop
     } while (matches.length != 0)
 }
-
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -503,7 +524,7 @@ export const addPoints = (matches, level) => {
                 pointsPerMatch = 500
             }
             // Multiply points per match by the level to get the total points to add
-            pointsToAdd += pointsPerMatch * level
+            pointsToAdd += pointsPerMatch
         })
     }
     console.log("Points to add to score : " + pointsToAdd)
