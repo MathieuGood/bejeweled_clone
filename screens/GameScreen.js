@@ -186,6 +186,7 @@ export default function GameScreen({ navigation }) {
         // Decrement progressBar
         setProgressBar((prevProgressBar) => {
           const newProgressBar = prevProgressBar - 1
+          return newProgressBar
         })
       }
     }, 1000)
