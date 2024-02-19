@@ -52,8 +52,8 @@ const ModalScore = ({
                         <TouchButton title="Back to menu" press={() => {
                             changeModalVisible(false)
                             route.params
-                                ? navigation.navigate('PlayerScreen', { player_id: route.params.player_id, player_name: route.params.player_name })
-                                : navigation.navigate('PlayerScreen')
+                                ? navigation.navigate('HomeScreen', { player_id: route.params.player_id, player_name: route.params.player_name })
+                                : navigation.navigate('HomeScreen')
                         }}
                         />
 

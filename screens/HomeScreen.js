@@ -1,128 +1,65 @@
-import React, { useState } from 'react'
-import { StyleSheet, View, Alert, ImageBackground } from 'react-native'
+import React from 'react'
+import { StyleSheet, View, Text, Alert } from 'react-native'
 import TouchButton from '../components/TouchButton'
-import TextField from '../components/TextField'
-import Header from '../components/Header'
-import { checkCredentials } from '../core/apiRequests'
-import { checkEmailFormat, checkIfStringIsNotEmpty, checkPasswordFormat } from '../core/userEntryCheck'
 
-export default function HomeScreen({ navigation }) {
+export default function HomeScreen({ navigation, route }) {
 
-    const [state, setState] = useState({
-        email: '',
-        password: ''
-    })
-
-    const { email, password } = state
-
+    const confirmLogout = () => {
+        Alert.alert(
+            'Log out',
+            'Are you sure you want to log out?',
+            [
+                { text: 'Cancel' },
+                { text: 'Log out', onPress: () => navigation.navigate('HomeScreen') }
+            ],
+            { cancelable: false }
+        )
+    }
 
     return (
         <View style={styles.mainContainer}>
+            
+            {/* <Text>Welcome {player_name} number {player_id}</Text> */}
 
-            <ImageBackground
-                source={require('../assets/essai3.png')}
-                style={styles.background}
-                resizeMode='cover'
-            >
-                <View style={styles.form}>
+            {/* If the player is logged in, display his name */}
+            {route.params
+                ? <Text>Welcome {route.params.player_name}</Text>
+                : null
+            }
 
-                    <Header style={styles.header} title='Welcome' />
+            <TouchButton
+                title={
+                    route.params
+                        ? 'Log out '
+                        : 'Log in'
+                }
+                press={() => {
+                    route.params
+                        // On click on log out, ask for confirmation and if yes, reload HomeScreen with no parameters
+                        ? confirmLogout()
+                        // On click on log in , navigate to the LoginScreen
+                        : navigation.navigate('LoginScreen')
+                }}
+            />
 
-                    <TextField
-                        placeholder='E-mail'
-                        value={email}
-                        onChangeText={text => setState(prevState => {
-                            return { ...prevState, email: text }
-                        })}
-                        autoCapitalize='none'
-                        secureTextEntry={false}
-                    />
-                    <TextField
-                        placeholder='Password'
-                        value={password}
-                        onChangeText={text => setState(prevState => {
-                            return { ...prevState, password: text }
-                        })}
-                        autoCapitalize='none'
-                        secureTextEntry={true}
-                    />
-
-                    <TouchButton
-                        title='Login'
-                        press={() => {
-                            // On click, check if fields are not empty
-                            // Check if e-mail and password match
-                            if (
-                                checkIfStringIsNotEmpty(email) &&
-                                checkIfStringIsNotEmpty(password) &&
-                                checkEmailFormat(email) &&
-                                checkPasswordFormat(password)
-                            ) {
-                                checkCredentials(email, password, navigation)
-                            } else {
-                                console.log('E-mail or password wrong')
-                                Alert.alert(
-                                    'Error',
-                                    'E-mail or password are incorrect',
-                                    [
-                                        { text: 'OK' }
-                                    ],
-                                    { cancelable: false }
-                                );
-                            }
-                        }}
-                    />
-
-                    <TouchButton
-                        title='Create account'
-                        press={() => {
-                            navigation.navigate('RegisterScreen')
-                        }}
-                    />
-
-                </View>
-
-            </ImageBackground>
+                        <TouchButton
+                title='Play game'
+                press={() => {
+                    route.params
+                        ? navigation.navigate('GameScreen', { player_id: route.params.player_id, player_name: route.params.player_name })
+                        : navigation.navigate('GameScreen')
+                }}
+            />
 
         </View>
     )
-
 }
 
 let styles = StyleSheet.create({
     mainContainer: {
-        flex: 1,
-        // alignItems: 'center',
-        // justifyContent: 'center'
-    },
-    background: {
+        backgroundColor: 'lightgray',
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center'
-    },
-    form: {
-        backgroundColor: 'rgba(244, 232, 193, 0.8)',
-        padding: 20,
-        borderRadius: 10,
-        borderWidth: 2,
-        borderColor: '#d4af37', // Doré
-        width: '80%',
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
-        alignItems: 'center',
-    },
-    header: {
-        color: '#2b50c8',
-        fontSize: 20,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        textTransform: 'uppercase',
-        marginBottom: 20
-    },
+    }
 })

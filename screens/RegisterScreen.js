@@ -32,7 +32,7 @@ export default function RegisterScreen({ navigation }) {
             // If errorMessage is empty and all the checks went well
             if (errorMessage === '') {
                 // Execute addPlayer() that sends API call to create new player in database
-                // and navigate to PlayerScreen
+                // and navigate to HomeScreen
                 console.log('Adding player')
                 addPlayer(name.trim(), email, password, navigation)
             } else {
@@ -61,7 +61,7 @@ export default function RegisterScreen({ navigation }) {
             >
 
                 <View style={styles.form}>
-                <Header style={styles.header} title='registration'/>
+                <Header style={styles.header} title='Create new account'/>
 
                     {/* TextField behavior :
                     onChangeText -> update state with user entry and reinject the state as value */}
@@ -100,7 +100,7 @@ export default function RegisterScreen({ navigation }) {
                     <TouchButton
                         title='Back to home page'
                         press={() => {
-                            navigation.navigate('HomeScreen')
+                            navigation.navigate('LoginScreen')
                         }}
                     />
 
@@ -138,14 +138,5 @@ let styles = StyleSheet.create({
         elevation: 5,
         alignItems: 'center',
     },
-    header: {
-        color: '#2b50c8', 
-        fontSize: 20,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        textTransform: 'uppercase',
-        marginBottom: 20
-
-      },
-      
+    
 })

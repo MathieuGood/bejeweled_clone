@@ -30,7 +30,7 @@ export const addPlayer = (name, email, password, navigation) => {
             console.log(json)
             if (json) {
                 console.log('Player added')
-                navigation.navigate('PlayerScreen', { player_id: json.id, player_name: name })
+                navigation.navigate('HomeScreen', { player_id: json.id, player_name: name })
             } else {
                 console.log('Incorrect data entered')
                 Alert.alert(
@@ -65,12 +65,12 @@ export const checkCredentials = (email, password, navigation) => {
     })
         .then((response) => response.json())
         .then((json) => {
-            // If credentials are valid, navigate to PlayerScreen with player_id as
+            // If credentials are valid, navigate to HomeScreen with player_id as
             if (json) {
                 console.log('Password OK')
                 console.log(json)
                 console.log(json.player_id, json.player_name)
-                navigation.navigate('PlayerScreen', { player_id: json.player_id, player_name: json.player_name })
+                navigation.navigate('HomeScreen', { player_id: json.player_id, player_name: json.player_name })
             } else {
                 console.log('E-mail or password wrong')
                 Alert.alert(
@@ -104,7 +104,7 @@ export const checkIfEmailDoesNotExist = (email, callbackFunction) => {
     })
         .then((response) => response.json())
         .then((json) => {
-            // If credentials are valid, navigate to PlayerScreen
+            // If credentials are valid, navigate to HomeScreen
             if (json) {
                 console.log('Email does not already exist')
                 callbackFunction()

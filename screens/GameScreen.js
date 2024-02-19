@@ -377,8 +377,8 @@ export default function GameScreen({ navigation, route }) {
             title="Quit game"
             press={() => {
               route.params
-                ? navigation.navigate('PlayerScreen', { player_id: route.params.player_id, player_name: route.params.player_name })
-                : navigation.navigate('PlayerScreen')
+                ? navigation.navigate('HomeScreen', { player_id: route.params.player_id, player_name: route.params.player_name })
+                : navigation.navigate('HomeScreen')
             }}
           />
         </View>
