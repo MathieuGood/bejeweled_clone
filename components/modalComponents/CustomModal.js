@@ -24,12 +24,14 @@ export default function CustomModal({
                 intensity={20}
             >
                 <View style={styles.modal}>
-                 <Text style={styles.modalText}>{title}</Text>
 
-                {children}
+                    <Text style={styles.modalText}>{title}</Text>
+
+                    {children}
+
                 </View>
             </BlurView>
-            
+
         </Modal >
     )
 }
@@ -37,11 +39,6 @@ export default function CustomModal({
 const windowWidth = Dimensions.get('window').width
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
     blur: {
         position: 'absolute',
         top: 0,

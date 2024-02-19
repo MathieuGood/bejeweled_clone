@@ -4,6 +4,7 @@ import TouchButton from '../components/TouchButton'
 import CustomModal from '../components/modalComponents/CustomModal'
 import ScoresModal from '../components/modalComponents/ScoresModal'
 
+
 export default function HomeScreen({ navigation, route }) {
 
     // Set the modal visibility to false
@@ -60,8 +61,7 @@ export default function HomeScreen({ navigation, route }) {
                 press={() => { setisHighScoresModalVisible(true) }}
             />
 
-            {/* HighScoresModal */}
-            {/* Not visible by default */}
+            {/* High scores Modal (hidden by default*/}
             <CustomModal
                 visible={isHighScoresModalvisible}
                 changeModalVisible={setisHighScoresModalVisible}

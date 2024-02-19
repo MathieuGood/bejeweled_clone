@@ -13,25 +13,13 @@ export default function ScoresModal({
     endGame
 }) {
 
-    // Set title whether it is an endGame Modal or simple HighScores Modal
-    let title
-    if (endGame) {
-        title = 'Game over'
-    } else {
-        title = 'High scores'
-    }
-
     return (
         <View>
 
             {endGame
                 ? <View>
-                    <Text style={{
-                        textAlign: 'center',
-                        marginBottom: 15,
-                        fontSize: 17
-                    }}>
-                        You scored <Text style={styles.scoreStyle}>{score}</Text> points.
+                    <Text style={styles.scoreText}>
+                        You scored <Text style={styles.score}>{score}</Text> points.
                     </Text>
                 </View>
                 : null
@@ -59,7 +47,7 @@ export default function ScoresModal({
                     />
 
                 </View>
-                // If the modal is a highScores modal, display the button to go back
+                // If the modal is a highScores modal, display the button to close modal
                 : <View>
                     <TouchButton title="Close" press={() => {
                         changeModalVisible(false)
@@ -72,59 +60,20 @@ export default function ScoresModal({
     )
 }
 
-const windowWidth = Dimensions.get('window').width
+
 
 const styles = StyleSheet.create({
-    modal: {
-        marginTop: 300,
-        width: windowWidth - 50,
-        padding: 10,
-        backgroundColor: 'white',
-        borderRadius: 10,
-        alignSelf: 'center',
-    },
-    modalText: {
-        fontSize: 18,
-        color: '#1E201C',
-        fontWeight: 'bold',
-        marginBottom: 20,
-        textTransform: "uppercase",
+    scoreText: {
         textAlign: 'center',
-        marginBottom: 20,
-        marginTop: 15
+        marginBottom: 15,
+        fontSize: 17
     },
-    scoreStyle: {
+    score: {
         color: '#E53935', // Par exemple, une couleur rouge pour le score
         fontWeight: 'bold',
-    },
-    highScores: {
-        backgroundColor: '#f2f2f2',
-        width: '80%',
-        alignSelf: 'center',
-        paddingVertical: 10,
-    },
-    flatListRow: {
-        flexDirection: 'row',
-        marginBottom: 5,
-    },
-    flatListCol: {
-        flex: 1,
-        justifyContent: 'center',
-    },
-    leftCol: {
-        width: '50%',
-        textAlign: 'right',
-        marginEnd: 5
-    },
-    rightCol: {
-        width: '50%',
-        textAlign: 'left',
-        marginStart: 5
     },
     bottomButtonsContainer: {
         flexDirection: "row",
         justifyContent: 'space-evenly'
     }
-
-
 })
