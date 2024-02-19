@@ -1,8 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { StyleSheet, View, Text, Alert } from 'react-native'
 import TouchButton from '../components/TouchButton'
+import CustomModal from '../components/modalComponents/CustomModal'
 
 export default function HomeScreen({ navigation, route }) {
+
+    // Set the modal visibility to false
+    const [isModalvisible, setisModalVisible] = useState(false)
 
     const confirmLogout = () => {
         Alert.alert(
@@ -18,8 +22,6 @@ export default function HomeScreen({ navigation, route }) {
 
     return (
         <View style={styles.mainContainer}>
-            
-            {/* <Text>Welcome {player_name} number {player_id}</Text> */}
 
             {/* If the player is logged in, display his name */}
             {route.params
@@ -42,7 +44,7 @@ export default function HomeScreen({ navigation, route }) {
                 }}
             />
 
-                        <TouchButton
+            <TouchButton
                 title='Play game'
                 press={() => {
                     route.params
@@ -50,10 +52,28 @@ export default function HomeScreen({ navigation, route }) {
                         : navigation.navigate('GameScreen')
                 }}
             />
+            {/* High scores button */}
+            {/* Makes ScoresModal visible*/}
+            <TouchButton
+                title='High scores'
+                press={() => { setisModalVisible(true) }}
+            />
+
+            {/* HighScoresModal */}
+            {/* Not visible by default */}
+            <CustomModal
+                visible={isModalvisible}
+                changeModalVisible={setisModalVisible}
+                type={"highScores"}
+                navigation={navigation}
+                route={route}
+            />
+
 
         </View>
     )
 }
+
 
 let styles = StyleSheet.create({
     mainContainer: {

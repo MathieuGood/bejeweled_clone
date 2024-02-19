@@ -8,12 +8,11 @@ import {
   ImageBackground,
 } from "react-native"
 import TouchButton from "../components/TouchButton"
-import GameGrid from "../components/GameGrid"
-import ScoreBoard from "../components/ScoreBoard"
-import ProgressBar from "../components/ProgressBar"
-import ModalScore from "../components/ModalScore"
+import CustomModal from "../components/modalComponents/CustomModal"
+import GameGrid from "../components/gameComponents/GameGrid"
+import ScoreBoard from "../components/gameComponents/ScoreBoard"
+import ProgressBar from "../components/gameComponents/ProgressBar"
 import {
-  getHighScores,
   addScore
 } from "../core/apiRequests"
 import {
@@ -89,9 +88,6 @@ export default function GameScreen({ navigation, route }) {
   // Set the modal visibility to false
   const [isModalvisible, setisModalVisible] = useState(false)
 
-  // Set high scores to null
-  const [highScores, setHighScores] = useState(null)
-
 
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -160,9 +156,6 @@ export default function GameScreen({ navigation, route }) {
 
     console.log("END TIME : " + endTime)
     console.log("TIMER : " + timer)
-
-    // Retrieve high scores
-    getHighScores(setHighScores)
 
     // Show scores Modal
     setisModalVisible(true)
@@ -309,15 +302,14 @@ export default function GameScreen({ navigation, route }) {
             > */}
 
       <SafeAreaView style={styles.safeArea}>
-        <ModalScore
+        <CustomModal
           visible={isModalvisible}
           changeModalVisible={setisModalVisible}
+          type={"endGame"}
           navigation={navigation}
           route={route}
           resetGame={resetGame}
-          title={"Game is over"}
           score={score}
-          highScores={highScores}
         />
 
         <ScoreBoard level={level} score={score} attempts={attempts} />

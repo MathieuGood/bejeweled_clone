@@ -1,7 +1,17 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { StyleSheet, View, Text, FlatList } from 'react-native'
+import { getHighScores } from '../core/apiRequests'
 
-export default function HighScores({ data }) {
+export default function HighScores() {
+
+  // Set high scores to null by default
+  const [highScores, setHighScores] = useState(null)
+
+
+  // Retrieve high scores when component is mounted
+  useEffect(() => {
+    getHighScores(setHighScores)
+  }, [])
 
   return (
 
@@ -12,11 +22,11 @@ export default function HighScores({ data }) {
         fontWeight: '700',
         marginBottom: 10,
       }}>
-        High scores
+        TOP 6
       </Text>
 
       <FlatList
-        data={data}
+        data={highScores}
         keyExtractor={(item, index) => {
           `${item.rank}-${item.score}-${item.player_name}-${index}`
         }}

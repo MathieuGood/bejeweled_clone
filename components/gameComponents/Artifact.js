@@ -1,18 +1,18 @@
 import React from 'react'
 import { StyleSheet, TouchableOpacity, View, Image } from 'react-native'
 
-export default function Artifact({ artifactNumber, press }) {
+export default function Artifact({ artifactNumber}) {
 
     const artifactsImages = {
-        '': require('../assets/brickwall.png'),
-        0: require('../assets/1.png'),
-        1: require('../assets/2.png'),
-        2: require('../assets/3.png'),
-        3: require('../assets/4.png'),
-        4: require('../assets/9.png'),
-        5: require('../assets/6.png'),
-        6: require('../assets/40.png'),
-        7: require('../assets/30.png'),
+        '': require('../../assets/brickwall.png'),
+        0: require('../../assets/1.png'),
+        1: require('../../assets/2.png'),
+        2: require('../../assets/3.png'),
+        3: require('../../assets/4.png'),
+        4: require('../../assets/9.png'),
+        5: require('../../assets/6.png'),
+        6: require('../../assets/40.png'),
+        7: require('../../assets/30.png'),
     }
 
     return (

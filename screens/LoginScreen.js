@@ -116,13 +116,5 @@ let styles = StyleSheet.create({
         shadowRadius: 3.84,
         elevation: 5,
         alignItems: 'center',
-    },
-    header: {
-        color: '#2b50c8',
-        fontSize: 20,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        textTransform: 'uppercase',
-        marginBottom: 20
-    },
+    }
 })
