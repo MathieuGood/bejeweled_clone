@@ -10,7 +10,6 @@ export default function ScoresModal({
     route,
     resetGame,
     score,
-    highScores,
     endGame
 }) {
 
@@ -23,11 +22,8 @@ export default function ScoresModal({
     }
 
     return (
-        <View style={styles.modal}>
+        <View>
 
-            <Text style={styles.modalText}>{title}</Text>
-
-            {/* If it is an endGame Modal, display finished game score */}
             {endGame
                 ? <View>
                     <Text style={{
@@ -41,11 +37,7 @@ export default function ScoresModal({
                 : null
             }
 
-
-
             <HighScores
-                data={highScores}
-                styles={{}}
             />
 
             {endGame

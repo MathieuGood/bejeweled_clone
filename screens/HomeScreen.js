@@ -2,11 +2,12 @@ import React, { useState } from 'react'
 import { StyleSheet, View, Text, Alert } from 'react-native'
 import TouchButton from '../components/TouchButton'
 import CustomModal from '../components/modalComponents/CustomModal'
+import ScoresModal from '../components/modalComponents/ScoresModal'
 
 export default function HomeScreen({ navigation, route }) {
 
     // Set the modal visibility to false
-    const [isModalvisible, setisModalVisible] = useState(false)
+    const [isHighScoresModalvisible, setisHighScoresModalVisible] = useState(false)
 
     const confirmLogout = () => {
         Alert.alert(
@@ -56,18 +57,21 @@ export default function HomeScreen({ navigation, route }) {
             {/* Makes ScoresModal visible*/}
             <TouchButton
                 title='High scores'
-                press={() => { setisModalVisible(true) }}
+                press={() => { setisHighScoresModalVisible(true) }}
             />
 
             {/* HighScoresModal */}
             {/* Not visible by default */}
             <CustomModal
-                visible={isModalvisible}
-                changeModalVisible={setisModalVisible}
-                type={"highScores"}
-                navigation={navigation}
-                route={route}
-            />
+                visible={isHighScoresModalvisible}
+                changeModalVisible={setisHighScoresModalVisible}
+                title={"High scores"}
+            >
+                <ScoresModal
+                    changeModalVisible={setisHighScoresModalVisible}
+                    endGame={false}
+                />
+            </CustomModal>
 
 
         </View>

@@ -1,18 +1,13 @@
 import React from 'react'
-import { Modal, StyleSheet, Dimensions } from 'react-native'
+import { Modal, StyleSheet, Dimensions, Text, View } from 'react-native'
 import { BlurView } from 'expo-blur'
-import HighScoresModal from './ScoresModal'
 
 
 export default function CustomModal({
+    children,
     visible,
     changeModalVisible,
-    type,
-    navigation,
-    route,
-    resetGame,
-    score,
-    highScores
+    title
 }) {
 
     return (
@@ -28,29 +23,13 @@ export default function CustomModal({
                 tint='dark'
                 intensity={20}
             >
-                {/* Set content of modal regarding the type parameter : endGame, highScores, register or login */}
-                {type === 'endGame'
-                    // Modal for end game, display score and high scores
-                    ? <HighScoresModal
-                        changeModalVisible={changeModalVisible}
-                        navigation={navigation}
-                        route={route}
-                        resetGame={resetGame}
-                        score={score}
-                        highScores={highScores}
-                        endGame={true}
-                    />
-                    // Modal for high scores, display high scores only
-                    : type === 'highScores'
-                        ? <HighScoresModal
-                            changeModalVisible={changeModalVisible}
-                            highScores={highScores}
-                            endGame={false}
-                        />
-                        : null
-                }
+                <View style={styles.modal}>
+                 <Text style={styles.modalText}>{title}</Text>
 
+                {children}
+                </View>
             </BlurView>
+            
         </Modal >
     )
 }
@@ -88,9 +67,5 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginBottom: 20,
         marginTop: 15
-    },
-    scoreStyle: {
-        color: '#E53935', // Par exemple, une couleur rouge pour le score
-        fontWeight: 'bold',
     },
 })

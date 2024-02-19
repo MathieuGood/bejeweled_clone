@@ -9,6 +9,7 @@ import {
 } from "react-native"
 import TouchButton from "../components/TouchButton"
 import CustomModal from "../components/modalComponents/CustomModal"
+import ScoresModal from "../components/modalComponents/ScoresModal"
 import GameGrid from "../components/gameComponents/GameGrid"
 import ScoreBoard from "../components/gameComponents/ScoreBoard"
 import ProgressBar from "../components/gameComponents/ProgressBar"
@@ -220,48 +221,33 @@ export default function GameScreen({ navigation, route }) {
     // Get current grid from state
     let grid = gameGrid
 
-    console.log("useEffect : lastPress is " + lastPress)
     if (firstPress === null) {
-      // If it user's first press on jewel, record press to firstPress state
+      // If it user's first press on a cell, record press to firstPress state
       setFirstPress(lastPress)
-      // Norah :
-      // INTEGRER CODE POUR METTRE EN SURBRILLANCE LA PREMIERER CELLULE SELECTIONNEE SUR LE GRID
-      // Coordoonnées de la première cellule sélectionnée : firstPress
-      console.log("useEffect : firstPress recorded >>> " + lastPress)
+
+      // TO DO : Highlight the first cell selected on the grid
+
     } else {
-      console.log("useEffect : secondPress recorded >>> " + lastPress)
-
-      console.log("firstPress is " + firstPress)
-      console.log("secondPress is " + lastPress)
-
-      // Player has selected two cells
-      // NOW DO SOMETHING !
-
-      showGameGrid(grid)
+      // If it user's second press on a cell, run the game logic to swap cells and check for matches
 
       // If the two selected cells are ok for swapping (result in new match)
       if (swapTwoItemsOnGrid(grid, firstPress, lastPress) != false) {
         // Swap cells
         let swapGrid = swapTwoItemsOnGrid(grid, firstPress, lastPress)
-
         // Check if there are matches
         let matches = checkGameGridForAlignments(swapGrid)
-        console.log("Matches found after swap test", matches)
 
-        // If 1 or more matches have been found
+        // If at least one match is found, swap the values between the two cells
         if (matches.length > 0) {
-          console.log("OK TO SWAP ", firstPress, "and", lastPress)
 
           // Apply grid with swapped cells to the game grid
           grid = swapGrid
-          showGameGrid(grid)
 
           // Find matches, erase matches and push down values until there are no more matches
           pushDownValuesAndEraseAlignments(grid, level, setScore, score, setLevel, setProgressBar)
 
           // Fill the empty cells with random values, checking there are no matches
           grid = fillEmptyCellsWithNoMatches(grid)
-          showGameGrid(grid)
 
           // Save the new grid to the gameGrid state
           setGameGrid(grid)
@@ -276,12 +262,8 @@ export default function GameScreen({ navigation, route }) {
         }
       }
 
-      // Update gameGrid state with the new grid
+      // Update gameGrid state with the new grid and reset firstPress
       setGameGrid(grid)
-
-      showGameGrid(grid)
-
-      // Reset firstPress
       setFirstPress(null)
     }
   }, [lastPress])
@@ -302,15 +284,21 @@ export default function GameScreen({ navigation, route }) {
             > */}
 
       <SafeAreaView style={styles.safeArea}>
+
         <CustomModal
           visible={isModalvisible}
           changeModalVisible={setisModalVisible}
-          type={"endGame"}
-          navigation={navigation}
-          route={route}
-          resetGame={resetGame}
-          score={score}
-        />
+          title={"Game over"}
+        >
+          <ScoresModal
+            changeModalVisible={setisModalVisible}
+            navigation={navigation}
+            route={route}
+            resetGame={resetGame}
+            score={score}
+            endGame={true}
+          />
+        </CustomModal>
 
         <ScoreBoard level={level} score={score} attempts={attempts} />
 
