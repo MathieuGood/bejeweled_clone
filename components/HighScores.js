@@ -28,7 +28,7 @@ export default function HighScores() {
       <FlatList
         data={highScores}
         keyExtractor={(item, index) => {
-          `${item.rank}-${item.score}-${item.player_name}-${index}`
+          return `${item.rank}-${item.score}-${item.player_name}-${index}`
         }}
         renderItem={({ item }) => (
           <View style={styles.flatListRow}>
