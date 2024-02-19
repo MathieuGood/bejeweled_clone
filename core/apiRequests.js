@@ -52,7 +52,7 @@ export const addPlayer = (name, email, password, navigation) => {
 
 // Using /checklogin
 // Check if e-mail and password match the entry in the databse
-export const checkCredentials = (email, password, navigation) => {
+export const checkCredentials = (email, password, navigation, changeModalVisible) => {
     const bodyData = {
         player_email: email,
         player_password: password
@@ -71,6 +71,7 @@ export const checkCredentials = (email, password, navigation) => {
                 console.log(json)
                 console.log(json.player_id, json.player_name)
                 navigation.navigate('HomeScreen', { player_id: json.player_id, player_name: json.player_name })
+                changeModalVisible(false)
             } else {
                 console.log('E-mail or password wrong')
                 Alert.alert(

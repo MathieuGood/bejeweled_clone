@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { StyleSheet, View, Text, Alert } from 'react-native'
 import TouchButton from '../components/TouchButton'
 import ScoresModal from '../components/modalComponents/ScoresModal'
+import LoginModal from '../components/modalComponents/LoginModal'
 
 
 export default function HomeScreen({ navigation, route }) {
@@ -42,7 +43,7 @@ export default function HomeScreen({ navigation, route }) {
                         // On click on log out, ask for confirmation and if yes, reload HomeScreen with no parameters
                         ? confirmLogout()
                         // On click on log in , navigate to the LoginScreen
-                        : navigation.navigate('LoginScreen')
+                        : setisLoginModalVisible(true)
                 }}
             />
 
@@ -62,14 +63,28 @@ export default function HomeScreen({ navigation, route }) {
                 press={() => { setisHighScoresModalVisible(true) }}
             />
 
-            {/* High scores Modal (hidden by default*/}
-                <ScoresModal
-                    changeModalVisible={setisHighScoresModalVisible}
-                    visible={isHighScoresModalvisible}
-                    title = 'High scores'
-                    endGame={false}
-                />
+            <TouchButton
+                title='Log in modal'
+                press={() => { setisLoginModalVisible(true) }}
+            />
 
+
+            {/* Modals */}
+
+            {/* High scores Modal */}
+            <ScoresModal
+                changeModalVisible={setisHighScoresModalVisible}
+                visible={isHighScoresModalvisible}
+                title='High scores'
+                endGame={false}
+            />
+
+            <LoginModal
+                changeModalVisible={setisLoginModalVisible}
+                visible={isLoginModalVisible}
+                title='Log in'
+                navigation={navigation}
+            />
 
         </View>
     )

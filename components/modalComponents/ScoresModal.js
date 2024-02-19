@@ -17,7 +17,7 @@ export default function ScoresModal({
 }) {
 
     return (
-        
+
         <CustomModal
             visible={visible}
             title={title}
@@ -40,17 +40,17 @@ export default function ScoresModal({
                 // If the modal is an endGame modal, display the buttons to restart the game or go back to the menu
                 ? <View style={styles.bottomButtonsContainer}>
 
-                    <TouchButton title="Restart game" press={() => {
-                        changeModalVisible(false)
-                        resetGame()
-                    }}
-                    />
-
                     <TouchButton title="Back to menu" press={() => {
                         changeModalVisible(false)
                         route.params
                             ? navigation.navigate('HomeScreen', { player_id: route.params.player_id, player_name: route.params.player_name })
                             : navigation.navigate('HomeScreen')
+                    }}
+                    />
+
+                    <TouchButton title="Restart game" press={() => {
+                        changeModalVisible(false)
+                        resetGame()
                     }}
                     />
 

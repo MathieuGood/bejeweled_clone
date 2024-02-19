@@ -1,14 +1,16 @@
 import React, { useState } from 'react'
-import { StyleSheet, View, Alert } from 'react-native'
-import TouchButton from '../components/TouchButton'
-import TextField from '../components/TextField'
-import Header from '../components/Header'
-import { checkCredentials } from '../core/apiRequests'
-import { checkEmailFormat, checkIfStringIsNotEmpty, checkPasswordFormat } from '../core/userEntryCheck'
+import { StyleSheet, View } from 'react-native'
+import TouchButton from '../../components/TouchButton'
+import TextField from '../../components/TextField'
+import Header from '../../components/Header'
+import CustomModal from './CustomModal'
+import { checkEmailAndPasswordMatch } from '../../core/userEntryCheck'
 
 export default function LoginModal({
     changeModalVisible,
-    navigation
+    visible,
+    navigation,
+    title,
 }) {
 
     const [state, setState] = useState({
@@ -20,8 +22,11 @@ export default function LoginModal({
 
 
     return (
-        <View style={styles.mainContainer}>
-
+        <CustomModal
+            visible={visible}
+            title={title}
+            changeModalVisible={changeModalVisible}
+        >
             <View style={styles.form}>
 
                 <Header style={styles.header} title='Log into your account' />
@@ -49,23 +54,8 @@ export default function LoginModal({
                     title='Login'
                     press={() => {
                         // On click, check if fields are not empty
-                        // Check if e-mail and password match
-                        if (
-                            checkIfStringIsNotEmpty(email) &&
-                            checkIfStringIsNotEmpty(password) &&
-                            checkEmailFormat(email) &&
-                            checkPasswordFormat(password)
-                        ) {
-                            checkCredentials(email, password, navigation)
-                        } else {
-                            console.log('E-mail or password wrong')
-                            Alert.alert(
-                                'Error',
-                                'E-mail or password are incorrect',
-                                [{ text: 'OK' }],
-                                { cancelable: false }
-                            );
-                        }
+                        // Then, check if e-mail and password match
+                        checkEmailAndPasswordMatch(email, password, navigation, changeModalVisible)
                     }}
                 />
 
@@ -75,7 +65,7 @@ export default function LoginModal({
                 />
 
             </View>
-        </View>
+        </CustomModal>
     )
 
 }
@@ -83,8 +73,8 @@ export default function LoginModal({
 let styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
-        // alignItems: 'center',
-        // justifyContent: 'center'
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     background: {
         flex: 1,

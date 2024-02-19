@@ -5,6 +5,11 @@
 /////////////////////////////////////////////////////////////////////////////////////
 
 
+import { checkCredentials } from '../core/apiRequests'
+import { Alert } from 'react-native'
+
+
+
 // Check if a string is not empty
 export const checkIfStringIsNotEmpty = (string) => {
     console.log("--- checkIfStringIsNotEmpty function")
@@ -18,6 +23,8 @@ export const checkIfStringIsNotEmpty = (string) => {
     }
 }
 
+
+
 // Check if a name has at least 1 character that is a letter
 export const checkNameFormat = (name) => {
     // Checking if the email is not empty
@@ -29,6 +36,8 @@ export const checkNameFormat = (name) => {
         return re.test(name)
     }
 }
+
+
 
 // Check if an email has a valid format
 export const checkEmailFormat = (email) => {
@@ -42,6 +51,8 @@ export const checkEmailFormat = (email) => {
     }
 }
 
+
+
 // Check if password has at least 6 characters and no space
 export const checkPasswordFormat = (password) => {
     if (checkIfStringIsNotEmpty(password)) {
@@ -50,5 +61,28 @@ export const checkPasswordFormat = (password) => {
         const re = /^[^\s]{6,}$/
         console.log('Password format is : ' + re.test(password))
         return re.test(password)
+    }
+}
+
+
+
+// Check if email and password match the entry in the database
+export const checkEmailAndPasswordMatch = (email, password, navigation, changeModalVisible) => {
+        
+    if (
+        checkIfStringIsNotEmpty(email) &&
+        checkIfStringIsNotEmpty(password) &&
+        checkEmailFormat(email) &&
+        checkPasswordFormat(password)
+    ) {
+        checkCredentials(email, password, navigation, changeModalVisible)
+    } else {
+        console.log('E-mail or password wrong')
+        Alert.alert(
+            'Error',
+            'E-mail or password are incorrect',
+            [{ text: 'OK' }],
+            { cancelable: false }
+        )
     }
 }
