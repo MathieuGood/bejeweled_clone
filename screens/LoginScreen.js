@@ -79,6 +79,7 @@ export default function LoginScreen({ navigation }) {
                             navigation.navigate('RegisterScreen')
                         }}
                     />
+                    
 
                 </View>
 

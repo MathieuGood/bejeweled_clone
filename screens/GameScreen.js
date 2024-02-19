@@ -285,20 +285,16 @@ export default function GameScreen({ navigation, route }) {
 
       <SafeAreaView style={styles.safeArea}>
 
-        <CustomModal
-          visible={isModalvisible}
-          changeModalVisible={setisModalVisible}
-          title={"Game over"}
-        >
           <ScoresModal
+            visible={isModalvisible}
             changeModalVisible={setisModalVisible}
             navigation={navigation}
             route={route}
+            title={"Game over"}
             resetGame={resetGame}
             score={score}
             endGame={true}
           />
-        </CustomModal>
 
         <ScoreBoard level={level} score={score} attempts={attempts} />
 

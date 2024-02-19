@@ -1,20 +1,28 @@
 import React from 'react'
-import { StyleSheet, Text, View, Dimensions } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import TouchButton from '../TouchButton'
 import HighScores from '../HighScores'
+import CustomModal from './CustomModal'
 
 
 export default function ScoresModal({
     changeModalVisible,
+    visible,
     navigation,
     route,
+    title,
     resetGame,
     score,
     endGame
 }) {
 
     return (
-        <View>
+        
+        <CustomModal
+            visible={visible}
+            title={title}
+            changeModalVisible={changeModalVisible}
+        >
 
             {endGame
                 ? <View>
@@ -54,9 +62,10 @@ export default function ScoresModal({
                     }}
                     />
                 </View>
-            }
 
-        </View>
+            }
+        </CustomModal>
+
     )
 }
 
