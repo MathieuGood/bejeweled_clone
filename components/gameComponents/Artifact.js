@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleSheet, TouchableOpacity, View, Image } from 'react-native'
 
-export default function Artifact({ artifactNumber}) {
+export default function Artifact({ artifactNumber }) {
 
     const artifactsImages = {
         '': require('../../assets/brickwall.png'),

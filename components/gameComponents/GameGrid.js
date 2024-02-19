@@ -11,6 +11,7 @@ export default function GameGrid({ gridContent, pressCellCallback , disableTouch
     }
 
     function renderGrid(gameGrid) {
+
         return gameGrid.map((row, rowIndex) => (
 
             <View key={rowIndex} style={styles.row}>
@@ -43,11 +44,6 @@ export default function GameGrid({ gridContent, pressCellCallback , disableTouch
 
 
 const styles = StyleSheet.create({
-    artifactImage: {
-        width: '100%',
-        height: '100%',
-        resizeMode: 'contain',
-    },
     grid: {
         flex: 0.65,
         justifyContent: 'center',
