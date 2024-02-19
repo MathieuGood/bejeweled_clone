@@ -8,7 +8,6 @@ import {
   ImageBackground,
 } from "react-native"
 import TouchButton from "../components/TouchButton"
-import CustomModal from "../components/modalComponents/CustomModal"
 import ScoresModal from "../components/modalComponents/ScoresModal"
 import GameGrid from "../components/gameComponents/GameGrid"
 import ScoreBoard from "../components/gameComponents/ScoreBoard"
