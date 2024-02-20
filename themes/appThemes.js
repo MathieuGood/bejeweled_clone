@@ -11,7 +11,7 @@ export const appThemes = {
             'HomeScreen': require('../assets/backgrounds/detailedBackground1.png'),
         },
         'flatDesign': {
-            'HomeScreen': require('../assets/backgrounds/detailedBackground1.png'),
+            'HomeScreen': require('../assets/backgrounds/detailedBackground2.png'),
         }
     },
     'tiles': {

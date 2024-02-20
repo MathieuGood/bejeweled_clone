@@ -1,10 +1,11 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { StyleSheet, View, Text, ImageBackground } from 'react-native'
 import AppContext from '../providers/AppContext'
 import TouchButton from '../components/TouchButton'
 import ScoresModal from '../components/modalComponents/ScoresModal'
 import LoginModal from '../components/modalComponents/LoginModal'
 import RegisterModal from '../components/modalComponents/RegisterModal'
+import SettingsModal from '../components/modalComponents/SettingsModal'
 import { confirmLogout } from '../core/userEntryCheck'
 import { appThemes } from '../themes/appThemes'
 
@@ -12,17 +13,24 @@ import { appThemes } from '../themes/appThemes'
 export default function HomeScreen({ navigation, route }) {
 
     // Get selected theme from AppContext
-    const theme = useContext(AppContext).theme
+    const { theme, setTheme } = useContext(AppContext)
+
 
     // Import background images from appThemes
     const backgroundImage = appThemes.backgrounds[theme]['HomeScreen']
+    console.log(appThemes)
 
     // Set the modal visibility to false
     const [isHighScoresModalvisible, setisHighScoresModalVisible] = useState(false)
     const [isLoginModalVisible, setisLoginModalVisible] = useState(false)
     const [isRegisterModalVisible, setisRegisterModalVisible] = useState(false)
+    const [isSettingsModalVisible, setisSettingsModalVisible] = useState(false)
 
-
+    // Rerender the component when the theme changes
+    useEffect(() => {
+        console.log('Theme changed')
+    }, [theme])
+    
     return (
         <View style={styles.mainContainer}>
 
@@ -69,11 +77,15 @@ export default function HomeScreen({ navigation, route }) {
                     }}
                 />
 
-                {/* High scores button */}
-                {/* Makes ScoresModal visible*/}
+
                 <TouchButton
                     title='High scores'
                     press={() => { setisHighScoresModalVisible(true) }}
+                />
+
+                <TouchButton
+                    title='Settings'
+                    press={() => { setisSettingsModalVisible(true) }}
                 />
 
 
@@ -100,6 +112,14 @@ export default function HomeScreen({ navigation, route }) {
                     visible={isRegisterModalVisible}
                     title='Create new account'
                     navigation={navigation}
+                />
+
+                <SettingsModal
+                    changeModalVisible={setisSettingsModalVisible}
+                    visible={isSettingsModalVisible}
+                    title='Settings'
+                    navigation={navigation}
+
                 />
 
             </ImageBackground>

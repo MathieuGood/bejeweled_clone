@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
 
     },
     modal: {
+        alignItems: 'center',
         marginTop: 300,
         width: windowWidth - 50,
         padding: 10,

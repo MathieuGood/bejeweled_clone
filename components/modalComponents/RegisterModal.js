@@ -81,19 +81,10 @@ export default function RegisterModal({
 }
 
 const styles = StyleSheet.create({
-    mainContainer: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    background: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
     form: {
         backgroundColor: 'rgba(244, 232, 193, 0.8)',
         padding: 20,
+        marginBottom: 15,
         borderRadius: 10,
         borderWidth: 2,
         borderColor: '#d4af37', // Doré

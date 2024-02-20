@@ -1,10 +1,9 @@
 import React, { createContext, useState } from 'react'
-import { appThemes } from '../themes/appThemes'
 
 const AppContext = createContext()
 
 export const AppProvider = ({ children }) => {
-    const [theme, setTheme = useState(initialState)] = useState('detailed')
+    const [theme, setTheme ] = useState('detailed')
 
     return (
         <AppContext.Provider value={{ theme, setTheme }}>
