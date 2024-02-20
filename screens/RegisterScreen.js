@@ -2,8 +2,7 @@ import React, { useState } from 'react'
 import { StyleSheet, ImageBackground, View, Alert } from 'react-native'
 import TouchButton from '../components/TouchButton'
 import TextField from '../components/TextField'
-import { addPlayer, checkIfEmailDoesNotExist } from '../core/apiRequests'
-import { checkEmailFormat, checkNameFormat, checkPasswordFormat } from '../core/userEntryCheck'
+import { checkUserEntryAndAddPlayer } from '../core/userEntryCheck'
 import Header from '../components/Header'
 
 
@@ -16,39 +15,6 @@ export default function RegisterScreen({ navigation }) {
     })
 
     const { name, email, password } = state
-
-    // Check if name, email and password have right format
-    function checkUserEntryAndAddPlayer(name, email, password) {
-        // Check if entered e-mail does not already exist in the database
-        checkIfEmailDoesNotExist(email, () => {
-            // Initalize errorMessage to empty string
-            let errorMessage = ''
-
-            // Run all entry check functions and feed errorMessage string if the return is false
-            checkEmailFormat(email) ? errorMessage += '' : errorMessage += 'Wrong e-mail format.\n'
-            checkPasswordFormat(password) ? errorMessage += '' : errorMessage += 'Wrong password format, it must contain at least 6 characters and no space.\n'
-            checkNameFormat(name) ? errorMessage += '' : errorMessage += 'Wrong name format, it must contain at least one letter.\n'
-
-            // If errorMessage is empty and all the checks went well
-            if (errorMessage === '') {
-                // Execute addPlayer() that sends API call to create new player in database
-                // and navigate to HomeScreen
-                console.log('Adding player')
-                addPlayer(name.trim(), email, password, navigation)
-            } else {
-                Alert.alert(
-                    'Invalid entry',
-                    // Remove last line break in error message
-                    errorMessage.slice(0, -2),
-                    [
-                        { text: 'OK' }
-                    ],
-                    { cancelable: false }
-                );
-            }
-        })
-
-    }
 
 
     return (
