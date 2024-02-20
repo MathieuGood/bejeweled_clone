@@ -36,6 +36,7 @@ export default function HomeScreen({ navigation, route }) {
                 }
 
                 <TouchButton
+                    // Change title regarding login status
                     title={route.params ? 'Log out ' : 'Log in'}
                     press={() => {
                         route.params
