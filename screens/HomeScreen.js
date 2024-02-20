@@ -41,7 +41,7 @@ export default function HomeScreen({ navigation, route }) {
                         route.params
                             // On click on log out, ask for confirmation and if yes, reload HomeScreen with no parameters
                             ? confirmLogout(navigation)
-                            // On click on log in , navigate to the LoginScreen
+                            // On click on log in , show LoginModal
                             : setisLoginModalVisible(true)
                     }}
                 />
