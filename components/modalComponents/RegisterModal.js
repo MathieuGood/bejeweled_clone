@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { StyleSheet, View } from 'react-native'
-import TouchButton from '../../components/TouchButton'
-import TextField from '../../components/TextField'
-import Header from '../../components/Header'
+import TouchButton from '../TouchButton'
+import TextField from '../TextField'
+import Header from '../Header'
 import CustomModal from './CustomModal'
 import { checkUserEntryAndAddPlayer } from '../../core/userEntryCheck'
 
