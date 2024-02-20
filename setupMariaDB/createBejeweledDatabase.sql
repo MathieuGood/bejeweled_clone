@@ -75,7 +75,7 @@ INSERT INTO games (
     duration,
     end_time
     ) VALUES
-    (500, 1, 276, '2024-01-08 14:01:00'),
+    (900, 1, 276, '2024-01-08 14:01:00'),
     (1050, 2, 230, '2024-01-08 14:08:00'),
     (800, 3, 231, '2024-01-08 15:00:00'),
     (300, 4, 456, '2024-01-08 17:00:00'),
@@ -174,9 +174,9 @@ END //
 
 CREATE PROCEDURE getRankingDifference()
 BEGIN
-    SELECT player_id, player_name, prev_rank, MIN(rank) AS rank
+    SELECT player_id, player_name, player_email, prev_rank, MIN(rank) AS rank
     FROM (
-        SELECT DISTINCT p.player_id, p.player_name, p.prev_rank, top_scores.rank
+        SELECT DISTINCT p.player_id, p.player_name, p.player_email, p.prev_rank, top_scores.rank
         FROM players AS p
         LEFT JOIN (
             SELECT RANK() OVER (ORDER BY score DESC) AS rank, player_id
@@ -186,7 +186,7 @@ BEGIN
         ) AS top_scores ON p.player_id = top_scores.player_id
         WHERE p.prev_rank IS NOT NULL
     ) AS ranked_players
-    GROUP BY player_id, player_name, prev_rank
+    GROUP BY player_id, player_name, player_email, prev_rank
     ORDER BY prev_rank ASC;
 END //
 

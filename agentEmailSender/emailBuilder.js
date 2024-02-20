@@ -56,6 +56,9 @@ function buildRecapEmail(player_email, player_name, play_time, last_games) {
     let playTimeHTMLContent = ''
     let playTimeTextContent = ''
 
+    console.log("Player email in buildRecapEmail : " + player_email)
+
+    // Format last games from Date object to string
     last_games.forEach((game) => {
         const formattedDate = new Date(game.end_time).toLocaleDateString('fr-FR', {
             day: 'numeric',

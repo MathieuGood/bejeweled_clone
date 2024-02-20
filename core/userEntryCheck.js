@@ -5,8 +5,9 @@
 /////////////////////////////////////////////////////////////////////////////////////
 
 
-import { checkCredentials } from '../core/apiRequests'
 import { Alert } from 'react-native'
+import { checkCredentials } from '../core/apiRequests'
+import { addPlayer, checkIfEmailDoesNotExist } from '../core/apiRequests'
 
 
 
@@ -68,7 +69,7 @@ export const checkPasswordFormat = (password) => {
 
 // Check if email and password match the entry in the database
 export const checkEmailAndPasswordMatch = (email, password, navigation, changeModalVisible) => {
-        
+
     if (
         checkIfStringIsNotEmpty(email) &&
         checkIfStringIsNotEmpty(password) &&
@@ -85,4 +86,53 @@ export const checkEmailAndPasswordMatch = (email, password, navigation, changeMo
             { cancelable: false }
         )
     }
+}
+
+
+// Show alert to confirm logout
+export const confirmLogout = (navigation) => {
+    Alert.alert(
+        'Log out',
+        'Are you sure you want to log out?',
+        [
+            { text: 'Cancel' },
+            { text: 'Log out', onPress: () => navigation.navigate('HomeScreen') }
+        ],
+        { cancelable: false }
+    )
+}
+
+
+// Check if name, email and password have right format and add player to database
+export const checkUserEntryAndAddPlayer = (name, email, password, navigation, changeModalVisible) => {
+    // Check if entered e-mail does not already exist in the database
+    checkIfEmailDoesNotExist(email, () => {
+        // Initalize errorMessage to empty string
+        let errorMessage = ''
+
+        // Run all entry check functions and feed errorMessage string if the return is false
+        checkEmailFormat(email) ? errorMessage += '' : errorMessage += 'Wrong e-mail format.\n'
+        checkPasswordFormat(password) ? errorMessage += '' : errorMessage += 'Wrong password format, it must contain at least 6 characters and no space.\n'
+        checkNameFormat(name) ? errorMessage += '' : errorMessage += 'Wrong name format, it must contain at least one letter.\n'
+
+        // If errorMessage is empty and all the checks went well
+        if (errorMessage === '') {
+            // Execute addPlayer() that sends API call to create new player in database
+            // and navigate to HomeScreen
+            console.log('Adding player')
+            addPlayer(name.trim(), email, password, navigation)
+            changeModalVisible(false)
+        } else {
+            Alert.alert(
+                'Invalid entry',
+                // Remove last line break in error message
+                errorMessage.slice(0, -2),
+                [
+                    { text: 'OK' }
+                ],
+                { cancelable: false }
+            );
+        }
+    })
+
 }

@@ -45,7 +45,7 @@ function sendGameRecapToAllPlayers() {
             }
         })
         .catch(error => {
-            console.error(error)
+            console.error('ERROR in endGameRecapToAllPlayers : ' + error)
             return null
         });
 }
@@ -75,7 +75,7 @@ function updateRankingInDatabase() {
             }
         })
         .catch(error => {
-            console.error(error)
+            console.error('ERROR in updateRankingInDatabase : ' + error)
             return null
         });
 }
@@ -103,13 +103,15 @@ function sendRankingDifferences() {
                 json.forEach((ranking) => {
                     // Run function to send recap by e-mail if last played game has ended for an hour at least
                     // console.log(ranking)
-                    const rank = 'unranked'
+                    let rank = 'unranked'
+                    // If player has been losing ranks
                     if (ranking.rank > ranking.prev_rank || ranking.rank === null) {
                         if (ranking.rank !== null) {
-                            const rank = `#${ranking.rank}`
+                            rank = `#${ranking.rank}`
                         }
 
                         console.log(`>>>>>>${ranking.player_name} was rank #${ranking.prev_rank}, now he is ${rank} `)
+                        console.log('SEND E-MAIL NOW to ' + ranking.player_email)
                         const email = buildRankingUpdateEmail(ranking.player_email, ranking.player_name, [{ prev: ranking.prev_rank, current: rank }])
                         sendMail(email)
                     }
@@ -124,7 +126,7 @@ function sendRankingDifferences() {
             }
         })
         .catch(error => {
-            console.error(error)
+            console.error('Error in sendRankingDifferences : ' + error)
             return null
         });
 }
@@ -158,7 +160,7 @@ function updateLastGameId(player_id, last_game_id) {
             }
         })
         .catch(error => {
-            console.error(error)
+            console.error('Error in updateLastGameId : ' + error)
             return null
         });
 }
@@ -186,7 +188,7 @@ function getLastGames(player_id) {
             }
         })
         .catch(error => {
-            console.error(error)
+            console.error('Error in getLastGames :' + error)
             return null
         });
 }
@@ -207,8 +209,7 @@ function getPlayTime(player_id) {
         .then(response => response.json())
         .then(json => {
             if (json) {
-                console.log('Play time : ' + json['play_time'])
-                console.log(json['play_time'])
+                // console.log('Play time : ' + json['play_time'])
                 return json
             } else {
                 console.log('No duration data.')
@@ -216,7 +217,7 @@ function getPlayTime(player_id) {
             }
         })
         .catch(error => {
-            console.error(error)
+            console.error('Error in getPlayTime : ' + error)
             return null
         });
 }
@@ -244,14 +245,16 @@ function sendRecapEmailIfTimeReached(player_id) {
 
                 // Check if last game has been played for at least one hour
                 if (end_time < now) {
+                    console.log('Last games : ' + ' for player ID ' + player_id )
+                    console.log(last_games)
                     const player_email = last_games[last_games.length - 1]['player_email']
                     const player_name = last_games[last_games.length - 1]['player_name']
                     const player_time = play_time['play_time']
 
                     // Build e-mail to send providing e-mail, name, total play time and last games
-                    console.log('SEND E-MAIL NOW to ' + player_email)
+                    console.log('SEND RECAP E-MAIL NOW to ' + player_email)
                     const email = buildRecapEmail(player_email, player_name, player_time, last_games)
-                    
+
                     // Send the e-mail
                     sendMail(email)
 
@@ -263,7 +266,7 @@ function sendRecapEmailIfTimeReached(player_id) {
                     // If it is not time to send the e-mail, display time to wait before it can be seny
                     let waitTime = new Date(end_time - now)
                     waitTime = waitTime.getUTCMinutes()
-                    console.log('DO NOT SEND E-MAIL NOW to ' + email)
+                    console.log('DO NOT SEND E-MAIL NOW to ' + last_games[last_games.length - 1]['player_name'])
                     console.log('-> Minutes to wait before sending : ' + waitTime)
                 }
             } else {
@@ -272,7 +275,7 @@ function sendRecapEmailIfTimeReached(player_id) {
             }
         })
         .catch(error => {
-            console.error(error)
+            console.error('Error in sendRecapEmailIfTimeReached for player_id ' + player_id + ': ' + error)
         });
 }
 
@@ -303,7 +306,7 @@ function sendMail(emailToSend) {
         console.log('Sending e-mail to ' + player_name + ' at ' + player_email + ' with subject ' + emailToSend.Messages[0].Subject)
         // console.log(result.body)
     }).catch((err) => {
-        console.log(err.statusCode)
+        console.log('Error in sendMail' + err)
     })
 
 }
