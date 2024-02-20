@@ -1,13 +1,21 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { StyleSheet, View, Text, ImageBackground } from 'react-native'
+import AppContext from '../providers/AppContext'
 import TouchButton from '../components/TouchButton'
 import ScoresModal from '../components/modalComponents/ScoresModal'
 import LoginModal from '../components/modalComponents/LoginModal'
 import RegisterModal from '../components/modalComponents/RegisterModal'
 import { confirmLogout } from '../core/userEntryCheck'
+import { appThemes } from '../themes/appThemes'
 
 
 export default function HomeScreen({ navigation, route }) {
+
+    // Get selected theme from AppContext
+    const theme = useContext(AppContext).theme
+
+    // Import background images from appThemes
+    const backgroundImage = appThemes.backgrounds[theme]['HomeScreen']
 
     // Set the modal visibility to false
     const [isHighScoresModalvisible, setisHighScoresModalVisible] = useState(false)
@@ -19,7 +27,7 @@ export default function HomeScreen({ navigation, route }) {
         <View style={styles.mainContainer}>
 
             <ImageBackground
-                source={require('../assets/essai3.png')}
+                source={backgroundImage}
                 style={styles.background}
                 resizeMode='cover'
             >
@@ -53,7 +61,10 @@ export default function HomeScreen({ navigation, route }) {
                     title='Start game'
                     press={() => {
                         route.params
-                            ? navigation.navigate('GameScreen', { player_id: route.params.player_id, player_name: route.params.player_name })
+                            ? navigation.navigate('GameScreen', {
+                                player_id: route.params.player_id,
+                                player_name: route.params.player_name,
+                            })
                             : navigation.navigate('GameScreen')
                     }}
                 />

@@ -1,9 +1,9 @@
 import React from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
-import Artifact from './Artifact'
+import GameTile from './GameTile'
 
 
-export default function GameGrid({ gridContent, pressCellCallback , disableTouchCapacity}) {
+export default function GameGrid({ gridContent, pressCellCallback, disableTouchCapacity, theme }) {
 
     const pressCellFunction = (row, col) => {
         pressCellCallback(row, col)
@@ -18,13 +18,16 @@ export default function GameGrid({ gridContent, pressCellCallback , disableTouch
 
                 {row.map((artefact, colIndex) => (
 
-                    <TouchableOpacity                                
+                    <TouchableOpacity
                         key={colIndex}
                         style={styles.cell}
                         onPress={() => pressCellFunction(rowIndex, colIndex)}
                         disabled={disableTouchCapacity}
                     >
-                        <Artifact artifactNumber={artefact} />
+                        <GameTile
+                            tileReference={artefact}
+                            theme={theme}
+                        />
                     </TouchableOpacity>
 
                 ))}

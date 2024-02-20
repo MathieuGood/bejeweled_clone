@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useContext } from "react"
 import {
   StyleSheet,
   View,
@@ -7,6 +7,7 @@ import {
   Alert,
   ImageBackground,
 } from "react-native"
+import AppContext from "../providers/AppContext"
 import TouchButton from "../components/TouchButton"
 import ScoresModal from "../components/modalComponents/ScoresModal"
 import GameGrid from "../components/gameComponents/GameGrid"
@@ -29,6 +30,7 @@ import {
 
 
 export default function GameScreen({ navigation, route }) {
+
 
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -61,6 +63,9 @@ export default function GameScreen({ navigation, route }) {
 
   // const [gameGrid, setGameGrid] = useState(exampleGrid)
 
+  // Get theme from context
+  const theme = useContext(AppContext).theme
+
   // Build a grid with no matches
   const gridSize = 8
   const gridNumberOfDifferentItems = 8
@@ -87,6 +92,7 @@ export default function GameScreen({ navigation, route }) {
 
   // Set the modal visibility to false
   const [isModalvisible, setisModalVisible] = useState(false)
+
 
 
 
@@ -304,6 +310,7 @@ export default function GameScreen({ navigation, route }) {
           pressCellCallback={getCellCoordinates}
           // If timer is paused, disable touch capacity
           disableTouchCapacity={timerPause === false ? false : true}
+          theme={theme}
         />
 
         <ProgressBar
