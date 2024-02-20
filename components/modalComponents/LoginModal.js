@@ -59,9 +59,11 @@ export default function LoginModal({
                     }}
                 />
 
-                <TouchButton title="Close" press={() => {
-                    changeModalVisible(false)
-                }}
+                <TouchButton
+                    title="Close"
+                    press={() => {
+                        changeModalVisible(false)
+                    }}
                 />
 
             </View>
@@ -70,12 +72,7 @@ export default function LoginModal({
 
 }
 
-let styles = StyleSheet.create({
-    mainContainer: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
+const styles = StyleSheet.create({
     background: {
         flex: 1,
         alignItems: 'center',
