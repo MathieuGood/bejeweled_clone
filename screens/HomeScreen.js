@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
-import { StyleSheet, View, Text, Alert } from 'react-native'
+import { StyleSheet, View, Text, ImageBackground } from 'react-native'
 import TouchButton from '../components/TouchButton'
 import ScoresModal from '../components/modalComponents/ScoresModal'
 import LoginModal from '../components/modalComponents/LoginModal'
+import RegisterModal from '../components/modalComponents/RegisterModal'
+import { confirmLogout } from '../core/userEntryCheck'
 
 
 export default function HomeScreen({ navigation, route }) {
@@ -10,81 +12,85 @@ export default function HomeScreen({ navigation, route }) {
     // Set the modal visibility to false
     const [isHighScoresModalvisible, setisHighScoresModalVisible] = useState(false)
     const [isLoginModalVisible, setisLoginModalVisible] = useState(false)
+    const [isRegisterModalVisible, setisRegisterModalVisible] = useState(false)
 
-    const confirmLogout = () => {
-        Alert.alert(
-            'Log out',
-            'Are you sure you want to log out?',
-            [
-                { text: 'Cancel' },
-                { text: 'Log out', onPress: () => navigation.navigate('HomeScreen') }
-            ],
-            { cancelable: false }
-        )
-    }
 
     return (
         <View style={styles.mainContainer}>
 
-            {/* If the player is logged in, display his name */}
-            {route.params
-                ? <Text>Welcome {route.params.player_name}</Text>
-                : null
-            }
+            <ImageBackground
+                source={require('../assets/essai3.png')}
+                style={styles.background}
+                resizeMode='cover'
+            >
 
-            <TouchButton
-                title={
-                    route.params
-                        ? 'Log out '
-                        : 'Log in'
+                {/* If the player is logged in, display his name */}
+                {route.params
+                    ? <Text>Welcome {route.params.player_name}</Text>
+                    : <View>
+                        <TouchButton
+                            title='Create new account'
+                            press={() => { setisRegisterModalVisible(true) }}
+                        />
+                    </View>
                 }
-                press={() => {
-                    route.params
-                        // On click on log out, ask for confirmation and if yes, reload HomeScreen with no parameters
-                        ? confirmLogout()
-                        // On click on log in , navigate to the LoginScreen
-                        : setisLoginModalVisible(true)
-                }}
-            />
 
-            <TouchButton
-                title='Start game'
-                press={() => {
-                    route.params
-                        ? navigation.navigate('GameScreen', { player_id: route.params.player_id, player_name: route.params.player_name })
-                        : navigation.navigate('GameScreen')
-                }}
-            />
-
-            {/* High scores button */}
-            {/* Makes ScoresModal visible*/}
-            <TouchButton
-                title='High scores'
-                press={() => { setisHighScoresModalVisible(true) }}
-            />
-
-            <TouchButton
-                title='Log in modal'
-                press={() => { setisLoginModalVisible(true) }}
-            />
+                <TouchButton
+                    title={route.params ? 'Log out ' : 'Log in'}
+                    press={() => {
+                        route.params
+                            // On click on log out, ask for confirmation and if yes, reload HomeScreen with no parameters
+                            ? confirmLogout(navigation)
+                            // On click on log in , navigate to the LoginScreen
+                            : setisLoginModalVisible(true)
+                    }}
+                />
 
 
-            {/* Modals */}
 
-            {/* High scores Modal */}
-            <ScoresModal
-                changeModalVisible={setisHighScoresModalVisible}
-                visible={isHighScoresModalvisible}
-                title='High scores'
-                endGame={false}
-            />
+                <TouchButton
+                    title='Start game'
+                    press={() => {
+                        route.params
+                            ? navigation.navigate('GameScreen', { player_id: route.params.player_id, player_name: route.params.player_name })
+                            : navigation.navigate('GameScreen')
+                    }}
+                />
 
-            <LoginModal
-                changeModalVisible={setisLoginModalVisible}
-                visible={isLoginModalVisible}
-                title='Log in'
-                navigation={navigation}
-            />
+                {/* High scores button */}
+                {/* Makes ScoresModal visible*/}
+                <TouchButton
+                    title='High scores'
+                    press={() => { setisHighScoresModalVisible(true) }}
+                />
+
+
+
+                {/* Modals */}
+
+                {/* High scores Modal */}
+                <ScoresModal
+                    changeModalVisible={setisHighScoresModalVisible}
+                    visible={isHighScoresModalvisible}
+                    title='High scores'
+                    endGame={false}
+                />
+
+                <LoginModal
+                    changeModalVisible={setisLoginModalVisible}
+                    visible={isLoginModalVisible}
+                    title='Log in'
+                    navigation={navigation}
+                />
+
+                <RegisterModal
+                    changeModalVisible={setisRegisterModalVisible}
+                    visible={isRegisterModalVisible}
+                    title='Create new account'
+                    navigation={navigation}
+                />
+
+            </ImageBackground>
 
         </View>
     )
@@ -93,9 +99,11 @@ export default function HomeScreen({ navigation, route }) {
 
 let styles = StyleSheet.create({
     mainContainer: {
-        backgroundColor: 'lightgray',
+        flex: 1,
+    },
+    background: {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center'
-    }
+    },
 })
