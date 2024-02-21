@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, StyleSheet } from 'react-native'
 
-const ProgressBar = ({ level, nextLevel, progress }) => {
+export default function ProgressBar({ level, nextLevel, progress }) {
   return (
     <View style={styles.container}>
 
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     fontSize: 19
   },
   progressBarContainer: {
-    height: 30,
+    height: 35,
     flex: 1,
     flexDirection: 'row',
     backgroundColor: '#E7E3E3',
@@ -57,5 +57,3 @@ const styles = StyleSheet.create({
     backgroundColor: '#e8b923',
   },
 })
-
-export default ProgressBar

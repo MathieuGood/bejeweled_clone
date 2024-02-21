@@ -23,6 +23,7 @@ export default function CustomModal({
                 tint='dark'
                 intensity={20}
             >
+
                 <View style={styles.modal}>
 
                     <Text style={styles.modalText}>{title}</Text>
@@ -30,6 +31,7 @@ export default function CustomModal({
                     {children}
 
                 </View>
+                
             </BlurView>
 
         </Modal >
@@ -45,7 +47,6 @@ const styles = StyleSheet.create({
         left: 0,
         bottom: 0,
         right: 0,
-
     },
     modal: {
         alignItems: 'center',

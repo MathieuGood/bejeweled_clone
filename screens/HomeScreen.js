@@ -86,7 +86,9 @@ export default function HomeScreen({ navigation, route }) {
                                     borderRadius: 9,
                                     height: 65,
                                     alignSelf: 'center',
-                                    margin: 5
+                                    margin: 5,
+                                    borderWidth: 2,
+                                    borderColor: '#e8b923'
                                 }
                             }}
                             press={() => {

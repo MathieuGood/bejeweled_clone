@@ -31,17 +31,17 @@ export default function GameTile({
 
 const styles = StyleSheet.create({
     tileContainer: {
-        width: 50,
-        height: 50,
+        width: '100%',
+        height: '100%',
         justifyContent: 'center',
         alignItems: 'center',
-        borderWidth: 1,
+        borderWidth: 0.5,
         borderColor: '#ddd',
         backgroundColor: 'rgba(176, 141, 87, 0.5)'
     },
     tileImage: {
-        width: '100%',
-        height: '100%',
+        width: '95%',
+        height: '95%',
         resizeMode: 'contain',
     },
     highlight: {

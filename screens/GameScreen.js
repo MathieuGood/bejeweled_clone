@@ -32,7 +32,6 @@ import {
 export default function GameScreen({ navigation, route }) {
 
 
-
   ////////////////////////////////////////////////////////////////////////////////////////////////////
   //
   // States and variables
@@ -105,7 +104,7 @@ export default function GameScreen({ navigation, route }) {
   // Build a grid with empty values
   const buildEmptyGrid = Array(gridSize).fill(Array(gridSize).fill(""))
 
-  
+
   // Retrieve cell coordinates and record them to lastPress state
   const getCellCoordinates = (row, col) => {
     console.log(`\nPRESS: row ${row}, col ${col}`)
@@ -256,7 +255,7 @@ export default function GameScreen({ navigation, route }) {
           // If no hints can be found, end the game
           if (getAllHints(grid).length === 0) {
             console.log("No more matches on the grid, regenerating grid in order to continue game")
-            setGameGrid(buildGameGridWithNoMatches(gridSize, gridNumberOfDifferentItems))
+            grid = buildGameGridWithNoMatches(gridSize, gridNumberOfDifferentItems)
           }
         } else {
           // If the cells are not ok for swapping, decrement attempts counter
@@ -290,27 +289,34 @@ export default function GameScreen({ navigation, route }) {
 
           <ScoreBoard level={level} score={score} attempts={attempts} />
         </View>
-        
-        <GameGrid
-          gridContent={gameGrid}
-          // Return the coordinates of the cell pressed through getCellCoordinates()
-          pressCellCallback={getCellCoordinates}
-          firstPress={firstPress}
-          // If timer is paused, disable touch capacity
-          disableTouchCapacity={timerPause === false ? false : true}
-          theme={theme}
-        />
 
-        <ProgressBar
-          level={level}
-          nextLevel={level + 1}
-          progress={progressBar}
-        />
+
+        <View style={styles.centerContainer}>
+
+          <GameGrid
+            gridContent={gameGrid}
+            // Return the coordinates of the cell pressed through getCellCoordinates()
+            pressCellCallback={getCellCoordinates}
+            firstPress={firstPress}
+            // If timer is paused, disable touch capacity
+            disableTouchCapacity={timerPause === false ? false : true}
+            theme={theme}
+          />
+
+          <ProgressBar
+            level={level}
+            nextLevel={level + 1}
+            progress={progressBar}
+          />
+
+        </View>
+
 
         <View style={styles.bottomContainer}>
-          <Text>
+          {/* <Text>
             Progress bar : {progressBar} / 100      Timer : {timer}
-          </Text>
+          </Text> */}
+
           {/* <Text>firstPress : {firstPress}     secondPress : {secondPress}</Text> */}
 
           <TouchButton
@@ -391,14 +397,23 @@ const styles = StyleSheet.create({
     // alignItems: 'stretch',
     justifyContent: "space-around",
   },
-  topContainer : {
-    flex:0.15,
+  topContainer: {
+    backgroundColor: 'red',
+    flex: 0.1,
     alignContent: 'center',
     justifyContent: 'center'
   },
+  centerContainer: {
+    // backgroundColor: 'black',
+    flex: 0.8,
+    justifyContent: 'space-around',
+    // alignContent: 'center',
+    alignItems: 'center'
+  },
   bottomContainer: {
-    flex:0.3,
-    flexDirection: "column",
+    backgroundColor: 'green',
+    flex: 0.1,
+    flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
   },

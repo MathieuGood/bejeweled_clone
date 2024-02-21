@@ -5,16 +5,16 @@ const ScoreBoard = ({ score, level, attempts }) => {
   return (
     <View style={styles.mainContainer}>
 
-      <View style={styles.Container}>
-        <Text style={styles.info}> Level : {level} </Text>
+      <View style={styles.buttonContainer}>
+        <Text style={styles.text}> Level : {level} </Text>
       </View>
 
-      <View style={styles.Container}>
-        <Text style={styles.info}>Score : {score}</Text>
+      <View style={styles.buttonContainer}>
+        <Text style={styles.text}>Score : {score}</Text>
       </View>
 
-      <View style={styles.Container}>
-        <Text style={styles.info}> Tries left : {attempts} </Text>
+      <View style={styles.buttonContainer}>
+        <Text style={styles.text}> Tries left : {attempts} </Text>
       </View>
 
     </View>
@@ -26,15 +26,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  Container: {
+  buttonContainer: {
     backgroundColor: '#2b50c8',
     borderRadius: 5,
     padding: 10,
-    bottom: 10,
-    right: 10,
     margin: 5
   },
-  info: {
+  text: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#e8b923',

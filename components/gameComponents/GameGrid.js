@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, TouchableOpacity, View, Dimensions } from 'react-native'
 import GameTile from './GameTile'
 
 
@@ -53,10 +53,13 @@ export default function GameGrid({
     )
 }
 
+const windowWidth = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
     grid: {
-        flex: 0.65,
+        // flex: 0.65,
+        // flex: 1,
+        width: windowWidth * 0.98,
         justifyContent: 'center',
         alignItems: 'center',
     },
@@ -64,12 +67,16 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     cell: {
-        width: 50,
-        height: 50,
+        // width: 50,
+        // height: 50,
+        // width: 'auto',
+        // height: 'auto',
+        flex:1,
+        aspectRatio: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        borderWidth: 1,
-        borderColor: '#ddd',
+        // borderWidth: 0.5,
+        // borderColor: '#ddd',
         backgroundColor: 'rgba(176, 141, 87, 0.5)'
     }
 })
