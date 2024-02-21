@@ -30,7 +30,7 @@ function buildRankingUpdateEmail(player_email, player_name, apiResponseResults) 
 
                 HTMLPart:
                     `<p>Dear ${player_name},</p>` +
-                    `<p>You went down from #${previousRank} to #${currentRank}.</p>` +
+                    `<p>You went down from #${previousRank} to ${currentRank}.</p>` +
                     `<p>Come play again to reclaim your spot!</p>` +
                     `<p>See you soon 👋<p>` +
                     `<p>Bejeweled Clone team</p>`
