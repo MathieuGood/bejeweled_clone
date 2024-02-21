@@ -19,6 +19,7 @@ export const addPlayer = (name, email, password, navigation) => {
         player_email: email,
         player_password: password
     }
+    console.log('Player password : ' + password)
 
     fetch('http://mathieubon.com:3001/addplayer', {
         method: 'POST',

@@ -8,7 +8,7 @@
 import { Alert } from 'react-native'
 import { checkCredentials } from '../core/apiRequests'
 import { addPlayer, checkIfEmailDoesNotExist } from '../core/apiRequests'
-
+import { generateHash, hashPassword } from './passwordHasher'
 
 
 // Check if a string is not empty
@@ -76,7 +76,11 @@ export const checkEmailAndPasswordMatch = (email, password, navigation, changeMo
         checkEmailFormat(email) &&
         checkPasswordFormat(password)
     ) {
-        checkCredentials(email, password, navigation, changeModalVisible)
+        // Hash the password and send the API request to check the credentials
+        hashPassword(password).then((hashedPassword) => {
+            checkCredentials(email, hashedPassword, navigation, changeModalVisible)
+        })
+
     } else {
         console.log('E-mail or password wrong')
         Alert.alert(
@@ -120,8 +124,12 @@ export const checkUserEntryAndAddPlayer = (name, email, password, navigation, ch
             // Execute addPlayer() that sends API call to create new player in database
             // and navigate to HomeScreen
             console.log('Adding player')
-            addPlayer(name.trim(), email, password, navigation)
-            changeModalVisible(false)
+
+            // Hash the password and add the player to the database
+            hashPassword(password).then((hashedPassword) => {
+                addPlayer(name.trim(), email, hashedPassword, navigation)
+                changeModalVisible(false)
+            })
         } else {
             Alert.alert(
                 'Invalid entry',
