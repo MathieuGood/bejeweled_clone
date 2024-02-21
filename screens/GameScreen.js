@@ -108,11 +108,6 @@ export default function GameScreen({ navigation, route }) {
   // Retrieve cell coordinates and record them to lastPress state
   const getCellCoordinates = (row, col) => {
     console.log(`\nPRESS: row ${row}, col ${col}`)
-
-    if (firstPress == [row, col]) {
-      console.log("Same cell as before!")
-    }
-    // console.log("firstPress before updating state : " + firstPress)
     setLastPress([row, col])
   }
 
@@ -289,25 +284,15 @@ export default function GameScreen({ navigation, route }) {
             > */}
 
       <SafeAreaView style={styles.safeArea}>
+        <View style={styles.topContainer}>
 
-          <ScoresModal
-            visible={isModalvisible}
-            changeModalVisible={setisModalVisible}
-            navigation={navigation}
-            route={route}
-            title={"Game over"}
-            resetGame={resetGame}
-            score={score}
-            endGame={true}
-          />
-
-        <ScoreBoard level={level} score={score} attempts={attempts} />
-
+          <ScoreBoard level={level} score={score} attempts={attempts} />
+        </View>
         <GameGrid
           gridContent={gameGrid}
-          // If timer is paused, do not allow cell press
-          // Else, return the coordinates of the cell pressed through getCellCoordinates()
+          // Return the coordinates of the cell pressed through getCellCoordinates()
           pressCellCallback={getCellCoordinates}
+          firstPress={firstPress}
           // If timer is paused, disable touch capacity
           disableTouchCapacity={timerPause === false ? false : true}
           theme={theme}
@@ -364,6 +349,18 @@ export default function GameScreen({ navigation, route }) {
             }}
           />
         </View>
+
+        <ScoresModal
+          visible={isModalvisible}
+          changeModalVisible={setisModalVisible}
+          navigation={navigation}
+          route={route}
+          title={"Game over"}
+          resetGame={resetGame}
+          score={score}
+          endGame={true}
+        />
+
       </SafeAreaView>
 
       {/* </ImageBackground> */}
@@ -377,7 +374,7 @@ export default function GameScreen({ navigation, route }) {
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-let styles = StyleSheet.create({
+const styles = StyleSheet.create({
   mainContainer: {
     // backgroundColor: 'rgba(255, 230, 128, 0.5)', // Background with 50% opacity
     backgroundColor: "lightgrey",
@@ -387,6 +384,8 @@ let styles = StyleSheet.create({
   },
   safeArea: {
     flex: 1,
+    alignItems: "center",
+    // alignItems: 'stretch',
     justifyContent: "space-around",
   },
   bottomContainer: {

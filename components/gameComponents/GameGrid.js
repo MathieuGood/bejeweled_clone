@@ -3,11 +3,16 @@ import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import GameTile from './GameTile'
 
 
-export default function GameGrid({ gridContent, pressCellCallback, disableTouchCapacity, theme }) {
+export default function GameGrid({
+    gridContent,
+    pressCellCallback,
+    firstPress,
+    disableTouchCapacity,
+    theme
+}) {
 
     const pressCellFunction = (row, col) => {
         pressCellCallback(row, col)
-
     }
 
     function renderGrid(gameGrid) {
@@ -16,7 +21,7 @@ export default function GameGrid({ gridContent, pressCellCallback, disableTouchC
 
             <View key={rowIndex} style={styles.row}>
 
-                {row.map((artefact, colIndex) => (
+                {row.map((tile, colIndex) => (
 
                     <TouchableOpacity
                         key={colIndex}
@@ -25,7 +30,10 @@ export default function GameGrid({ gridContent, pressCellCallback, disableTouchC
                         disabled={disableTouchCapacity}
                     >
                         <GameTile
-                            tileReference={artefact}
+                            tileReference={tile}
+                            firstPress={firstPress}
+                            rowIndex={rowIndex}
+                            colIndex={colIndex}
                             theme={theme}
                         />
                     </TouchableOpacity>

@@ -3,13 +3,21 @@ import { StyleSheet, View, Image } from 'react-native'
 import { appThemes } from '../../themes/appThemes'
 
 
-export default function GameTile({ tileReference, theme }) {
+export default function GameTile({
+    tileReference,
+    firstPress,
+    rowIndex,
+    colIndex,
+    theme
+}) {
 
     const tileImages = appThemes.tiles[theme]
 
+    const isFirstPress = firstPress ? firstPress[0] === rowIndex && firstPress[1] === colIndex : false;
+
     return (
 
-        <View style={styles.artifactContainer}>
+        <View style={[styles.tileContainer, isFirstPress && styles.highlight]}>
 
             <Image
                 source={tileImages[tileReference]}
@@ -22,7 +30,7 @@ export default function GameTile({ tileReference, theme }) {
 
 
 const styles = StyleSheet.create({
-    artifactContainer: {
+    tileContainer: {
         width: 50,
         height: 50,
         justifyContent: 'center',
@@ -36,4 +44,7 @@ const styles = StyleSheet.create({
         height: '100%',
         resizeMode: 'contain',
     },
+    highlight: {
+        backgroundColor: 'red'
+    }
 })
