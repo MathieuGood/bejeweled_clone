@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     },
     modal: {
         alignItems: 'center',
-        marginTop: 300,
+        marginVertical: '30%',
         width: windowWidth - 50,
         padding: 10,
         backgroundColor: 'white',

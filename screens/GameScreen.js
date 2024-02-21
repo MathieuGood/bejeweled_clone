@@ -105,6 +105,7 @@ export default function GameScreen({ navigation, route }) {
   // Build a grid with empty values
   const buildEmptyGrid = Array(gridSize).fill(Array(gridSize).fill(""))
 
+  
   // Retrieve cell coordinates and record them to lastPress state
   const getCellCoordinates = (row, col) => {
     console.log(`\nPRESS: row ${row}, col ${col}`)
@@ -254,7 +255,8 @@ export default function GameScreen({ navigation, route }) {
 
           // If no hints can be found, end the game
           if (getAllHints(grid).length === 0) {
-            endGame("No more valid move possible. End of game.", score, timer)
+            console.log("No more matches on the grid, regenerating grid in order to continue game")
+            setGameGrid(buildGameGridWithNoMatches(gridSize, gridNumberOfDifferentItems))
           }
         } else {
           // If the cells are not ok for swapping, decrement attempts counter
@@ -288,6 +290,7 @@ export default function GameScreen({ navigation, route }) {
 
           <ScoreBoard level={level} score={score} attempts={attempts} />
         </View>
+        
         <GameGrid
           gridContent={gameGrid}
           // Return the coordinates of the cell pressed through getCellCoordinates()
@@ -388,8 +391,13 @@ const styles = StyleSheet.create({
     // alignItems: 'stretch',
     justifyContent: "space-around",
   },
+  topContainer : {
+    flex:0.15,
+    alignContent: 'center',
+    justifyContent: 'center'
+  },
   bottomContainer: {
-    height: "26%",
+    flex:0.3,
     flexDirection: "column",
     justifyContent: "space-around",
     alignItems: "center",

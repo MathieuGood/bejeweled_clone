@@ -1,19 +1,25 @@
 import React from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
-export default function TouchButton({ title, press }) {
+export default function TouchButton({ title, press, customStyle }) {
+
+    // If customStyleSheet has been passed, use it, otherwise use the default styles
+    const buttonStyle = customStyle ? StyleSheet.create(customStyle) : styles
 
     return (
         <View>
-            <TouchableOpacity style={styles.buttonContainer} onPress={press}>
-                <Text style={styles.buttonText}>{title}</Text>
+            <TouchableOpacity
+                style={buttonStyle.buttonContainer}
+                onPress={press}
+            >
+                <Text style={buttonStyle.buttonText}>{title}</Text>
             </TouchableOpacity>
         </View>
     )
 }
 
 
-const styles = StyleSheet.create({
+const styles =  StyleSheet.create({
     buttonText: {
         color: '#e8b923',
         fontSize: 15,
