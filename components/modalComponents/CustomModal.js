@@ -1,6 +1,7 @@
 import React from 'react'
-import { Modal, StyleSheet, Dimensions, Text, View } from 'react-native'
+import { Modal, StyleSheet, Dimensions, View } from 'react-native'
 import { BlurView } from 'expo-blur'
+import Header from '../Header'
 
 
 export default function CustomModal({
@@ -26,12 +27,12 @@ export default function CustomModal({
 
                 <View style={styles.modal}>
 
-                    <Text style={styles.modalText}>{title}</Text>
+                    <Header title={title} />
 
                     {children}
 
                 </View>
-                
+
             </BlurView>
 
         </Modal >
@@ -52,19 +53,16 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginVertical: '30%',
         width: windowWidth - 50,
-        padding: 10,
-        backgroundColor: 'white',
+        padding: 20,
+        borderWidth: 2,
+        borderColor: '#d4af37',
         borderRadius: 10,
         alignSelf: 'center',
-    },
-    modalText: {
-        fontSize: 18,
-        color: '#1E201C',
-        fontWeight: 'bold',
-        marginBottom: 20,
-        textTransform: "uppercase",
-        textAlign: 'center',
-        marginBottom: 20,
-        marginTop: 15
-    },
+        backgroundColor: 'rgba(244, 232, 193, 0.8)',
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+    }
 })

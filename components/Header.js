@@ -20,7 +20,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     textTransform: 'uppercase',
-    marginBottom: 20
+    marginBottom: 20,
+    marginTop: 15
 },
 })
 

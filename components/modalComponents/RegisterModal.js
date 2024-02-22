@@ -30,10 +30,6 @@ export default function RegisterModal({
             changeModalVisible={changeModalVisible}
         >
 
-            <View style={styles.form}>
-
-                <Header style={styles.header} title='Create new account' />
-
                 <TextField
                     placeholder='Name'
                     value={name}
@@ -73,30 +69,7 @@ export default function RegisterModal({
                     }}
                 />
 
-            </View>
-
         </CustomModal>
     )
 
 }
-
-const styles = StyleSheet.create({
-    form: {
-        backgroundColor: 'rgba(244, 232, 193, 0.8)',
-        padding: 20,
-        marginBottom: 15,
-        borderRadius: 10,
-        borderWidth: 2,
-        borderColor: '#d4af37', // Doré
-        width: '80%',
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
-        alignItems: 'center',
-    }
-})
