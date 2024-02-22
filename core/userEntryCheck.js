@@ -8,7 +8,7 @@
 import { Alert } from 'react-native'
 import { checkCredentials } from '../core/apiRequests'
 import { addPlayer, checkIfEmailDoesNotExist } from '../core/apiRequests'
-import { generateHash, hashPassword } from './passwordHasher'
+import { hashPassword } from './passwordHasher'
 
 
 // Check if a string is not empty

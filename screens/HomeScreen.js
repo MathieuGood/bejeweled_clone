@@ -46,7 +46,29 @@ export default function HomeScreen({ navigation, route }) {
 
                         {/* If the player is logged in, display his name */}
                         {route.params
-                            ? <Text>Welcome {route.params.player_name}</Text>
+                            ? <TouchButton title={route.params.player_name}
+                                customStyle={{
+                                    buttonText: {
+                                        color: '#e8b923',
+                                        fontSize: 15,
+                                        fontWeight: 'bold',
+                                        textTransform: 'uppercase',
+                                    },
+                                    buttonContainer: {
+                                        width: 220,
+                                        backgroundColor: '#2b50c8',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        paddingHorizontal: 25,
+                                        borderRadius: 9,
+                                        height: 50,
+                                        alignSelf: 'center',
+                                        margin: 5,
+                                        borderWidth: 2,
+                                        borderColor: '#e8b923'
+                                        
+                                    }
+                                }} />
                             : <TouchButton
                                 title='Create account'
                                 press={() => { setisRegisterModalVisible(true) }}
@@ -70,7 +92,7 @@ export default function HomeScreen({ navigation, route }) {
 
                     <View style={styles.centerContainer}>
                         <TouchButton
-                            title='Start game'
+                            title='Play game'
                             customStyle={{
                                 buttonText: {
                                     color: '#e8b923',
