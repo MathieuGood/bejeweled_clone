@@ -3,7 +3,6 @@ START TRANSACTION;
 
 
 -- --------------------------------------------------------------------------------------
--- --------------------------------------------------------------------------------------
 --
 -- Database creation
 --
@@ -46,15 +45,16 @@ INSERT INTO players (
     player_password,
     last_game_id
     ) VALUES
-    ('Mathieu', 'bon.mathieu@gmail.com', 'mathieubon', 1),
-    ('Osiris', 'osiris@egyptian-god.com', 'osiris', 2),
-    ('Anubis', 'anubis@egyptian-god.com', 'anubis', 3),
-    ('Horus', 'horus@egyptian-god.com', 'horusrocks', 4),
-    ('Bastet', 'bastet@egyptian-god.com', 'meowmeow', 5),
-    ('Cleopatra', 'cleopatra@pharaoh.com', 'queenofegypt', 6),
-    ('Ramses II', 'ramsestwo@pharaoh.com', 'ramsestwo', 7),
-    ('Tutankhamun', 'tutankhamun@pharaoh.com', 'kingtut', 8),
-    ('Norah', 'norah.essaih@uha.fr', 'Norah67', 0)
+    ('Mathieu', 'bon.mathieu@gmail.com', 'e46354a123cbac37b62dff88f151a794067dfd23445fe985d15ca5dcc176dccfc640e53f78ac0fd12c3eac7756f9e363d625340f3a7577a22f8cd2097acea1c3', 1),
+    ('Osiris', 'osiris@egyptian-god.com', '2a69c9fea18ff71313f1ab14308650531869e66cbc13072b710987fce58fa657f0d00b3036fea27c45ad226627cc71b46d37c6625f1effb374530981474f5380', 2),
+    ('Anubis', 'anubis@egyptian-god.com', '88d0c024520e94b4d3e83941495e8617e1268695e385beceaa9a703823d967178b822e9472e0e84b6ee46e7dadbcb282bce4414fb3aacb088741943f2c9b53e3', 3),
+    ('Bastet', 'bastet@egyptian-god.com', 'de4c2ff99fb34242646a324885db79ca9ef82a5f4b36c657b83ecf6931c008de87b6daf99a1c46336f36687d0ab1fc9b91f5bc07e7c3913bec3844993fd2fbad', 5),
+    ('Cleopatra', 'cleopatra@pharaoh.com', '94d9c79958a928808f4b1afdb6bf51f6a5d4a0b2bb6f07f40e47b2f0a158667520f19ba2242edceec140ffe8f2ea0993025d3436c0655fb4d25c8ae5290ebe08', 6),
+    ('Ramses II', 'ramsestwo@pharaoh.com', 'e2d07c0ac978e5fb3c92050e3dd46fa7494ca66425f1e413c6dd3663ef448d624606d6ec2ba5a9f786cde78d3b4af113d032c2a48ef388970c7d0a811900b865', 7),
+    ('Tutankhamun', 'tutankhamun@pharaoh.com', '826714ca3371f84c489ebb76e5a2929303be1acc15a1e5a0ef0f73191f869c9c37b735ccbd817bedbab3910bcc7daf523f7682053fb87a65963cb89fba19f252
+', 8),
+    ('Norah', 'norah.essaih@uha.fr', 'd00c904644a7600b286cac762442ebd9838263665eef4ff48c47839ea3e88c998aea961628f1042da0bcb9e3571b85bfd4fb02ef146b6bc6cb4508f28ab19254', 0),
+    ('Miaou', 'oplatralala@gmail.com', '938f81e4ad808235762b6692a3b65a336cb71b4bc26a5f3308acf24f8ce26bdc04626c72857605003eb6d3153431cfdec9271077ce40b88f2349f0bf8a993113', 0)
     ;
 
 
