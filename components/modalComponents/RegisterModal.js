@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
+import { Alert, StyleSheet, Text } from 'react-native'
 import TouchButton from '../TouchButton'
 import TextField from '../TextField'
 import CustomModal from './CustomModal'
 import { checkUserEntryAndAddPlayer } from '../../core/userEntryCheck'
+import privacyPolicy from '../../assets/privacyPolicy'
 
 
 export default function RegisterModal({
@@ -19,6 +21,8 @@ export default function RegisterModal({
     })
 
     const { name, email, password } = state
+
+    console.log(privacyPolicy)
 
     // Clear the fields when the modal is closed
     useEffect(() => {
@@ -60,6 +64,14 @@ export default function RegisterModal({
                 autoCapitalize='none'
                 secureTextEntry={true}
             />
+
+            <Text
+                style={styles.privacyPolicy}
+                onPress={() => {Alert.alert('Privacy Policy and GDPR Consent', privacyPolicy.privacyPolicy)}}
+                >
+                Click here to read our privacy policy
+            </Text>
+
             <TouchButton
                 title='Create account'
                 press={() => checkUserEntryAndAddPlayer(name, email, password, navigation, changeModalVisible)}
@@ -76,3 +88,13 @@ export default function RegisterModal({
     )
 
 }
+
+const styles = StyleSheet.create({
+    privacyPolicy: {
+        color: 'blue',
+        textDecorationLine: 'underline',
+        textAlign: 'center',
+        fontSize: 10,
+        marginBottom: 10
+    }
+})
