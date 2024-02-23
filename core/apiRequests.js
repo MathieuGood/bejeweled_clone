@@ -72,8 +72,7 @@ export const checkCredentials = (email, password, navigation, changeModalVisible
                 console.log(json)
                 console.log(json.player_id, json.player_name)
                 navigation.navigate('HomeScreen', { player_id: json.player_id, player_name: json.player_name })
-                changeModalVisible(false)
-            } else {
+                changeModalVisible(false)            } else {
                 console.log('E-mail or password wrong')
                 Alert.alert(
                     'Error',

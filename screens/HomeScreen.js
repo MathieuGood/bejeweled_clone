@@ -18,7 +18,6 @@ export default function HomeScreen({ navigation, route }) {
 
     // Import background images from appThemes
     const backgroundImage = appThemes.backgrounds[theme]['HomeScreen']
-    console.log(appThemes)
 
     // Set the modal visibility to false
     const [isHighScoresModalvisible, setisHighScoresModalVisible] = useState(false)

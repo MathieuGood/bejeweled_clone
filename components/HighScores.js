@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, View, Text, FlatList } from 'react-native'
+import { StyleSheet, View, Text, FlatList, Image } from 'react-native'
 import { getHighScores } from '../core/apiRequests'
 
 export default function HighScores() {
@@ -16,6 +16,15 @@ export default function HighScores() {
   return (
 
     <View style={styles.mainContainer}>
+
+      {/* TODO : Adjust style to display scroll image */}
+
+      {/* <View style={styles.scrollImageContainer}>
+        <Image source={
+          require('../assets/modal/topScroll.png')}
+          style={styles.scrollImage}
+        />
+      </View> */}
 
       <Text style={{
         textAlign: 'center',
@@ -39,6 +48,13 @@ export default function HighScores() {
         onEndReachedThreshold={0.5}
       />
 
+      {/* <View style={styles.scrollImageContainer}>
+        <Image source={
+          require('../assets/modal/bottomScroll.png')}
+          style={styles.scrollImage}
+        />
+      </View> */}
+
     </View>
 
   )
@@ -47,7 +63,7 @@ export default function HighScores() {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    backgroundColor: '#f2f2f2',
+    backgroundColor: '#fdf7aa',
     width: '80%',
     alignSelf: 'center',
     paddingTop: 15,
@@ -71,5 +87,5 @@ const styles = StyleSheet.create({
     // width: '55%',
     textAlign: 'left',
     marginStart: 5
-  }
+  },
 })
