@@ -21,25 +21,30 @@ export default function SettingsModal({
             changeModalVisible={changeModalVisible}
         >
 
-                    <Header title='Theme' />
+            <Header title='Theme' />
 
-                    <TouchButton
-                        title='Detailed'
-                        press={() => {
-                            setTheme('detailed')
+            <TouchButton
+                title='Detailed'
+                press={() => {
+                    setTheme('detailed')
 
-                        }}
-                    />
+                }}
+            />
 
-                    <TouchButton
-                        title="Flat Design"
-                        press={() => {
-                            setTheme('flatDesign')
-                            navigation.navigate('HomeScreen')
-                            console.log('Changed to flatDesign')
-                            console.log(theme)
-                        }}
-                    />
+            <TouchButton
+                title="Flat Design"
+                press={() => {
+                    setTheme('flatDesign')
+                    navigation.navigate('HomeScreen')
+                    console.log('Changed to flatDesign')
+                    console.log(theme)
+                }}
+            />
+
+            <TouchButton
+                title='Upload custom images'
+                press={() => { addImage() }}
+            />
 
             <TouchButton
                 title="Close"
