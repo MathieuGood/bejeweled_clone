@@ -86,7 +86,12 @@ INSERT INTO games (
     ;
 
 
+CREATE TABLE images (
+    image_id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    player_id INT UNSIGNED NOT NULL,
+    image_file MEDIUMBLOB);
 
+    
 -- --------------------------------------------------------------------------------------
 --
 -- Stored procedures and functions
