@@ -257,6 +257,18 @@ app.get('/rankdiff', (req, res) => {
 
 
 
+// Add image to database as BLOB to table custom_images with player_id
+app.post('/addimage', (req, res) => {
+    const { player_id, image } = req.body
+    const imageBuffer = Buffer.from(image, 'base64')
+    db.query('INSERT INTO custom_images (player_id, image) VALUES (?, ?)',
+        [player_id, imageBuffer],
+        (err, result) => {
+            if (err) throw err
+            res.json({ message: 'Image added successfuly', id: result.insertId })
+        })
+})
+
 
 ///////////// UNUSED FOR NOW
 
