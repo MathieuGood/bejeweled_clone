@@ -15,7 +15,6 @@ export default function HomeScreen({ navigation, route }) {
     // Get selected theme from AppContext
     const { theme, setTheme } = useContext(AppContext)
 
-
     // Import background images from appThemes
     const backgroundImage = appThemes.backgrounds[theme]['HomeScreen']
 
@@ -29,6 +28,8 @@ export default function HomeScreen({ navigation, route }) {
     useEffect(() => {
         console.log('Theme changed')
     }, [theme])
+
+
 
     return (
         <View style={styles.mainContainer}>
