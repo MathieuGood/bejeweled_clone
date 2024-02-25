@@ -47,25 +47,8 @@ export default function HomeScreen({ navigation, route }) {
                         {route.params
                             ? <TouchButton title={route.params.player_name}
                                 customStyle={{
-                                    buttonText: {
-                                        color: '#e8b923',
-                                        fontSize: 15,
-                                        fontWeight: 'bold',
-                                        textTransform: 'uppercase',
-                                    },
                                     buttonContainer: {
                                         width: 220,
-                                        backgroundColor: '#2b50c8',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        paddingHorizontal: 25,
-                                        borderRadius: 9,
-                                        height: 50,
-                                        alignSelf: 'center',
-                                        margin: 5,
-                                        borderWidth: 2,
-                                        borderColor: '#e8b923'
-                                        
                                     }
                                 }} />
                             : <TouchButton
@@ -94,22 +77,11 @@ export default function HomeScreen({ navigation, route }) {
                             title='Play game'
                             customStyle={{
                                 buttonText: {
-                                    color: '#e8b923',
                                     fontSize: 26,
-                                    fontWeight: 'bold',
-                                    textTransform: 'uppercase',
                                 },
                                 buttonContainer: {
-                                    backgroundColor: '#2b50c8',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    paddingHorizontal: 25,
-                                    borderRadius: 9,
                                     height: 65,
-                                    alignSelf: 'center',
-                                    margin: 5,
-                                    borderWidth: 2,
-                                    borderColor: '#e8b923'
+                                    width: 200,
                                 }
                             }}
                             press={() => {
