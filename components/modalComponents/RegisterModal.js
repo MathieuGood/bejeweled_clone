@@ -22,8 +22,6 @@ export default function RegisterModal({
 
     const { name, email, password } = state
 
-    console.log(privacyPolicy)
-
     // Clear the fields when the modal is closed
     useEffect(() => {
         setState({ name: '', email: '', password: '' })

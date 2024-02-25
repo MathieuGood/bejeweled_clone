@@ -18,8 +18,8 @@ export default function LoginModal({
 
     const { email, password } = state
 
+    // Clear the fields when the modal is closed
     useEffect(() => {
-        // Clear the fields when the modal is closed
         setState({ email: '', password: '' })
     },
         [visible])
