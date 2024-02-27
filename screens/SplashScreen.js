@@ -13,7 +13,7 @@ export default function SplashScreen({navigation}) {
     <View style={styles.container}>
       <LottieView
         style={{ flex: 1, width: '100%' }}
-        source={require('../assets/Animations/lottie.json')}
+        source={require('../assets/Animations/lottie2.json')} // à choisir entre le 1 à 5
         autoPlay
         loop={false} 
         onAnimationFinish={handleAnimationFinish} 
