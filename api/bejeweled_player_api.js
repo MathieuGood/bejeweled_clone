@@ -1,5 +1,7 @@
 const express = require('express')
 const mysql = require('mysql2')
+const fs = require('fs');
+const https = require('https');
 
 
 
@@ -59,10 +61,21 @@ const port = 3001
 
 app.use(express.json())
 
-app.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}`)
-})
 
+
+
+
+
+// Load SSL certificate and key
+const options = {
+    key: fs.readFileSync('privkey.pem'),
+    cert: fs.readFileSync('fullchain.pem')
+};
+
+// Start HTTPS server
+https.createServer(options, app).listen(port, () => {
+    console.log(`Server running on https://localhost:${port}`);
+});
 
 
 
@@ -157,7 +170,7 @@ app.get('/highscores', (req, res) => {
         })
 })
 // Test /topscores
-// curl -X GET 'http://mathieubon.com:3001/topscores'
+// curl -X GET "http://mathieubon.com:3001/highscores"
 
 
 
