@@ -3,7 +3,7 @@
 // apiRequests utils
 //
 // Host :
-// http://mathieubon.com:3001
+// https://mathieubon.com:3001
 //
 /////////////////////////////////////////////////////////////////////////////////////
 
@@ -21,7 +21,7 @@ export const addPlayer = (name, email, password, navigation) => {
     }
     console.log('Player password : ' + password)
 
-    fetch('http://mathieubon.com:3001/addplayer', {
+    fetch('https://mathieubon.com:3001/addplayer', {
         method: 'POST',
         body: JSON.stringify(bodyData),
         headers: { "Content-Type": "application/json" }
@@ -59,7 +59,7 @@ export const checkCredentials = (email, password, navigation, changeModalVisible
         player_password: password
     }
 
-    fetch('http://mathieubon.com:3001/checklogin', {
+    fetch('https://mathieubon.com:3001/checklogin', {
         method: 'POST',
         body: JSON.stringify(bodyData),
         headers: { "Content-Type": "application/json" }
@@ -98,7 +98,7 @@ export const checkIfEmailDoesNotExist = (email, callbackFunction) => {
         player_email: email,
     }
 
-    fetch('http://mathieubon.com:3001/checkemail', {
+    fetch('https://mathieubon.com:3001/checkemail', {
         method: 'POST',
         body: JSON.stringify(bodyData),
         headers: { "Content-Type": "application/json" }
@@ -138,7 +138,7 @@ export const addScore = (player_id, score, duration, endTime,) => {
         endTime: endTime
     }
 
-    fetch('http://mathieubon.com:3001/addscore', {
+    fetch('https://mathieubon.com:3001/addscore', {
         method: 'POST',
         body: JSON.stringify(bodyData),
         headers: { "Content-Type": "application/json" }
@@ -170,7 +170,7 @@ export const addScore = (player_id, score, duration, endTime,) => {
 // Using /highscores
 // Retrieve high scores
 export const getHighScores = (setHighScores) => {
-    return fetch(`http://mathieubon.com:3001/highscores/`, {
+    return fetch(`https://mathieubon.com:3001/highscores/`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
     })
