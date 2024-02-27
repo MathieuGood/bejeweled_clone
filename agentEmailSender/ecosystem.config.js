@@ -6,5 +6,5 @@ module.exports = {
         cron_restart: '*/1 * * * *',
       },
     ],
-  };
+  }
   

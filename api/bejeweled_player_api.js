@@ -112,21 +112,25 @@ app.post('/addplayer', (req, res) => {
 
 
 // Check login validity
+// Return player_id if valid, false if not
 app.post('/checklogin', (req, res) => {
     const { player_email, player_password } = req.body
     console.log(req.body)
-    db.query('SELECT COUNT(player_id) FROM players WHERE player_email = ? AND player_password = ?', [player_email, player_password],
+    db.query('SELECT COUNT(player_id), player_id, player_name FROM players WHERE player_email = ? AND player_password = ?', [player_email, player_password],
         (err, result) => {
             if (err) throw err
             if (result[0]['COUNT(player_id)'] === 1) {
-                res.json(true)
+                res.json({
+                    "player_id": result[0]['player_id'],
+                    "player_name": result[0]['player_name']
+                })
             } else {
                 res.json(false)
             }
         })
 })
 // Test /checklogin route
-// curl -X POST -H "Content-Type: application/json" -d '{"player_email":"bon.mathieu@gmail.com", "player_password":"mb"}' http://mathieubon.com:3001/checklogin
+// curl -X POST -H "Content-Type: application/json" -d '{"player_email":"bon.mathieu@gmail.com", "player_password":"mathieubon"}' http://mathieubon.com:3001/checklogin
 
 
 
@@ -145,7 +149,7 @@ app.post('/updatepassword', (req, res) => {
 
 
 // Get top 6 scores
-app.get('/topscores', (req, res) => {
+app.get('/highscores', (req, res) => {
     db.query('CALL getRanking()',
         (err, results) => {
             if (err) throw err
@@ -154,6 +158,21 @@ app.get('/topscores', (req, res) => {
 })
 // Test /topscores
 // curl -X GET 'http://mathieubon.com:3001/topscores'
+
+
+
+// Add new score
+app.post('/addscore', (req, res) => {
+    const { player_id, score, duration, end_time } = req.body
+    db.query('INSERT INTO games (player_id, score, duration, end_time) VALUES (?, ?, ?, ?)',
+        [player_id, score, duration, end_time],
+        (err, result) => {
+            if (err) throw err
+            res.json({ message: 'Score added successfuly', id: result.insertId })
+        })
+})
+// Test /addscore route
+// curl -X POST -H "Content-Type: application/json" -d '{"player_id": "1", "score": "6666", "duration": "666", "end_time": "1999-01-01 12:00:00"}' http://mathieubon.com:3001/addscore
 
 
 
@@ -180,6 +199,20 @@ app.get('/lastgames/:player_id', (req, res) => {
 })
 // Test /lastgames/player_id
 // curl -X GET "http://mathieubon.com:3001/lastgames/1"
+
+
+
+// Get total play time in seconds by player_id
+app.get('/playtime/:player_id', (req, res) => {
+    const { player_id } = req.params
+    db.query('SELECT SUM(duration) AS play_time FROM games WHERE games.player_id = ?;',
+        [player_id], (err, results) => {
+            if (err) throw err
+            res.json(results[0])
+        })
+})
+// Test /lastgames/player_id
+// curl -X GET "http://mathieubon.com:3001/playtime/1"
 
 
 
@@ -223,6 +256,18 @@ app.get('/rankdiff', (req, res) => {
 // curl -X GET 'http://mathieubon.com:3001/rankdiff'
 
 
+
+// Add image to database as BLOB to table custom_images with player_id
+app.post('/addimage', (req, res) => {
+    const { player_id, image } = req.body
+    const imageBuffer = Buffer.from(image, 'base64')
+    db.query('INSERT INTO custom_images (player_id, image) VALUES (?, ?)',
+        [player_id, imageBuffer],
+        (err, result) => {
+            if (err) throw err
+            res.json({ message: 'Image added successfuly', id: result.insertId })
+        })
+})
 
 
 ///////////// UNUSED FOR NOW

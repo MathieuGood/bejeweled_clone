@@ -3,7 +3,6 @@ START TRANSACTION;
 
 
 -- --------------------------------------------------------------------------------------
--- --------------------------------------------------------------------------------------
 --
 -- Database creation
 --
@@ -34,7 +33,10 @@ CREATE TABLE players (
     player_email VARCHAR(255) NOT NULL,
     player_password VARCHAR(255) NOT NULL,
     last_game_id INT DEFAULT 0,
-    prev_rank INT DEFAULT NULL
+    prev_rank INT DEFAULT NULL,
+    INDEX(player_email),
+    CONSTRAINT UC_player_email UNIQUE (player_email)
+
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
 INSERT INTO players (
@@ -43,24 +45,28 @@ INSERT INTO players (
     player_password,
     last_game_id
     ) VALUES
-    ('Mathieu', 'bon.mathieu@gmail.com', 'mathieubon', 2),
-    ('Testeur', 'mathieu.bon@uha.fr', 'test', 3),
-    ('Guru', 'gurumatmat@gmail.com', 'guru', 0),
-    ('John', 'john@john.com', 'john', 0),
-    ('Alex', 'alex@alex.com', 'alex', 0),
-    ('Terry', 'terry@terry.com', 'terry', 0),
-    ('Graham', 'graham@graham.com', 'graham', 0),
-    ('Eric', 'eric@eric.com', 'eric', 0)
+    ('Mathieu', 'bon.mathieu@gmail.com', 'e46354a123cbac37b62dff88f151a794067dfd23445fe985d15ca5dcc176dccfc640e53f78ac0fd12c3eac7756f9e363d625340f3a7577a22f8cd2097acea1c3', 1),
+    ('Osiris', 'osiris@egyptian-god.com', '2a69c9fea18ff71313f1ab14308650531869e66cbc13072b710987fce58fa657f0d00b3036fea27c45ad226627cc71b46d37c6625f1effb374530981474f5380', 2),
+    ('Anubis', 'anubis@egyptian-god.com', '88d0c024520e94b4d3e83941495e8617e1268695e385beceaa9a703823d967178b822e9472e0e84b6ee46e7dadbcb282bce4414fb3aacb088741943f2c9b53e3', 3),
+    ('Bastet', 'bastet@egyptian-god.com', 'de4c2ff99fb34242646a324885db79ca9ef82a5f4b36c657b83ecf6931c008de87b6daf99a1c46336f36687d0ab1fc9b91f5bc07e7c3913bec3844993fd2fbad', 5),
+    ('Cleopatra', 'cleopatra@pharaoh.com', '94d9c79958a928808f4b1afdb6bf51f6a5d4a0b2bb6f07f40e47b2f0a158667520f19ba2242edceec140ffe8f2ea0993025d3436c0655fb4d25c8ae5290ebe08', 6),
+    ('Ramses II', 'ramsestwo@pharaoh.com', 'e2d07c0ac978e5fb3c92050e3dd46fa7494ca66425f1e413c6dd3663ef448d624606d6ec2ba5a9f786cde78d3b4af113d032c2a48ef388970c7d0a811900b865', 7),
+    ('Tutankhamun', 'tutankhamun@pharaoh.com', '826714ca3371f84c489ebb76e5a2929303be1acc15a1e5a0ef0f73191f869c9c37b735ccbd817bedbab3910bcc7daf523f7682053fb87a65963cb89fba19f252
+', 8),
+    ('Norah', 'norah.essaih@uha.fr', 'd00c904644a7600b286cac762442ebd9838263665eef4ff48c47839ea3e88c998aea961628f1042da0bcb9e3571b85bfd4fb02ef146b6bc6cb4508f28ab19254', 0),
+    ('Miaou', 'oplatralala@gmail.com', '938f81e4ad808235762b6692a3b65a336cb71b4bc26a5f3308acf24f8ce26bdc04626c72857605003eb6d3153431cfdec9271077ce40b88f2349f0bf8a993113', 0)
     ;
 
 
 
 CREATE TABLE games (
         game_id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-        player_id INT NOT NULL,
+        player_id INT UNSIGNED NOT NULL,
         score INT NOT NULL,
         duration INT NOT NULL,
-        end_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+        end_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (player_id) REFERENCES players(player_id),
+        INDEX(player_id)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
 INSERT INTO games (
@@ -69,48 +75,23 @@ INSERT INTO games (
     duration,
     end_time
     ) VALUES
-    (845, 1, 276, '2024-01-08 14:01:00'),
-    (204, 1, 230, '2024-01-08 14:08:00'),
-    (768, 2, 231, '2024-01-08 15:00:00'),
-    (302, 1, 456, '2024-01-08 17:00:00'),
-    (300, 1, 400, '2024-01-08 17:05:30'),
-    (287, 1, 340, '2024-01-08 17:12:00'),
-    (255, 1, 300, '2024-01-08 17:15:00'),
-    (156, 2, 124, '2024-01-09 06:00:00'),
-    (210, 3, 180, '2024-01-10 08:30:00'),
-    (189, 4, 200, '2024-01-10 09:15:00'),
-    (275, 5, 320, '2024-01-10 10:00:00'),
-    (312, 6, 400, '2024-01-10 10:45:00'),
-    (198, 7, 210, '2024-01-10 11:30:00'),
-    (245, 8, 260, '2024-01-10 12:15:00'),
-    (320, 8, 360, '2024-01-10 13:00:00'),
-    (180, 1, 150, '2024-01-10 13:45:00'),
-    (791, 3, 280, '2024-01-12 15:30:00'),
-    (310, 4, 330, '2024-01-12 16:15:00'),
-    (270, 5, 290, '2024-01-12 17:00:00'),
-    (320, 6, 400, '2024-01-12 17:45:00'),
-    (240, 7, 220, '2024-01-12 18:30:00'),
-    (290, 8, 320, '2024-01-12 19:15:00'),
-    (330, 8, 360, '2024-01-12 20:00:00'),
-    (245, 1, 280, '2024-01-13 08:30:00'),
-    (312, 2, 330, '2024-01-13 09:15:00'),
-    (278, 3, 290, '2024-01-13 10:00:00'),
-    (320, 4, 400, '2024-01-13 10:45:00'),
-    (225, 5, 190, '2024-01-13 11:30:00'),
-    (270, 6, 320, '2024-01-13 12:15:00'),
-    (340, 7, 380, '2024-01-13 13:00:00'),
-    (198, 8, 150, '2024-01-13 13:45:00'),
-    (310, 3, 290, '2024-01-15 15:30:00'),
-    (280, 4, 330, '2024-01-15 16:15:00'),
-    (330, 5, 290, '2024-01-15 17:00:00'),
-    (360, 6, 400, '2024-01-15 17:45:00'),
-    (240, 7, 220, '2024-01-15 18:30:00'),
-    (300, 8, 320, '2024-01-15 19:15:00'),
-    (350, 8, 360, '2024-01-15 20:00:00')
+    (900, 1, 276, '2024-01-08 14:01:00'),
+    (1050, 2, 230, '2024-01-08 14:08:00'),
+    (800, 3, 231, '2024-01-08 15:00:00'),
+    (300, 4, 456, '2024-01-08 17:00:00'),
+    (750, 5, 400, '2024-01-08 17:05:30'),
+    (900, 6, 340, '2024-01-08 17:12:00'),
+    (1450, 7, 300, '2024-01-08 17:15:00'),
+    (150, 8, 124, '2024-01-09 06:00:00')
     ;
 
 
+CREATE TABLE images (
+    image_id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    player_id INT UNSIGNED NOT NULL,
+    image_file MEDIUMBLOB);
 
+    
 -- --------------------------------------------------------------------------------------
 --
 -- Stored procedures and functions
@@ -144,7 +125,7 @@ CREATE PROCEDURE getRanking()
 BEGIN
     SET @count := 0;
 
-    SELECT (@count:=@count+1) AS rank, games.player_id, player_name, score, prev_rank
+    SELECT (@count:=@count+1) AS rank, player_name, score
     FROM games
     INNER JOIN players ON games.player_id = players.player_id
     ORDER BY score DESC
@@ -198,9 +179,9 @@ END //
 
 CREATE PROCEDURE getRankingDifference()
 BEGIN
-    SELECT player_id, player_name, prev_rank, MIN(rank) AS rank
+    SELECT player_id, player_name, player_email, prev_rank, MIN(rank) AS rank
     FROM (
-        SELECT DISTINCT p.player_id, p.player_name, p.prev_rank, top_scores.rank
+        SELECT DISTINCT p.player_id, p.player_name, p.player_email, p.prev_rank, top_scores.rank
         FROM players AS p
         LEFT JOIN (
             SELECT RANK() OVER (ORDER BY score DESC) AS rank, player_id
@@ -210,7 +191,7 @@ BEGIN
         ) AS top_scores ON p.player_id = top_scores.player_id
         WHERE p.prev_rank IS NOT NULL
     ) AS ranked_players
-    GROUP BY player_id, player_name, prev_rank
+    GROUP BY player_id, player_name, player_email, prev_rank
     ORDER BY prev_rank ASC;
 END //
 

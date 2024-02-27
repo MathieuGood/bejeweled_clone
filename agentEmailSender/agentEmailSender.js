@@ -1,13 +1,25 @@
 const { buildRankingUpdateEmail, buildRecapEmail } = require('./emailBuilder');
-
 const Mailjet = require('node-mailjet')
 
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// RUN ON SCRIPT LAUNCH
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 sendGameRecapToAllPlayers()
 
 sendRankingDifferences()
 
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Send a recap e-mail to all the players whose last game has ended for an hour at least
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function sendGameRecapToAllPlayers() {
 
@@ -33,12 +45,18 @@ function sendGameRecapToAllPlayers() {
             }
         })
         .catch(error => {
-            console.error(error)
+            console.error('ERROR in endGameRecapToAllPlayers : ' + error)
             return null
         });
 }
 
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Call stored procedure in database to update previous rankings
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function updateRankingInDatabase() {
 
@@ -57,12 +75,18 @@ function updateRankingInDatabase() {
             }
         })
         .catch(error => {
-            console.error(error)
+            console.error('ERROR in updateRankingInDatabase : ' + error)
             return null
         });
 }
 
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Send e-mail to players that have been losing ranks in top 6
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function sendRankingDifferences() {
 
@@ -74,14 +98,21 @@ function sendRankingDifferences() {
         .then(json => {
             // Get the response for ranking difference
             if (json) {
-                // console.log(json)
+                console.log(json)
                 // For each player in the database
                 json.forEach((ranking) => {
                     // Run function to send recap by e-mail if last played game has ended for an hour at least
                     // console.log(ranking)
+                    let rank = 'unranked'
+                    // If player has been losing ranks
                     if (ranking.rank > ranking.prev_rank || ranking.rank === null) {
-                        console.log(`>>>>>>${ranking.player_name} was rank #${ranking.prev_rank}, now he is rank #${ranking.rank} `)
-                        const email = buildRankingUpdateEmail(ranking.player_email, ranking.player_name, [{ prev: ranking.prev_rank, current: ranking.rank }])
+                        if (ranking.rank !== null) {
+                            rank = `#${ranking.rank}`
+                        }
+
+                        console.log(`>>>>>>${ranking.player_name} was rank #${ranking.prev_rank}, now he is ${rank} `)
+                        console.log('SEND E-MAIL NOW to ' + ranking.player_email)
+                        const email = buildRankingUpdateEmail(ranking.player_email, ranking.player_name, [{ prev: ranking.prev_rank, current: rank }])
                         sendMail(email)
                     }
                 })
@@ -95,36 +126,18 @@ function sendRankingDifferences() {
             }
         })
         .catch(error => {
-            console.error(error)
+            console.error('Error in sendRankingDifferences : ' + error)
             return null
         });
 }
 
 
 
-
-
-function getLastGames(player_id) {
-    return fetch(`http://mathieubon.com:3001/lastgames/${player_id}`, {
-        method: 'GET',
-        headers: { "Content-Type": "application/json" }
-    })
-        .then(response => response.json())
-        .then(json => {
-            if (json) {
-                return json
-            } else {
-                console.log('No last games')
-                return null
-            }
-        })
-        .catch(error => {
-            console.error(error)
-            return null
-        });
-}
-
-
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Update players table with last game ID played for a specific player
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function updateLastGameId(player_id, last_game_id) {
 
@@ -147,69 +160,132 @@ function updateLastGameId(player_id, last_game_id) {
             }
         })
         .catch(error => {
-            console.error(error)
+            console.error('Error in updateLastGameId : ' + error)
             return null
         });
 }
 
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Retrieve last games played (games with game_id greather than last_game_id)
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function getLastGames(player_id) {
+    return fetch(`http://mathieubon.com:3001/lastgames/${player_id}`, {
+        method: 'GET',
+        headers: { "Content-Type": "application/json" }
+    })
+        .then(response => response.json())
+        .then(json => {
+            if (json) {
+                return json
+            } else {
+                console.log('No last games')
+                return null
+            }
+        })
+        .catch(error => {
+            console.error('Error in getLastGames :' + error)
+            return null
+        });
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Retrieve total play time for a specific player
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function getPlayTime(player_id) {
+    return fetch(`http://mathieubon.com:3001/playtime/${player_id}`, {
+        method: 'GET',
+        headers: { "Content-Type": "application/json" }
+    })
+        .then(response => response.json())
+        .then(json => {
+            if (json) {
+                // console.log('Play time : ' + json['play_time'])
+                return json
+            } else {
+                console.log('No duration data.')
+                return null
+            }
+        })
+        .catch(error => {
+            console.error('Error in getPlayTime : ' + error)
+            return null
+        });
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Send recap e-mail to one specific player with detail of last games and total play time
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
 function sendRecapEmailIfTimeReached(player_id) {
-    // Get all the last games for one player
-    getLastGames(player_id)
-        .then(result => {
-            // Print last games
-            // console.log(result)
-            if (result != false) {
-
-                // console.log(result)
-
-                // Get current datetime
+    // Wait until the queries have been executed to get last games and total play time
+    Promise.all([
+        getLastGames(player_id),
+        getPlayTime(player_id)])
+        .then(([last_games, play_time]) => {
+            // If there are last games (not empty array)
+            if (last_games != false) {
                 let now = new Date()
-                // Get end_time of last game played
-                let end_time = new Date(result[result.length - 1]['end_time'])
-                // Add one hour to the end_time of last game played
+                // Set end_time as time of last game + 1 hour
+                let end_time = new Date(last_games[last_games.length - 1]['end_time'])
                 end_time.setTime(end_time.getTime() + 60 * 60 * 1000)
 
-                // console.log('END : ' + end_time)
-                // console.log('NOW : ' + now)
-
-                // If it is time to notify the user
+                // Check if last game has been played for at least one hour
                 if (end_time < now) {
+                    console.log('Last games : ' + ' for player ID ' + player_id )
+                    console.log(last_games)
+                    const player_email = last_games[last_games.length - 1]['player_email']
+                    const player_name = last_games[last_games.length - 1]['player_name']
+                    const player_time = play_time['play_time']
 
-                    const player_email = result[result.length - 1]['player_email']
-                    const player_name = result[result.length - 1]['player_name']
+                    // Build e-mail to send providing e-mail, name, total play time and last games
+                    console.log('SEND RECAP E-MAIL NOW to ' + player_email)
+                    const email = buildRecapEmail(player_email, player_name, player_time, last_games)
 
-                    // Send e-mail
-                    console.log('SEND E-MAIL NOW to ' + player_email)
-                    const email = buildRecapEmail(player_email, player_name, result)
+                    // Send the e-mail
                     sendMail(email)
 
-
-                    // Update last_game_id in player table
-                    const last_game_id = result[result.length - 1]['game_id']
+                    const last_game_id = last_games[last_games.length - 1]['game_id']
                     updateLastGameId(player_id, last_game_id)
                     console.log('-> Update last_game_id in player table')
-
-
                 } else {
-                    // Print how many minutes to wait in console
+                    // For debugging purpose only
+                    // If it is not time to send the e-mail, display time to wait before it can be seny
                     let waitTime = new Date(end_time - now)
                     waitTime = waitTime.getUTCMinutes()
-                    console.log('DO NOT SEND E-MAIL NOW to ' + email)
+                    console.log('DO NOT SEND E-MAIL NOW to ' + last_games[last_games.length - 1]['player_name'])
                     console.log('-> Minutes to wait before sending : ' + waitTime)
                 }
-
             } else {
+                // There are no last games to process
                 console.log('NOTHING TO SEND to player ID ' + player_id)
             }
         })
         .catch(error => {
-            console.error(error);
-        })
+            console.error('Error in sendRecapEmailIfTimeReached for player_id ' + player_id + ': ' + error)
+        });
 }
 
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Send e-mail using Mailjet service API
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function sendMail(emailToSend) {
 
@@ -219,7 +295,6 @@ function sendMail(emailToSend) {
         // Secret Key
         '125ff23dba0087e2a32070553111bca5')
 
-
     const player_name = emailToSend.Messages[0].To[0].Name
     const player_email = emailToSend.Messages[0].To[0].Email
 
@@ -227,12 +302,11 @@ function sendMail(emailToSend) {
         .post('send', { version: 'v3.1' })
         .request(emailToSend)
 
-
     sendMailjet.then((result) => {
         console.log('Sending e-mail to ' + player_name + ' at ' + player_email + ' with subject ' + emailToSend.Messages[0].Subject)
         // console.log(result.body)
     }).catch((err) => {
-        console.log(err.statusCode)
+        console.log('Error in sendMail' + err)
     })
 
 }

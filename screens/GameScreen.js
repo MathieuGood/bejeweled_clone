@@ -1,258 +1,427 @@
-import React, { useState, useEffect } from 'react'
-import { StyleSheet, View, SafeAreaView, Text, Alert} from 'react-native'
-import TouchButton from '../components/TouchButton'
-import ScoreBoard from '../components/ScoreBoard'
-import GameGrid from '../components/GameGrid'
+import React, { useState, useEffect, useContext } from "react"
 import {
-    buildGameGridWithNoMatches,
-    showGameGrid,
-    checkGameGridForAlignments,
-    swapTwoItemsOnGrid,
-    updateGridCellValue,
-    pushDownValuesAndEraseAlignments,
-    fillEmptyCellsWithNoMatches
-} from '../project_resources/exportGameFunctions'
-import ProgressBar from '../components/ProgressBar'
-import ModalScore from '../components/ModalScore'
+  StyleSheet,
+  View,
+  SafeAreaView,
+  Text,
+  Alert,
+  ImageBackground,
+} from "react-native"
+import AppContext from "../providers/AppContext"
+import TouchButton from "../components/TouchButton"
+import ScoresModal from "../components/modalComponents/ScoresModal"
+import GameGrid from "../components/gameComponents/GameGrid"
+import ScoreBoard from "../components/gameComponents/ScoreBoard"
+import ProgressBar from "../components/gameComponents/ProgressBar"
+import {
+  addScore
+} from "../core/apiRequests"
+import {
+  buildGameGridWithNoMatches,
+  showGameGrid,
+  checkGameGridForAlignments,
+  swapTwoItemsOnGrid,
+  pushDownValuesAndEraseAlignments,
+  fillEmptyCellsWithNoMatches,
+  getAllHints,
+  getOneRandomHint,
+} from "../core/gameFunctions"
 
 
 
-export default function GameScreen({ navigation }) {
-
-    // const exampleGrid = [
-    //     [4, 5, 6, 6, 5, 1, 7, 2],
-    //     [1, 5, 6, 7, 7, 1, 3, 3],
-    //     [1, 3, 6, 0, 4, 7, 2, 1],
-    //     [0, 5, 6, 7, 7, 0, 3, 0],
-    //     [2, 0, 3, 3, 1, 2, 6, 1],
-    //     [0, 7, 2, 3, 2, 6, 6, 1],
-    //     [5, 4, 0, 3, 0, 2, 2, 1],
-    //     [7, 4, 6, 4, 1, 0, 5, 4],
-    // ]
-    // const [gameGrid, setGameGrid] = useState(exampleGrid)
-
-    // Build a 8*8 grid with no matches
-    const [gameGrid, setGameGrid] = useState(() => buildGameGridWithNoMatches(8, 8))
-
-    // Set the number of attempts to 3
-    const [attempts, setAttempts] = useState(3)
-
-    // Set timer start
-    const [timer, setTimer] = useState("")
-
-    // Set score and level (progress added by Norah)
-    const [score, setScore] = useState(0)
-    const [level, setLevel] = useState(1)
-    const [progress, setProgress] = useState(50); 
-
-    // Set states to record user entry
-    const [firstPress, setFirstPress] = useState(null)
-    const [secondPress, setSecondPress] = useState(null)
-    const [lastPress, setLastPress] = useState(null)
+export default function GameScreen({ navigation, route }) {
 
 
+  ////////////////////////////////////////////////////////////////////////////////////////////////////
+  //
+  // States and variables
+  //
+  ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    const getCellCoordinates = (row, col) => {
-        console.log(`\nPRESS: row ${row}, col ${col}`)
+  // const exampleGrid = [
+  //     [4, 5, 6, 6, 5, 1, 7, 2],
+  //     [1, 5, 6, 7, 7, 1, 3, 3],
+  //     [1, 3, 6, 0, 4, 7, 2, 1],
+  //     [0, 5, 6, 7, 7, 0, 3, 0],
+  //     [2, 0, 3, 3, 1, 2, 6, 1],
+  //     [0, 7, 2, 3, 2, 6, 6, 1],
+  //     [5, 4, 0, 3, 0, 2, 2, 1],
+  //     [7, 4, 6, 4, 1, 0, 5, 4],
+  // ]
 
-        if (firstPress == [row, col]) {
-            console.log("Same cell as before!")
-        }
+  let exampleGrid = [
+    [5, 1, 2, 3, 2, 0, 5, 0],
+    [4, 0, 6, 0, 5, 0, 7, 1],
+    [1, 7, 7, 1, 7, 7, 3, 7],
+    [3, 5, 6, 4, 2, 6, 1, 1],
+    [0, 5, 6, 3, 4, 7, 5, 1],
+    [3, 7, 4, 0, 3, 2, 3, 0],
+    [2, 2, 0, 4, 5, 4, 7, 0],
+    [4, 0, 3, 6, 0, 5, 2, 6],
+  ]
 
-        // console.log("firstPress before updating state : " + firstPress)
-        setLastPress([row, col])
+  // const [gameGrid, setGameGrid] = useState(exampleGrid)
 
+  // Get theme from context
+  const theme = useContext(AppContext).theme
+
+  // Build a grid with no matches
+  const gridSize = 8
+  const gridNumberOfDifferentItems = 8
+  const [gameGrid, setGameGrid] = useState(() =>
+    buildGameGridWithNoMatches(gridSize, gridNumberOfDifferentItems),
+  )
+  const [gridBackup, setGridBackup] = useState([])
+
+  // Set the number of attempts to 3
+  const [attempts, setAttempts] = useState(3)
+
+  // Set timer start
+  const [timer, setTimer] = useState(0)
+  const [timerPause, setTimerPause] = useState(false)
+
+  // Set score, level, progress bar to starting values
+  const [score, setScore] = useState(0)
+  const [level, setLevel] = useState(1)
+  const [progressBar, setProgressBar] = useState(50)
+
+  // Set states to record user entry
+  const [firstPress, setFirstPress] = useState(null)
+  const [lastPress, setLastPress] = useState(null)
+
+  // Set the modal visibility to false
+  const [isModalvisible, setisModalVisible] = useState(false)
+
+
+
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////
+  //
+  // Functions
+  //
+  ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  // Build a grid with empty values
+  const buildEmptyGrid = Array(gridSize).fill(Array(gridSize).fill(""))
+
+
+  // Retrieve cell coordinates and record them to lastPress state
+  const getCellCoordinates = (row, col) => {
+    console.log(`\nPRESS: row ${row}, col ${col}`)
+    setLastPress([row, col])
+  }
+
+
+  // Show hint
+  const showHint = (gameGrid) => {
+    let resultHints = getAllHints(gameGrid)
+
+    if (resultHints.length === 0) {
+      console.log("No hints available")
+      Alert.alert(
+        "No hints available",
+        "No matches found on the grid",
+        [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+        { cancelable: false },
+      )
+    } else {
+      let hint = getOneRandomHint(resultHints)
+      // TO DO : Display hint with animation
+      console.log("Hint : ", hint)
+      Alert.alert(
+        "Hint",
+        `Swap cells ${hint[0]} and ${hint[1]}`,
+        [{ text: "OK", onPress: () => console.log("OK Pressed after hint") }],
+        { cancelable: false },
+      )
+      return hint
     }
-    const  [isModalvisible, setisModalVisible] = useState(false);
-
-    const handleGameOver = () => {
-        setisModalVisible(true); 
-      };
+  }
 
 
-    // Record last cell pressed in either firstPress or secondPress
-    useEffect(() => {
+  // Handle end of game showing Modal with current score, top scores and add current score to database
+  const endGame = (message, score, timer) => {
+    console.log("Game over : " + message)
 
-        // Get current score, level and grid from states
-        let currentScore = score
-        let currentLevel = level
-        let grid = gameGrid
+    // Pause the timer
+    setTimerPause(true)
 
-        console.log("useEffect : lastPress is " + lastPress)
-        if (firstPress === null) {
-            // If it user's first press on jewel, record press to firstPress state
-            setFirstPress(lastPress)
-            console.log("useEffect : firstPress recorded >>> " + lastPress)
+    // Get current time in GMT and format it into a DateTime string (YYYY-MM-DD HH:MM:SS)
+    const endTime = new Date().toISOString().slice(0, 19).replace("T", " ")
+
+    // If route parameters contain logged in user info, add score, duration and endTime in database
+    if (route.params) {
+      const player_id = route.params.player_id
+      addScore(player_id, score, timer, endTime)
+    }
+
+    console.log("END TIME : " + endTime)
+    console.log("TIMER : " + timer)
+
+    // Show scores Modal
+    setisModalVisible(true)
+  }
+
+
+  // Reset all the states to default in order to start a new game
+  const resetGame = () => {
+    setGameGrid(buildGameGridWithNoMatches(gridSize, gridNumberOfDifferentItems))
+    setAttempts(3)
+    setScore(0)
+    setLevel(1)
+    setProgressBar(50)
+    setTimerPause(false)
+  }
+
+
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////
+  //
+  // useEffect functions
+  //
+  ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  // Timer and progress bar update
+  // Trigger actions when the timerPause state is updated
+  useEffect(() => {
+    // If the timer is not paused, increment the timer every second
+    const intervalId = setInterval(() => {
+      if (timerPause === false) {
+        // Increment timer
+        setTimer((prevTimer) => {
+          const newTimer = prevTimer + 1
+          return newTimer
+        })
+        // Decrement progressBar
+        setProgressBar((prevProgressBar) => {
+          const newProgressBar = prevProgressBar - 1
+          return newProgressBar
+        })
+      }
+    }, 1000)
+    return () => clearInterval(intervalId)
+  }, [timerPause])
+
+
+
+  // End the game if attemps or progressBar reach 0
+  useEffect(() => {
+    // Checks if game over conditions are met (no more attempts or progress reached 0)
+    if (attempts < 1) {
+      endGame("You used all your attempts.", score, timer)
+    } else if (progressBar < 1) {
+      endGame("Time is up!", score, timer)
+    }
+  }, [attempts, progressBar])
+
+
+
+  // Trigger actions when the lastPress state is updated
+  useEffect(() => {
+    // Get current grid from state
+    let grid = gameGrid
+
+    if (firstPress === null) {
+      // If it user's first press on a cell, record press to firstPress state
+      setFirstPress(lastPress)
+
+      // TO DO : Highlight the first cell selected on the grid
+
+    } else {
+      // If it user's second press on a cell, run the game logic to swap cells and check for matches
+
+      // If the two selected cells are ok for swapping (result in new match)
+      if (swapTwoItemsOnGrid(grid, firstPress, lastPress) != false) {
+        // Swap cells
+        let swapGrid = swapTwoItemsOnGrid(grid, firstPress, lastPress)
+        // Check if there are matches
+        let matches = checkGameGridForAlignments(swapGrid)
+
+        // If at least one match is found, swap the values between the two cells
+        if (matches.length > 0) {
+
+          // Apply grid with swapped cells to the game grid
+          grid = swapGrid
+
+          // Find matches, erase matches and push down values until there are no more matches
+          pushDownValuesAndEraseAlignments(grid, level, setScore, score, setLevel, setProgressBar)
+
+          // Fill the empty cells with random values, checking there are no matches
+          grid = fillEmptyCellsWithNoMatches(grid)
+
+          // Save the new grid to the gameGrid state
+          setGameGrid(grid)
+
+          // If no hints can be found, end the game
+          if (getAllHints(grid).length === 0) {
+            console.log("No more matches on the grid, regenerating grid in order to continue game")
+            grid = buildGameGridWithNoMatches(gridSize, gridNumberOfDifferentItems)
+          }
         } else {
-
-            setSecondPress(lastPress)
-            console.log("useEffect : secondPress recorded >>> " + lastPress)
-
-            console.log("firstPress is " + firstPress)
-            console.log("secondPress is " + lastPress)
-
-            // Player has selected two cells
-            // NOW DO SOMETHING !
-
-            showGameGrid(grid)
-
-            if (swapTwoItemsOnGrid(grid, firstPress, lastPress) != false) {
-                let swapGrid = swapTwoItemsOnGrid(grid, firstPress, lastPress)
-                let matches = checkGameGridForAlignments(swapGrid)
-                console.log("Matches found after swap test", matches)
-                if (matches.length > 0) {
-                    console.log("OK TO SWAP ", firstPress, 'and', lastPress)
-
-                    grid = swapGrid
-                    showGameGrid(grid)
-
-                    grid = updateGridCellValue(grid, matches, '')
-                    showGameGrid(grid)
-
-                    let pointsPerMatch
-                    let pointsToAdd = 0
-                    matches.forEach((matchingCells) => {
-                        if (matchingCells.length === 3) {
-                            pointsPerMatch = 50
-                        } else if (matchingCells.length === 4) {
-                            pointsPerMatch = 150
-                        } else if (matchingCells.length > 4) {
-                            pointsPerMatch = 500
-                        }
-                        pointsToAdd += pointsPerMatch * level
-                    })
-                    console.log("Points to add to score : " + pointsToAdd)
-                    setScore(score + pointsToAdd)
-
-
-                    setTimeout(() => {
-                        pushDownValuesAndEraseAlignments(grid);
-                        grid = fillEmptyCellsWithNoMatches(grid);
-                        showGameGrid(grid);
-                        setGameGrid(grid);
-                    }, 500);
-
-                } else {
-                    setAttempts(attempts - 1)
-                    if (attempts - 1 === 0) {
-                        // Alert.alert(r
-                        //     'End of game',
-                        //     'Loser! Game is over!',
-                        //     [
-                        //         { text: 'OK' }
-                        //     ],
-                        //     { cancelable: false }
-                        // );
-                        // navigation.navigate('PlayerScreen')
-                    }
-                }
-
-            }
-
-            showGameGrid(grid)
-            setGameGrid(grid)
-
-            setFirstPress(null)
-            setSecondPress(null)
-
-            if (firstPress.toString() === lastPress.toString()) {
-                console.log("CELLS ARE THE SAME!!!!!!")
-
-                // Decrement attempts
-                setAttempts(attempts - 1)
-                // If it is the last attempt, show alert and stop game
-                if (attempts - 1 === 0) {
-
-
-
-                    // Alert.alert(
-                    //     'End of game',
-                    //     'Loser! Game is over!',
-                    //     [
-                    //         { text: 'OK' }
-                    //     ],
-                    //     { cancelable: false }
-                    // );
-                    // navigation.navigate('PlayerScreen')
-                }
-            }
+          // If the cells are not ok for swapping, decrement attempts counter
+          setAttempts(attempts - 1)
         }
-    }, [lastPress])
-    const resetGame = () => {
-        // Réinitialiser l'état du jeu à ses valeurs par défaut
-        setGameGrid(buildGameGridWithNoMatches(8, 8));
-        setAttempts(3);
-        setScore(0);
-        setLevel(1);
-        setProgress(50);
-      };
-      
-    useEffect(() => {
-        // Checks if game over conditions are met (no more attempts or progress reached 0)
-        if (attempts === 0 || progress === 0) {
-          handleGameOver(); // Function to handle game over logic
-        }
-      }, [attempts, progress]); // This useEffect runs whenever `attempts` or `progress` changes
-      
+      }
+
+      // Update gameGrid state with the new grid and reset firstPress
+      setGameGrid(grid)
+      setFirstPress(null)
+    }
+  }, [lastPress])
 
 
-    return (
-        <View style={styles.mainContainer}>
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////
+  //
+  // Component return
+  //
+  ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  return (
+    <View style={styles.mainContainer}>
+      {/* <ImageBackground
+                source={require('../assets/hieroglyphics.png')}
+                style={styles.imageBackground}
+            > */}
+
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.topContainer}>
+
+          <ScoreBoard level={level} score={score} attempts={attempts} />
+        </View>
 
 
-         <SafeAreaView style={styles.safeArea}>
-            
-            {/* <Text>Number of tries left : {attempts}</Text>
-            <Text></Text>
-            <Text>Level : {level}</Text>
-           <Text>Score : {score}</Text> 
-            <Text></Text>*/} 
+        <View style={styles.centerContainer}>
 
-            <Text>firstPress : {firstPress}</Text>
-            <Text>secondPress : {secondPress}</Text>
+          <GameGrid
+            gridContent={gameGrid}
+            // Return the coordinates of the cell pressed through getCellCoordinates()
+            pressCellCallback={getCellCoordinates}
+            firstPress={firstPress}
+            // If timer is paused, disable touch capacity
+            disableTouchCapacity={timerPause === false ? false : true}
+            theme={theme}
+          />
 
-            <ModalScore 
-                visible={isModalvisible}
-                changeModalVisible= {setisModalVisible}
-                navigation={navigation}
-                resetGame={resetGame}
-                score = {score}
-           />
-
-            <ScoreBoard level={level} score={score}  attempts={attempts}/>
-
-
-            <GameGrid
-                gridContent={gameGrid}
-                pressCellCallback={getCellCoordinates}
-            />
-            
-            {/* nextLevel à ne pas tenir compte car pas forcément level + 1 */}
-            <ProgressBar level={level} nextLevel={level + 1} progress={progress} /> 
-
-          
-            <TouchButton
-                title='Back to player screen'
-                press={() => {
-                    navigation.navigate('PlayerScreen')
-                }}
-            />
-              
-        </SafeAreaView>
+          <ProgressBar
+            level={level}
+            nextLevel={level + 1}
+            progress={progressBar}
+          />
 
         </View>
-    )
+
+
+        <View style={styles.bottomContainer}>
+          {/* <Text>
+            Progress bar : {progressBar} / 100      Timer : {timer}
+          </Text> */}
+
+          {/* <Text>firstPress : {firstPress}     secondPress : {secondPress}</Text> */}
+
+          <TouchButton
+            // Show 'Pause' on button text if the game is running
+            // Else, show 'Resume' on button text
+            title={timerPause === false ? "Pause" : "Resume"}
+            // On click, pause or resume the game
+            press={() => {
+              // If the game is running, pause it
+              if (timerPause === false) {
+                console.log("Pause button pressed")
+                setTimerPause(true)
+                setGameGrid(buildEmptyGrid)
+                // Make a deep copy of the gameGrid to gridBackup
+                setGridBackup(JSON.parse(JSON.stringify(gameGrid)))
+              } else {
+                // If the game is paused, resume it
+                console.log("Resume button pressed")
+                setTimerPause(false)
+                setGameGrid(gridBackup)
+              }
+            }}
+          />
+
+          <TouchButton
+            title={"Hint"}
+            press={() => {
+              console.log("Hint button pressed")
+              showHint(gameGrid)
+            }}
+          />
+
+          <TouchButton
+            title="Quit game"
+            press={() => {
+              route.params
+                ? navigation.navigate('HomeScreen', { player_id: route.params.player_id, player_name: route.params.player_name })
+                : navigation.navigate('HomeScreen')
+            }}
+          />
+        </View>
+
+        <ScoresModal
+          visible={isModalvisible}
+          changeModalVisible={setisModalVisible}
+          navigation={navigation}
+          route={route}
+          title={"Game over"}
+          resetGame={resetGame}
+          score={score}
+          endGame={true}
+        />
+
+      </SafeAreaView>
+
+      {/* </ImageBackground> */}
+    </View>
+  )
 }
 
-let styles = StyleSheet.create({
-    mainContainer: {
-        backgroundColor: 'lightgray',
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    safeArea: {
-        flex: 1,
-         justifyContent: 'space-around'
-       }
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Stylesheet
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+const styles = StyleSheet.create({
+  mainContainer: {
+    // backgroundColor: 'rgba(255, 230, 128, 0.5)', // Background with 50% opacity
+    backgroundColor: "lightgrey",
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  safeArea: {
+    flex: 1,
+    alignItems: "center",
+    // alignItems: 'stretch',
+    justifyContent: "space-around",
+  },
+  topContainer: {
+    backgroundColor: 'red',
+    flex: 0.1,
+    alignContent: 'center',
+    justifyContent: 'center'
+  },
+  centerContainer: {
+    // backgroundColor: 'black',
+    flex: 0.8,
+    justifyContent: 'space-around',
+    // alignContent: 'center',
+    alignItems: 'center'
+  },
+  bottomContainer: {
+    backgroundColor: 'green',
+    flex: 0.1,
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+  },
+  // Add opacity to ImageBackground
+  imageBackground: {
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "center",
+    opacity: 0.5,
+  },
 })
