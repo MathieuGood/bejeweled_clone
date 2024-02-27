@@ -8,6 +8,8 @@
 // #################################################################################################
 // #################################################################################################
 
+import { Alert } from "react-native"
+
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -270,40 +272,6 @@ export const updateGridCellValue = (gameGrid, cellCoordinates, value) => {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-// Push down all the values until there are no matches
-//
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const pushDownValuesAndEraseAlignments = (gameGrid) => {
-    let matches = ''
-    // Push the remaining values down to the bottom of the grid
-    pushItemsDown(gameGrid)
-    console.log('**** ITEMS PUSHED DOWN')
-    showGameGrid(gameGrid)
-
-    do {
-        // Check for matches and delete them
-        findAndDeleteMatchingValuesFromGrid(gameGrid)
-        console.log('**** ITEMS DELETED')
-        showGameGrid(gameGrid)
-
-        // Push values down
-        pushItemsDown(gameGrid)
-        console.log('**** ITEMS PUSHED DOWN')
-        showGameGrid(gameGrid)
-
-        // Check if there are matches after values have been pushed down
-        matches = checkGameGridForAlignments(gameGrid)
-        console.log('Matches length : ' + matches.length)
-
-        // While there are still matches, rerun the loop
-    } while (matches.length != 0)
-}
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-//
 // On a gameGrid with deleted items, push all the items down
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -344,20 +312,69 @@ export const pushItemsDown = (gameGrid) => {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //
+// Push down all the values until there are no matches
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const pushDownValuesAndEraseAlignments = (gameGrid, level, setScore, score, setLevel, setProgressBar) => {
+    let matches = ''
+
+    do {
+        // Check for matches and delete them
+        findAndDeleteMatchingValuesFromGrid(gameGrid, level, setScore, score, setLevel, setProgressBar)
+        console.log('**** ITEMS DELETED')
+        showGameGrid(gameGrid)
+
+        // Push values down
+        pushItemsDown(gameGrid)
+        console.log('**** ITEMS PUSHED DOWN')
+        showGameGrid(gameGrid)
+
+        // Check if there are matches after values have been pushed down
+        matches = checkGameGridForAlignments(gameGrid)
+        console.log('Matches length : ' + matches.length)
+
+        // While there are still matches, rerun the loop
+    } while (matches.length != 0)
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
 // Check a grid for matches and delete them replacing value with ''
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const findAndDeleteMatchingValuesFromGrid = (gameGrid) => {
+// TO DO : delete setProgressBarMax paramater if not used
+
+export const findAndDeleteMatchingValuesFromGrid = (gameGrid, level, setScore, score, setLevel, setProgressBar) => {
 
     // Check if there is a match consequently to the swap
     let matches = checkGameGridForAlignments(gameGrid)
 
     // If there are matches, updates values of the matches cells to ''
-    if (matches != '') {
+    // Updates the score with 
+    if (matches.length > 0) {
         updateGridCellValue(gameGrid, matches, '')
-    }
 
+        // Update score 
+        const pointsToAdd = addPoints(matches, level)
+        const newScore = score + pointsToAdd
+        setScore(newScore)
+
+        // Update level
+        const newLevel = Math.floor(newScore / 100) + 1
+        setLevel(newLevel)
+
+        // If a new level has been reached, update progressBar to new value
+        if (newLevel > level) {
+            // Update progress bar
+            // progressBarMax = newLevel * 100
+            // Progress bar % = ( score / (newLevel * 100) ) * 100
+            setProgressBar(Math.floor((newScore / (newLevel * 100)) * 100))
+        }
+
+    }
     return (gameGrid)
 }
 
@@ -376,15 +393,12 @@ export const fillEmptyCellsWithNoMatches = (gameGrid) => {
     const emptyValuesCoordinates = findEmptyValuesCoordinates(gameGrid)
     let matchesAfter = []
 
-    console.log('SHOWING INITIAL GAMEGRID :')
+    console.log('GAMEGRID BEFORE FILLING :')
     showGameGrid(gameGrid)
 
     do {
         // Reset gameGrid to its value when the function was called (without the new random values)
         gameGrid = initialGrid.map(row => [...row])
-
-        console.log('REINITIALIZED GAMEGRID : ')
-        showGameGrid(gameGrid)
 
         updateGridCellValue(gameGrid, emptyValuesCoordinates, '')
         updateGridCellValue(gameGrid, emptyValuesCoordinates, 'random')
@@ -395,6 +409,7 @@ export const fillEmptyCellsWithNoMatches = (gameGrid) => {
         matchesAfter = checkGameGridForAlignments(gameGrid)
         console.log("matchesAfter length : " + matchesAfter.length)
 
+        // While there are still matches, rerun the loop
         // If no matches, break out of the loop
     } while (matchesAfter.length !== 0)
     console.log('------------ ENDING FILLING FUNCTION ------------')
@@ -424,3 +439,157 @@ function findEmptyValuesCoordinates(gameGrid) {
 }
 
 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Based on given coordinates, get the coordinates of all adjacent cells
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function getAdjacentCells(gameGrid, [y, x]) {
+    // Initialize empty array to store adjacent cells coordinates
+    let adjacentCells = []
+
+    // console.log('Current item : ' + currentItem)
+    // console.log('Current item coordinates : ' + 'y = ' + y + '  x = ' + x)
+
+    // adjacentCellsCoordinatesOffset array contains the offset values of y and x to find adjacent cells
+    adjacentCellsCoordinatesOffset = [
+        [-1, 0],
+        [1, 0],
+        [0, -1],
+        [0, 1]
+    ]
+
+    // Loop through the coordinates of possible adjacent cells
+    for (let adjacentCellOffset of adjacentCellsCoordinatesOffset) {
+        // Add offset to coordinates
+        let verticalCoordinates = y + adjacentCellOffset[0]
+        let horizontalCoordinates = x + adjacentCellOffset[1]
+        // console.log('Checking coordinates : ' + 'y = ' + verticalCoordinates + '  x = ' + horizontalCoordinates)
+
+        // Check if calculated coordinates exist (not out of the game board)
+        if (isValidCoordinate(gameGrid, [verticalCoordinates, horizontalCoordinates])) {
+            adjacentCells.push([verticalCoordinates, horizontalCoordinates])
+        }
+    }
+    return adjacentCells
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Add points to the score according to the number of matches and the level
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const addPoints = (matches, level) => {
+    let pointsToAdd = 0
+    // If there are matches
+    if (matches.length !== 0) {
+        // Points per match depend on the number of matching cells
+        let pointsPerMatch
+        matches.forEach((matchingCells) => {
+            if (matchingCells.length === 3) {
+                // 50 points per match for 3 matching cells
+                pointsPerMatch = 50
+            } else if (matchingCells.length === 4) {
+                // 150 points per match for 4 matching cells
+                pointsPerMatch = 150
+            } else if (matchingCells.length > 4) {
+                // 500 points per match for 5 or more matching cells
+                pointsPerMatch = 500
+            }
+            // Multiply points per match by the level to get the total points to add
+            pointsToAdd += pointsPerMatch
+        })
+    }
+    console.log("Points to add to score : " + pointsToAdd)
+    return pointsToAdd
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Check if an array contains a specified given sub-array 
+// Disregards the order of the arrays contained in the sub-array
+// Example : containsArray([ [[2, 3], [1, 3]] ], [[1, 3], [2, 3]]) returns true
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function containsArray(array, subArray) {
+    const subArrayString = JSON.stringify(subArray)
+    const invertedSubArray = [subArray[1], subArray[0]]
+    const invertedSubArrayString = JSON.stringify(invertedSubArray)
+    return array.some(
+        (item) =>
+            JSON.stringify(item) === subArrayString || JSON.stringify(item) === invertedSubArrayString
+    )
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Find every swap between two cells that results in a match
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const getAllHints = (gameGrid) => {
+
+    // Initialize empty arrays for cells that have been checked and hints to return
+    let checkedPairs = []
+    let allHints = []
+
+    gameGrid.forEach(
+        (row, y) => row.forEach(
+            (value, x) => {
+                // Iterating over every cell in the grid
+                const currentCell = [y, x]
+                // Get the adjacent cells of current cell
+                const adjacentCells = getAdjacentCells(gameGrid, currentCell)
+
+                // Iterate over each adjacent cell
+                adjacentCells.forEach((adjacentCell) => {
+
+                    // If cell has not been already checked
+                    if (!containsArray(checkedPairs, [currentCell, adjacentCell])) {
+                        // Make a copy of gameGrid to prevent altering original grid
+                        let swapGrid = gameGrid.map(row => [...row])
+
+                        // Swap values of current cell and adjacent cell
+                        swapGrid = swapTwoItemsOnGrid(swapGrid, currentCell, adjacentCell)
+                        console.log('Swapping ' + currentCell + ' and ' + adjacentCell)
+
+                        // Add adjacent cell coordinates to checkedCells array to avoid rechecking it more than once
+                        checkedPairs.push([currentCell, adjacentCell])
+                        // Check if there are alignments consequently to the swap
+                        const matches = checkGameGridForAlignments(swapGrid)
+                        // If there are alignements, push their coordinates to allHints array
+                        if (matches.length > 0) {
+                            console.log('*************Match to display as hint :')
+                            console.log(currentCell, adjacentCell)
+                            allHints.push([currentCell, adjacentCell])
+                        }
+                    }
+                })
+            }))
+    console.log('All hints :', allHints)
+    return allHints
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Get a random hint from the allHints array
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const getOneRandomHint = (allHints) => {
+
+    let randomIndex = Math.floor(Math.random() * allHints.length)
+    return allHints[randomIndex]
+}

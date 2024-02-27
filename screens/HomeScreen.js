@@ -1,128 +1,181 @@
-import React, { useState } from 'react'
-import { StyleSheet, View, Alert, ImageBackground } from 'react-native'
+import React, { useContext, useState, useEffect } from 'react'
+import { StyleSheet, SafeAreaView, View, Text, ImageBackground } from 'react-native'
+import AppContext from '../providers/AppContext'
 import TouchButton from '../components/TouchButton'
-import TextField from '../components/TextField'
-import Header from '../components/Header'
-import { checkCredentials } from '../core/apiRequests'
-import { checkEmailFormat, checkIfStringIsNotEmpty, checkPasswordFormat } from '../core/userEntryCheck'
+import ScoresModal from '../components/modalComponents/ScoresModal'
+import LoginModal from '../components/modalComponents/LoginModal'
+import RegisterModal from '../components/modalComponents/RegisterModal'
+import SettingsModal from '../components/modalComponents/SettingsModal'
+import { confirmLogout } from '../core/userEntryCheck'
+import { appThemes } from '../themes/appThemes'
 
-export default function HomeScreen({ navigation }) {
 
-    const [state, setState] = useState({
-        email: '',
-        password: ''
-    })
+export default function HomeScreen({ navigation, route }) {
 
-    const { email, password } = state
+    // Get selected theme from AppContext
+    const { theme, setTheme } = useContext(AppContext)
+
+    // Import background images from appThemes
+    const backgroundImage = appThemes.backgrounds[theme]['HomeScreen']
+
+    // Set the modal visibility to false
+    const [isHighScoresModalvisible, setisHighScoresModalVisible] = useState(false)
+    const [isLoginModalVisible, setisLoginModalVisible] = useState(false)
+    const [isRegisterModalVisible, setisRegisterModalVisible] = useState(false)
+    const [isSettingsModalVisible, setisSettingsModalVisible] = useState(false)
+
+    // Rerender the component when the theme changes
+    useEffect(() => {
+        console.log('Theme changed')
+    }, [theme])
+
 
 
     return (
         <View style={styles.mainContainer}>
 
             <ImageBackground
-                source={require('../assets/essai3.png')}
+                source={backgroundImage}
                 style={styles.background}
                 resizeMode='cover'
             >
-                <View style={styles.form}>
 
-                    <Header style={styles.header} title='Welcome' />
+                <SafeAreaView>
 
-                    <TextField
-                        placeholder='E-mail'
-                        value={email}
-                        onChangeText={text => setState(prevState => {
-                            return { ...prevState, email: text }
-                        })}
-                        autoCapitalize='none'
-                        secureTextEntry={false}
+                    <View style={styles.topContainer}>
+
+                        {/* If the player is logged in, display his name */}
+                        {route.params
+                            ? <TouchButton title={route.params.player_name}
+                                customStyle={{
+                                    buttonContainer: {
+                                        width: 220,
+                                    }
+                                }} />
+                            : <TouchButton
+                                title='Create account'
+                                press={() => { setisRegisterModalVisible(true) }}
+                            />
+                        }
+
+                        <TouchButton
+                            // Change title regarding login status
+                            title={route.params ? 'Log out ' : 'Log in'}
+                            press={() => {
+                                route.params
+                                    // On click on log out, ask for confirmation and if yes, reload HomeScreen with no parameters
+                                    ? confirmLogout(navigation)
+                                    // On click on log in , show LoginModal
+                                    : setisLoginModalVisible(true)
+                            }}
+                        />
+
+                    </View>
+
+
+                    <View style={styles.centerContainer}>
+                        <TouchButton
+                            title='Play game'
+                            customStyle={{
+                                buttonText: {
+                                    fontSize: 26,
+                                },
+                                buttonContainer: {
+                                    height: 65,
+                                    width: 200,
+                                }
+                            }}
+                            press={() => {
+                                route.params
+                                    ? navigation.navigate('GameScreen', {
+                                        player_id: route.params.player_id,
+                                        player_name: route.params.player_name,
+                                    })
+                                    : navigation.navigate('GameScreen')
+                            }}
+                        />
+                    </View>
+
+
+                    <View style={styles.bottomContainer}>
+
+                        <TouchButton
+                            title='High scores'
+                            press={() => { setisHighScoresModalVisible(true) }}
+                        />
+
+                        <TouchButton
+                            title='Settings'
+                            press={() => { setisSettingsModalVisible(true) }}
+                        />
+
+                    </View>
+
+                    {/* Modals */}
+
+                    {/* High scores Modal */}
+                    <ScoresModal
+                        changeModalVisible={setisHighScoresModalVisible}
+                        visible={isHighScoresModalvisible}
+                        title='High scores'
+                        endGame={false}
                     />
-                    <TextField
-                        placeholder='Password'
-                        value={password}
-                        onChangeText={text => setState(prevState => {
-                            return { ...prevState, password: text }
-                        })}
-                        autoCapitalize='none'
-                        secureTextEntry={true}
+
+                    <LoginModal
+                        changeModalVisible={setisLoginModalVisible}
+                        visible={isLoginModalVisible}
+                        title='Log in'
+                        navigation={navigation}
                     />
 
-                    <TouchButton
-                        title='Login'
-                        press={() => {
-                            // On click, check if fields are not empty
-                            //check if e-mail and password match
-                            if (
-                                checkIfStringIsNotEmpty(email) &&
-                                checkIfStringIsNotEmpty(password) &&
-                                checkEmailFormat(email) &&
-                                checkPasswordFormat(password)
-                            ) {
-                                checkCredentials(email, password, navigation)
-                            } else {
-                                console.log('E-mail or password wrong')
-                                Alert.alert(
-                                    'Error',
-                                    'E-mail or password are incorrect',
-                                    [
-                                        { text: 'OK' }
-                                    ],
-                                    { cancelable: false }
-                                );
-                            }
-                        }}
+                    <RegisterModal
+                        changeModalVisible={setisRegisterModalVisible}
+                        visible={isRegisterModalVisible}
+                        title='Create new account'
+                        navigation={navigation}
                     />
 
-                    <TouchButton
-                        title='Create account'
-                        press={() => {
-                            navigation.navigate('RegisterScreen')
-                        }}
+                    <SettingsModal
+                        changeModalVisible={setisSettingsModalVisible}
+                        visible={isSettingsModalVisible}
+                        title='Settings'
+                        navigation={navigation}
+
                     />
 
-                </View>
+                </SafeAreaView>
 
             </ImageBackground>
 
         </View>
     )
-
 }
+
 
 let styles = StyleSheet.create({
     mainContainer: {
+        flex: 1
+    },
+    topContainer: {
         flex: 1,
-        // alignItems: 'center',
-        // justifyContent: 'center'
+        flexDirection: 'row',
+        marginTop: 10,
+    },
+    centerContainer: {
+        flex: 1,
+        alignContent: 'center',
+        justifyContent: 'center',
+    },
+    bottomContainer: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'flex-end',
+        marginBottom: 10
     },
     background: {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center'
-    },
-    form: {
-        backgroundColor: 'rgba(244, 232, 193, 0.8)',
-        padding: 20,
-        borderRadius: 10,
-        borderWidth: 2,
-        borderColor: '#d4af37', // Doré
-        width: '80%',
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
-        alignItems: 'center',
-    },
-    header: {
-        color: '#2b50c8',
-        fontSize: 20,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        textTransform: 'uppercase',
-        marginBottom: 20
     },
 })

@@ -1,7 +1,13 @@
 import React from 'react'
 import { StyleSheet, TextInput } from 'react-native'
 
-export default function TextField({ value, placeholder, onChangeText, autoCapitalize, secureTextEntry }) {
+export default function TextField({
+    value,
+    placeholder,
+    onChangeText,
+    autoCapitalize,
+    secureTextEntry
+}) {
 
     return (
 
