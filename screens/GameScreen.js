@@ -27,7 +27,7 @@ import {
   getOneRandomHint,
 } from "../core/gameFunctions"
 
-
+import MusicPlayer from "../components/MusicPlayer"
 
 export default function GameScreen({ navigation, route }) {
 
@@ -92,6 +92,15 @@ export default function GameScreen({ navigation, route }) {
   // Set the modal visibility to false
   const [isModalvisible, setisModalVisible] = useState(false)
 
+   // State to control automatic music playback based on game events and user interactions
+   const [shouldPlayMusic, setShouldPlayMusic] = useState(true);
+  
+  // State to control the on/off position of the music switch. 
+   const [musicSwitchEnabled, setMusicSwitchEnabled] = useState(true);
+
+   // Indicates readiness for navigation.
+   const [isReadyForNavigation, setIsReadyForNavigation] = useState(false);
+
 
 
 
@@ -143,8 +152,13 @@ export default function GameScreen({ navigation, route }) {
   const endGame = (message, score, timer) => {
     console.log("Game over : " + message)
 
-    // Pause the timer
+    // Pause the time
     setTimerPause(true)
+
+    // Stop music playback when the game ends
+    setShouldPlayMusic(false);  
+    setMusicSwitchEnabled(false);
+
 
     // Get current time in GMT and format it into a DateTime string (YYYY-MM-DD HH:MM:SS)
     const endTime = new Date().toISOString().slice(0, 19).replace("T", " ")
@@ -171,7 +185,17 @@ export default function GameScreen({ navigation, route }) {
     setLevel(1)
     setProgressBar(50)
     setTimerPause(false)
+    setShouldPlayMusic(true); //music playback is enabled for a new game
+    setMusicSwitchEnabled(true);
+
   }
+
+  // Initiates game quit process by stopping music and marking readiness for navigation.
+  const quitGame = () => {
+    setShouldPlayMusic(false);
+    setIsReadyForNavigation(true);
+  };
+
 
 
 
@@ -269,6 +293,17 @@ export default function GameScreen({ navigation, route }) {
     }
   }, [lastPress])
 
+  // Ensures navigation occurs only after component has handled all pre-navigation tasks and is ready to unmount, preventing premature transitions.
+  useEffect(() => {
+    if (isReadyForNavigation) {
+      route.params
+        ? navigation.navigate('HomeScreen', { player_id: route.params.player_id, player_name: route.params.player_name })
+        : navigation.navigate('HomeScreen');
+
+      // Reset state for future navigation
+      setIsReadyForNavigation(false);
+    }
+  }, [isReadyForNavigation, navigation, route.params]);
 
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -330,6 +365,9 @@ export default function GameScreen({ navigation, route }) {
                 console.log("Pause button pressed")
                 setTimerPause(true)
                 setGameGrid(buildEmptyGrid)
+                setShouldPlayMusic(true);
+                setMusicSwitchEnabled(false);
+
                 // Make a deep copy of the gameGrid to gridBackup
                 setGridBackup(JSON.parse(JSON.stringify(gameGrid)))
               } else {
@@ -337,6 +375,9 @@ export default function GameScreen({ navigation, route }) {
                 console.log("Resume button pressed")
                 setTimerPause(false)
                 setGameGrid(gridBackup)
+                setShouldPlayMusic(true);
+                setMusicSwitchEnabled(true);
+
               }
             }}
           />
@@ -351,12 +392,16 @@ export default function GameScreen({ navigation, route }) {
 
           <TouchButton
             title="Quit game"
-            press={() => {
-              route.params
-                ? navigation.navigate('HomeScreen', { player_id: route.params.player_id, player_name: route.params.player_name })
-                : navigation.navigate('HomeScreen')
-            }}
+            press={quitGame}
           />
+
+          <MusicPlayer 
+            shouldPlayAutomatically={shouldPlayMusic} 
+            musicSwitchEnabled={musicSwitchEnabled} 
+            setMusicSwitchEnabled={setMusicSwitchEnabled} 
+          />
+          
+
         </View>
 
         <ScoresModal
