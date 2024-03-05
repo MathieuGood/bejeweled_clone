@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Audio } from 'expo-av';
 import { View, Switch, StyleSheet, Text } from 'react-native';
+import IconButton from './IconButton';
 
 const MusicPlayer = ({ shouldPlayAutomatically, musicSwitchEnabled, setMusicSwitchEnabled }) => {
     const [sound, setSound] = useState(null);
@@ -53,23 +54,33 @@ const MusicPlayer = ({ shouldPlayAutomatically, musicSwitchEnabled, setMusicSwit
 
     return (
         <View style={styles.container}>
-            <Text>Music: {musicSwitchEnabled ? 'On' : 'Off'}</Text>
+
+          {/* Ancien bouton switch remplacé par celui du bas qui est une icône( switch à supprimer si icone ok) */}
+
+            {/* <Text>Music: {musicSwitchEnabled ? 'On' : 'Off'}</Text>
             <Switch
                 trackColor={{ false: "#767577", true: "#81b0ff" }}
                 thumbColor={musicSwitchEnabled ? "#f5dd4b" : "#f4f3f4"}
                 ios_backgroundColor="#3e3e3e"
                 onValueChange={toggleSwitch}
                 value={musicSwitchEnabled}
-            />
+            /> */}
+            
+            <IconButton
+              iconName={musicSwitchEnabled ? "music-note" : "music-note-off"}
+              iconColor={musicSwitchEnabled ? '#2b50c8': '#2b50c8'}
+              iconSize={40}
+              title="Music"
+              press={toggleSwitch}
+          />
+
         </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
+        paddingRight: 10, 
     },
 });
 

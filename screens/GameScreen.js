@@ -9,6 +9,7 @@ import {
 } from "react-native"
 import AppContext from "../providers/AppContext"
 import TouchButton from "../components/TouchButton"
+import IconButton from "../components/IconButton"
 import ScoresModal from "../components/modalComponents/ScoresModal"
 import GameGrid from "../components/gameComponents/GameGrid"
 import ScoreBoard from "../components/gameComponents/ScoreBoard"
@@ -101,6 +102,9 @@ export default function GameScreen({ navigation, route }) {
    // Indicates readiness for navigation.
    const [isReadyForNavigation, setIsReadyForNavigation] = useState(false);
 
+   const [hint, setHint] = useState(null);
+
+
 
 
 
@@ -136,13 +140,14 @@ export default function GameScreen({ navigation, route }) {
     } else {
       let hint = getOneRandomHint(resultHints)
       // TO DO : Display hint with animation
+      setHint(hint); // Met à jour l'état avec les coordonnées du hint sélectionné
       console.log("Hint : ", hint)
-      Alert.alert(
-        "Hint",
-        `Swap cells ${hint[0]} and ${hint[1]}`,
-        [{ text: "OK", onPress: () => console.log("OK Pressed after hint") }],
-        { cancelable: false },
-      )
+      // Alert.alert(
+      //   "Hint",
+      //   `Swap cells ${hint[0]} and ${hint[1]}`,
+      //   [{ text: "OK", onPress: () => console.log("OK Pressed after hint") }],
+      //   { cancelable: false },
+      // )
       return hint
     }
   }
@@ -336,6 +341,7 @@ export default function GameScreen({ navigation, route }) {
             // If timer is paused, disable touch capacity
             disableTouchCapacity={timerPause === false ? false : true}
             theme={theme}
+            hintTiles={hint}
           />
 
           <ProgressBar
@@ -354,7 +360,7 @@ export default function GameScreen({ navigation, route }) {
 
           {/* <Text>firstPress : {firstPress}     secondPress : {secondPress}</Text> */}
 
-          <TouchButton
+          {/* <TouchButton
             // Show 'Pause' on button text if the game is running
             // Else, show 'Resume' on button text
             title={timerPause === false ? "Pause" : "Resume"}
@@ -380,17 +386,63 @@ export default function GameScreen({ navigation, route }) {
 
               }
             }}
+          /> */}
+
+          <IconButton
+            // Show 'Pause' on button text if the game is running
+            // Else, show 'Resume' on button text
+            iconName={timerPause ? "play-circle-outline" : "pause-circle-outline"}
+            iconColor='#2b50c8'
+            iconSize={40}
+            title={timerPause === false ? "Pause" : "Resume"}
+            // On click, pause or resume the game
+            press={() => {
+              // If the game is running, pause it
+              if (timerPause === false) {
+                console.log("Pause button pressed")
+                setTimerPause(true)
+                setGameGrid(buildEmptyGrid)
+                setShouldPlayMusic(true);
+                setMusicSwitchEnabled(false);
+
+                // Make a deep copy of the gameGrid to gridBackup
+                setGridBackup(JSON.parse(JSON.stringify(gameGrid)))
+              } else {
+                // If the game is paused, resume it
+                console.log("Resume button pressed")
+                setTimerPause(false)
+                setGameGrid(gridBackup)
+                setShouldPlayMusic(true);
+                setMusicSwitchEnabled(true);
+
+              }
+            }}
           />
 
-          <TouchButton
+          {/* <TouchButton
             title={"Hint"}
             press={() => {
               console.log("Hint button pressed")
               showHint(gameGrid)
             }}
+          /> */}
+
+          <IconButton
+            iconName="help-circle-outline"
+            title={"Hint"}
+            press={() => {
+               console.log("Hint button pressed")
+               showHint(gameGrid)
+            }}
           />
 
-          <TouchButton
+          {/* <TouchButton
+            title="Quit game"
+            press={quitGame}
+          /> */}
+
+          <IconButton
+          iconName="exit-to-app" 
             title="Quit game"
             press={quitGame}
           />
@@ -430,11 +482,11 @@ export default function GameScreen({ navigation, route }) {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    // backgroundColor: 'rgba(255, 230, 128, 0.5)', // Background with 50% opacity
-    backgroundColor: "lightgrey",
+    // backgroundColor: "lightgrey",
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+
   },
   safeArea: {
     flex: 1,
@@ -443,11 +495,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
   },
   topContainer: {
-    backgroundColor: 'red',
-    flex: 0.1,
-    alignContent: 'center',
-    justifyContent: 'center'
-  },
+    backgroundColor: '#e8b923',
+    flex: 0.15, 
+    marginHorizontal: 30, //modifier la largeur du container suivant appareil
+    paddingVertical: 'auto'
+
+     
+    },
   centerContainer: {
     // backgroundColor: 'black',
     flex: 0.8,
@@ -456,11 +510,12 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   bottomContainer: {
-    backgroundColor: 'green',
+    backgroundColor:  '#87CEEB',
     flex: 0.1,
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "space-between",
     alignItems: "center",
+     width: '100%'
   },
   // Add opacity to ImageBackground
   imageBackground: {

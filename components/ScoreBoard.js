@@ -27,17 +27,19 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between', 
   },
   Container: {
-    backgroundColor: '#2b50c8',
-    borderRadius: 5,
-    padding: 10,
-    bottom: 10,
-    right: 10,
-    margin: 5
+    // backgroundColor: '#2b50c8',
+    // borderRadius: 5,
+    // padding: 10,
+    // bottom: 10,
+    // right: 10,
+    // margin: 5,
+
   },
   info: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#e8b923',
+
   },
 });
 
