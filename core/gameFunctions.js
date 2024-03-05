@@ -321,26 +321,26 @@ export const pushItemsDown = (gameGrid) => {
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// export const pushDownValuesAndEraseAlignments = (gameGrid, level, setScore, score, setLevel, setProgressBar) => {
-//     let matches = ''
+export const pushDownValuesAndEraseAlignments = (gameGrid, level, setScore, score, setLevel, setProgressBar) => {
+    let matches = ''
 
-//     do {
-//         // Check for matches and delete them
-//         findAndDeleteMatchingValuesFromGrid(gameGrid, level, setScore, score, setLevel, setProgressBar)
-//         console.log('**** ITEMS DELETED')
-//         showGameGrid(gameGrid)
+    do {
+        // Check for matches and delete them
+        findAndDeleteMatchingValuesFromGrid(gameGrid, level, setScore, score, setLevel, setProgressBar)
+        console.log('**** ITEMS DELETED')
+        showGameGrid(gameGrid)
 
-//         pushItemsDown(gameGrid)
-//         console.log('**** ITEMS PUSHED DOWN')
-//         showGameGrid(gameGrid)
+        pushItemsDown(gameGrid)
+        console.log('**** ITEMS PUSHED DOWN')
+        showGameGrid(gameGrid)
 
-//         // Check if there are matches after values have been pushed down
-//         matches = checkGameGridForAlignments(gameGrid)
-//         console.log('Matches length : ' + matches.length)
+        // Check if there are matches after values have been pushed down
+        matches = checkGameGridForAlignments(gameGrid)
+        console.log('Matches length : ' + matches.length)
 
-//         // While there are still matches, rerun the loop
-//     } while (matches.length != 0)
-// }
+        // While there are still matches, rerun the loop
+    } while (matches.length != 0)
+}
 
 
 
