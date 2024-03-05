@@ -278,24 +278,30 @@ export const updateGridCellValue = (gameGrid, cellCoordinates, value) => {
 
 export const pushItemsDown = (gameGrid) => {
 
+    // Create an array to store the content of each column
     let colsContent = []
 
+    // Loop through the gameGrid to get the content of each column
     for (let i = 0; i < gameGrid.length; i++) {
         let colContent = []
+        // Loop through each row of the column
         for (let j = 0; j < gameGrid.length; j++) {
+            // If the cell is not empty, add its value to the colContent array
             const cellValue = gameGrid[j][i]
             if (cellValue !== '') {
                 colContent.push(cellValue)
             }
         }
+        // Add the content of the column to the colsContent array
         colsContent[i] = colContent
     }
 
+    // Loop through the gameGrid to update the values of each column
     for (let i = 0; i < gameGrid.length; i++) {
-
-        // if 7 values in colsContent
-        // start i at 1
+        // If 6 values in colsContent
+        // (if 7 values in colsContent, start i at 1)
         let colValuesCount = 0
+        // Loop through each row of the column
         for (let j = 0; j < gameGrid.length; j++) {
             if (j < gameGrid.length - colsContent[i].length) {
                 gameGrid[j][i] = ''
@@ -303,7 +309,6 @@ export const pushItemsDown = (gameGrid) => {
                 gameGrid[j][i] = colsContent[i][colValuesCount]
                 colValuesCount++
             }
-
         }
     }
 }
@@ -316,27 +321,27 @@ export const pushItemsDown = (gameGrid) => {
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const pushDownValuesAndEraseAlignments = (gameGrid, level, setScore, score, setLevel, setProgressBar) => {
-    let matches = ''
+// export const pushDownValuesAndEraseAlignments = (gameGrid, level, setScore, score, setLevel, setProgressBar) => {
+//     let matches = ''
 
-    do {
-        // Check for matches and delete them
-        findAndDeleteMatchingValuesFromGrid(gameGrid, level, setScore, score, setLevel, setProgressBar)
-        console.log('**** ITEMS DELETED')
-        showGameGrid(gameGrid)
+//     do {
+//         // Check for matches and delete them
+//         findAndDeleteMatchingValuesFromGrid(gameGrid, level, setScore, score, setLevel, setProgressBar)
+//         console.log('**** ITEMS DELETED')
+//         showGameGrid(gameGrid)
 
-        // Push values down
-        pushItemsDown(gameGrid)
-        console.log('**** ITEMS PUSHED DOWN')
-        showGameGrid(gameGrid)
+//         pushItemsDown(gameGrid)
+//         console.log('**** ITEMS PUSHED DOWN')
+//         showGameGrid(gameGrid)
 
-        // Check if there are matches after values have been pushed down
-        matches = checkGameGridForAlignments(gameGrid)
-        console.log('Matches length : ' + matches.length)
+//         // Check if there are matches after values have been pushed down
+//         matches = checkGameGridForAlignments(gameGrid)
+//         console.log('Matches length : ' + matches.length)
 
-        // While there are still matches, rerun the loop
-    } while (matches.length != 0)
-}
+//         // While there are still matches, rerun the loop
+//     } while (matches.length != 0)
+// }
+
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
