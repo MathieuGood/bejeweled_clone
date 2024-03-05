@@ -8,7 +8,6 @@ import {
   ImageBackground,
 } from "react-native"
 import AppContext from "../providers/AppContext"
-import TouchButton from "../components/TouchButton"
 import IconButton from "../components/IconButton"
 import ScoresModal from "../components/modalComponents/ScoresModal"
 import GameGrid from "../components/gameComponents/GameGrid"
@@ -29,6 +28,7 @@ import {
 } from "../core/gameFunctions"
 
 import MusicPlayer from "../components/MusicPlayer"
+
 
 export default function GameScreen({ navigation, route }) {
 
@@ -360,34 +360,6 @@ export default function GameScreen({ navigation, route }) {
 
           {/* <Text>firstPress : {firstPress}     secondPress : {secondPress}</Text> */}
 
-          {/* <TouchButton
-            // Show 'Pause' on button text if the game is running
-            // Else, show 'Resume' on button text
-            title={timerPause === false ? "Pause" : "Resume"}
-            // On click, pause or resume the game
-            press={() => {
-              // If the game is running, pause it
-              if (timerPause === false) {
-                console.log("Pause button pressed")
-                setTimerPause(true)
-                setGameGrid(buildEmptyGrid)
-                setShouldPlayMusic(true);
-                setMusicSwitchEnabled(false);
-
-                // Make a deep copy of the gameGrid to gridBackup
-                setGridBackup(JSON.parse(JSON.stringify(gameGrid)))
-              } else {
-                // If the game is paused, resume it
-                console.log("Resume button pressed")
-                setTimerPause(false)
-                setGameGrid(gridBackup)
-                setShouldPlayMusic(true);
-                setMusicSwitchEnabled(true);
-
-              }
-            }}
-          /> */}
-
           <IconButton
             // Show 'Pause' on button text if the game is running
             // Else, show 'Resume' on button text
@@ -419,14 +391,6 @@ export default function GameScreen({ navigation, route }) {
             }}
           />
 
-          {/* <TouchButton
-            title={"Hint"}
-            press={() => {
-              console.log("Hint button pressed")
-              showHint(gameGrid)
-            }}
-          /> */}
-
           <IconButton
             iconName="help-circle-outline"
             title={"Hint"}
@@ -435,11 +399,6 @@ export default function GameScreen({ navigation, route }) {
                showHint(gameGrid)
             }}
           />
-
-          {/* <TouchButton
-            title="Quit game"
-            press={quitGame}
-          /> */}
 
           <IconButton
           iconName="exit-to-app" 
