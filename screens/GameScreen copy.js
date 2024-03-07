@@ -8,7 +8,6 @@ import {
   ImageBackground,
 } from "react-native"
 import AppContext from "../providers/AppContext"
-import TouchButton from "../components/TouchButton"
 import IconButton from "../components/IconButton"
 import ScoresModal from "../components/modalComponents/ScoresModal"
 import GameGrid from "../components/gameComponents/GameGrid"
@@ -29,7 +28,6 @@ import {
 } from "../core/gameFunctions"
 
 import MusicPlayer from "../components/MusicPlayer"
-import CustomModal2 from  "../components/modalComponents/CustomModal2"
 
 
 export default function GameScreen({ navigation, route }) {
@@ -106,10 +104,6 @@ export default function GameScreen({ navigation, route }) {
 
    const [hint, setHint] = useState(null);
 
-   const [isNoHintModalVisible, setIsNoHintModalVisible] = useState(false);
-
-
-
 
 
 
@@ -137,12 +131,23 @@ export default function GameScreen({ navigation, route }) {
 
     if (resultHints.length === 0) {
       console.log("No hints available")
-     
-    setIsNoHintModalVisible(true); 
+      Alert.alert(
+        "No hints available",
+        "No matches found on the grid",
+        [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+        { cancelable: false },
+      )
     } else {
       let hint = getOneRandomHint(resultHints)
+      // TO DO : Display hint with animation
       setHint(hint); // Met à jour l'état avec les coordonnées du hint sélectionné
       console.log("Hint : ", hint)
+      // Alert.alert(
+      //   "Hint",
+      //   `Swap cells ${hint[0]} and ${hint[1]}`,
+      //   [{ text: "OK", onPress: () => console.log("OK Pressed after hint") }],
+      //   { cancelable: false },
+      // )
       return hint
     }
   }
@@ -339,14 +344,6 @@ export default function GameScreen({ navigation, route }) {
             hintTiles={hint}
           />
 
-          <CustomModal2
-          visible={isNoHintModalVisible}
-          changeModalVisible={setIsNoHintModalVisible}
-          title="No hints available"
-          >
-            <Text style={{textAlign: 'center', margin: 20}}>No matches found on the grid.</Text>
-          </CustomModal2>
-
           <ProgressBar
             level={level}
             nextLevel={level + 1}
@@ -486,11 +483,4 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     opacity: 0.5,
   },
-  toast : {
-    backgroundColor: "red",
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-    marginTop: 15,
-  }
 })
