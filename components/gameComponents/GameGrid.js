@@ -8,7 +8,8 @@ export default function GameGrid({
     pressCellCallback,
     firstPress,
     disableTouchCapacity,
-    theme
+    theme,
+    hintTiles
 }) {
 
     const pressCellFunction = (row, col) => {
@@ -16,33 +17,34 @@ export default function GameGrid({
     }
 
     function renderGrid(gameGrid) {
-
         return gameGrid.map((row, rowIndex) => (
-
             <View key={rowIndex} style={styles.row}>
-
-                {row.map((tile, colIndex) => (
-
-                    <TouchableOpacity
-                        key={colIndex}
-                        style={styles.cell}
-                        onPress={() => pressCellFunction(rowIndex, colIndex)}
-                        disabled={disableTouchCapacity}
-                    >
-                        <GameTile
-                            tileReference={tile}
-                            firstPress={firstPress}
-                            rowIndex={rowIndex}
-                            colIndex={colIndex}
-                            theme={theme}
-                        />
-                    </TouchableOpacity>
-
-                ))}
-
+                {row.map((tile, colIndex) => {
+                    // Déterminez si cette tuile doit être animée
+                    const animate = hintTiles && hintTiles.some(hint => hint[0] === rowIndex && hint[1] === colIndex);
+    
+                    return (
+                        <TouchableOpacity
+                            key={colIndex}
+                            style={styles.cell}
+                            onPress={() => pressCellFunction(rowIndex, colIndex)}
+                            disabled={disableTouchCapacity}
+                        >
+                            <GameTile
+                                tileReference={tile}
+                                firstPress={firstPress}
+                                rowIndex={rowIndex}
+                                colIndex={colIndex}
+                                theme={theme}
+                                animate={animate} 
+                            />
+                        </TouchableOpacity>
+                    );
+                })}
             </View>
-        ))
+        ));
     }
+    
 
     return (
 
@@ -77,6 +79,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         // borderWidth: 0.5,
         // borderColor: '#ddd',
-        backgroundColor: 'rgba(176, 141, 87, 0.5)'
+        // backgroundColor: 'rgba(176, 141, 87, 0.5)'
     }
 })

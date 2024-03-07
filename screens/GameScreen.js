@@ -8,7 +8,7 @@ import {
   ImageBackground,
 } from "react-native"
 import AppContext from "../providers/AppContext"
-import TouchButton from "../components/TouchButton"
+import IconButton from "../components/IconButton"
 import ScoresModal from "../components/modalComponents/ScoresModal"
 import GameGrid from "../components/gameComponents/GameGrid"
 import ScoreBoard from "../components/gameComponents/ScoreBoard"
@@ -27,6 +27,7 @@ import {
   getOneRandomHint,
 } from "../core/gameFunctions"
 
+import MusicPlayer from "../components/MusicPlayer"
 
 
 export default function GameScreen({ navigation, route }) {
@@ -92,6 +93,18 @@ export default function GameScreen({ navigation, route }) {
   // Set the modal visibility to false
   const [isModalvisible, setisModalVisible] = useState(false)
 
+   // State to control automatic music playback based on game events and user interactions
+   const [shouldPlayMusic, setShouldPlayMusic] = useState(true);
+  
+  // State to control the on/off position of the music switch. 
+   const [musicSwitchEnabled, setMusicSwitchEnabled] = useState(true);
+
+   // Indicates readiness for navigation.
+   const [isReadyForNavigation, setIsReadyForNavigation] = useState(false);
+
+   const [hint, setHint] = useState(null);
+
+
 
 
 
@@ -127,13 +140,14 @@ export default function GameScreen({ navigation, route }) {
     } else {
       let hint = getOneRandomHint(resultHints)
       // TO DO : Display hint with animation
+      setHint(hint); // Met à jour l'état avec les coordonnées du hint sélectionné
       console.log("Hint : ", hint)
-      Alert.alert(
-        "Hint",
-        `Swap cells ${hint[0]} and ${hint[1]}`,
-        [{ text: "OK", onPress: () => console.log("OK Pressed after hint") }],
-        { cancelable: false },
-      )
+      // Alert.alert(
+      //   "Hint",
+      //   `Swap cells ${hint[0]} and ${hint[1]}`,
+      //   [{ text: "OK", onPress: () => console.log("OK Pressed after hint") }],
+      //   { cancelable: false },
+      // )
       return hint
     }
   }
@@ -143,8 +157,13 @@ export default function GameScreen({ navigation, route }) {
   const endGame = (message, score, timer) => {
     console.log("Game over : " + message)
 
-    // Pause the timer
+    // Pause the time
     setTimerPause(true)
+
+    // Stop music playback when the game ends
+    setShouldPlayMusic(false);  
+    setMusicSwitchEnabled(false);
+
 
     // Get current time in GMT and format it into a DateTime string (YYYY-MM-DD HH:MM:SS)
     const endTime = new Date().toISOString().slice(0, 19).replace("T", " ")
@@ -171,7 +190,17 @@ export default function GameScreen({ navigation, route }) {
     setLevel(1)
     setProgressBar(50)
     setTimerPause(false)
+    setShouldPlayMusic(true); //music playback is enabled for a new game
+    setMusicSwitchEnabled(true);
+
   }
+
+  // Initiates game quit process by stopping music and marking readiness for navigation.
+  const quitGame = () => {
+    setShouldPlayMusic(false);
+    setIsReadyForNavigation(true);
+  };
+
 
 
 
@@ -269,6 +298,17 @@ export default function GameScreen({ navigation, route }) {
     }
   }, [lastPress])
 
+  // Ensures navigation occurs only after component has handled all pre-navigation tasks and is ready to unmount, preventing premature transitions.
+  useEffect(() => {
+    if (isReadyForNavigation) {
+      route.params
+        ? navigation.navigate('HomeScreen', { player_id: route.params.player_id, player_name: route.params.player_name })
+        : navigation.navigate('HomeScreen');
+
+      // Reset state for future navigation
+      setIsReadyForNavigation(false);
+    }
+  }, [isReadyForNavigation, navigation, route.params]);
 
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -301,6 +341,7 @@ export default function GameScreen({ navigation, route }) {
             // If timer is paused, disable touch capacity
             disableTouchCapacity={timerPause === false ? false : true}
             theme={theme}
+            hintTiles={hint}
           />
 
           <ProgressBar
@@ -319,9 +360,12 @@ export default function GameScreen({ navigation, route }) {
 
           {/* <Text>firstPress : {firstPress}     secondPress : {secondPress}</Text> */}
 
-          <TouchButton
+          <IconButton
             // Show 'Pause' on button text if the game is running
             // Else, show 'Resume' on button text
+            iconName={timerPause ? "play-circle-outline" : "pause-circle-outline"}
+            iconColor='#2b50c8'
+            iconSize={40}
             title={timerPause === false ? "Pause" : "Resume"}
             // On click, pause or resume the game
             press={() => {
@@ -330,6 +374,9 @@ export default function GameScreen({ navigation, route }) {
                 console.log("Pause button pressed")
                 setTimerPause(true)
                 setGameGrid(buildEmptyGrid)
+                setShouldPlayMusic(true);
+                setMusicSwitchEnabled(false);
+
                 // Make a deep copy of the gameGrid to gridBackup
                 setGridBackup(JSON.parse(JSON.stringify(gameGrid)))
               } else {
@@ -337,26 +384,35 @@ export default function GameScreen({ navigation, route }) {
                 console.log("Resume button pressed")
                 setTimerPause(false)
                 setGameGrid(gridBackup)
+                setShouldPlayMusic(true);
+                setMusicSwitchEnabled(true);
+
               }
             }}
           />
 
-          <TouchButton
+          <IconButton
+            iconName="help-circle-outline"
             title={"Hint"}
             press={() => {
-              console.log("Hint button pressed")
-              showHint(gameGrid)
+               console.log("Hint button pressed")
+               showHint(gameGrid)
             }}
           />
 
-          <TouchButton
+          <IconButton
+          iconName="exit-to-app" 
             title="Quit game"
-            press={() => {
-              route.params
-                ? navigation.navigate('HomeScreen', { player_id: route.params.player_id, player_name: route.params.player_name })
-                : navigation.navigate('HomeScreen')
-            }}
+            press={quitGame}
           />
+
+          <MusicPlayer 
+            shouldPlayAutomatically={shouldPlayMusic} 
+            musicSwitchEnabled={musicSwitchEnabled} 
+            setMusicSwitchEnabled={setMusicSwitchEnabled} 
+          />
+          
+
         </View>
 
         <ScoresModal
@@ -385,11 +441,11 @@ export default function GameScreen({ navigation, route }) {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    // backgroundColor: 'rgba(255, 230, 128, 0.5)', // Background with 50% opacity
-    backgroundColor: "lightgrey",
+    // backgroundColor: "lightgrey",
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+
   },
   safeArea: {
     flex: 1,
@@ -398,11 +454,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
   },
   topContainer: {
-    backgroundColor: 'red',
-    flex: 0.1,
-    alignContent: 'center',
-    justifyContent: 'center'
-  },
+    backgroundColor: '#e8b923',
+    flex: 0.15, 
+    marginHorizontal: 30, //modifier la largeur du container suivant appareil
+    paddingVertical: 'auto'
+
+     
+    },
   centerContainer: {
     // backgroundColor: 'black',
     flex: 0.8,
@@ -411,11 +469,12 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   bottomContainer: {
-    backgroundColor: 'green',
+    backgroundColor:  '#87CEEB',
     flex: 0.1,
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "space-between",
     alignItems: "center",
+     width: '100%'
   },
   // Add opacity to ImageBackground
   imageBackground: {
