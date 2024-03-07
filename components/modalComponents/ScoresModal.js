@@ -1,8 +1,10 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import TouchButton from '../TouchButton'
+import IconButton from '../IconButton'; 
 import HighScores from '../HighScores'
 import CustomModal from './CustomModal'
+
 
 
 export default function ScoresModal({
@@ -40,18 +42,41 @@ export default function ScoresModal({
                 // If the modal is an endGame modal, display the buttons to restart the game or go back to the menu
                 ? <View style={styles.bottomButtonsContainer}>
 
-                    <TouchButton title="Back to menu" press={() => {
+                    {/* <TouchButton title="Back to menu" press={() => {
                         changeModalVisible(false)
                         route.params
                             ? navigation.navigate('HomeScreen', { player_id: route.params.player_id, player_name: route.params.player_name })
                             : navigation.navigate('HomeScreen')
                     }}
+                    /> */}
+                    <IconButton
+                        title="Back to menu"
+                        iconName="home-outline"
+                        iconColor="#000" 
+                        titleColor="#000"
+                        press={() => {
+                            changeModalVisible(false);
+                            route.params
+                                ? navigation.navigate('HomeScreen', { player_id: route.params.player_id, player_name: route.params.player_name })
+                                : navigation.navigate('HomeScreen');
+                        }}
                     />
 
-                    <TouchButton title="Restart game" press={() => {
+                    {/* <TouchButton title="Restart game" press={() => {
                         changeModalVisible(false)
                         resetGame()
                     }}
+                    /> */}
+
+                    <IconButton
+                        title="Restart game"
+                        iconName="restart"
+                        iconColor="#000"
+                        titleColor="#000"
+                        press={() => {
+                            changeModalVisible(false);
+                            resetGame();
+                        }}
                     />
 
                 </View>
