@@ -18,15 +18,16 @@ export default function HomeScreen({ navigation, route }) {
     // Import background images from appThemes
     const backgroundImage = appThemes.backgrounds[theme]['HomeScreen']
 
-    // Set the modal visibility to false
+    // Set the modals visibility to false
     const [isHighScoresModalvisible, setisHighScoresModalVisible] = useState(false)
     const [isLoginModalVisible, setisLoginModalVisible] = useState(false)
     const [isRegisterModalVisible, setisRegisterModalVisible] = useState(false)
     const [isSettingsModalVisible, setisSettingsModalVisible] = useState(false)
 
-    // Rerender the component when the theme changes
+    // Rerender the screen when the theme changes
     useEffect(() => {
         console.log('Theme changed')
+        console.log(route.params)
     }, [theme])
 
 
@@ -140,7 +141,7 @@ export default function HomeScreen({ navigation, route }) {
                         visible={isSettingsModalVisible}
                         title='Settings'
                         navigation={navigation}
-
+                        route={route}
                     />
 
                 </SafeAreaView>

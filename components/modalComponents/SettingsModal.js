@@ -8,7 +8,8 @@ export default function SettingsModal({
     changeModalVisible,
     visible,
     title,
-    navigation
+    navigation,
+    route
 }) {
 
     const { theme, setTheme } = useContext(AppContext)
@@ -27,17 +28,15 @@ export default function SettingsModal({
                 title='Detailed'
                 press={() => {
                     setTheme('detailed')
-
                 }}
             />
 
             <TouchButton
                 title="Flat Design"
                 press={() => {
+                    navigation.navigate('HomeScreen', { player_id: route.params.player_id, player_name: route.params.player_name })
                     setTheme('flatDesign')
-                    navigation.navigate('HomeScreen')
                     console.log('Changed to flatDesign')
-                    console.log(theme)
                 }}
             />
 
