@@ -1,5 +1,7 @@
 const express = require('express')
 const mysql = require('mysql2')
+const fs = require('fs');
+const https = require('https');
 
 
 
@@ -59,10 +61,21 @@ const port = 3001
 
 app.use(express.json())
 
-app.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}`)
-})
 
+
+
+
+
+// Load SSL certificate and key
+const options = {
+    key: fs.readFileSync('privkey.pem'),
+    cert: fs.readFileSync('fullchain.pem')
+};
+
+// Start HTTPS server
+https.createServer(options, app).listen(port, () => {
+    console.log(`Server running on https://localhost:${port}`);
+});
 
 
 
@@ -92,7 +105,7 @@ app.post('/checkemail', (req, res) => {
         })
 })
 // Test /checkemail route
-// curl -X POST -H "Content-Type: application/json" -d '{"player_email": "john.doe@example.com"}' http://mathieubon.com:3001/checkemail
+// curl -X POST -H "Content-Type: application/json" -d '{"player_email": "john.doe@example.com"}' https://mathieubon.com:3001/checkemail
 
 
 
@@ -107,7 +120,7 @@ app.post('/addplayer', (req, res) => {
         })
 })
 // Test /adduser route
-// curl -X POST -H "Content-Type: application/json" -d '{"player_name": "John Doe", "player_email": "john.doe@example.com", "player_password": "securepassword"}' http://mathieubon.com:3001/adduser
+// curl -X POST -H "Content-Type: application/json" -d '{"player_name": "John Doe", "player_email": "john.doe@example.com", "player_password": "securepassword"}' https://mathieubon.com:3001/adduser
 
 
 
@@ -130,7 +143,7 @@ app.post('/checklogin', (req, res) => {
         })
 })
 // Test /checklogin route
-// curl -X POST -H "Content-Type: application/json" -d '{"player_email":"bon.mathieu@gmail.com", "player_password":"mathieubon"}' http://mathieubon.com:3001/checklogin
+// curl -X POST -H "Content-Type: application/json" -d '{"player_email":"bon.mathieu@gmail.com", "player_password":"mathieubon"}' https://mathieubon.com:3001/checklogin
 
 
 
@@ -144,7 +157,7 @@ app.post('/updatepassword', (req, res) => {
         })
 })
 // Test /updatepassword route
-// curl -X POST -H "Content-Type: application/json" -d '{"player_email":"bon.mathieu@gmail.com", "new_password":"newpassword"}' http://mathieubon.com:3001/updatepassword
+// curl -X POST -H "Content-Type: application/json" -d '{"player_email":"bon.mathieu@gmail.com", "new_password":"newpassword"}' https://mathieubon.com:3001/updatepassword
 
 
 
@@ -157,7 +170,7 @@ app.get('/highscores', (req, res) => {
         })
 })
 // Test /topscores
-// curl -X GET 'http://mathieubon.com:3001/topscores'
+// curl -X GET "https://mathieubon.com:3001/highscores"
 
 
 
@@ -172,7 +185,7 @@ app.post('/addscore', (req, res) => {
         })
 })
 // Test /addscore route
-// curl -X POST -H "Content-Type: application/json" -d '{"player_id": "1", "score": "6666", "duration": "666", "end_time": "1999-01-01 12:00:00"}' http://mathieubon.com:3001/addscore
+// curl -X POST -H "Content-Type: application/json" -d '{"player_id": "1", "score": "6666", "duration": "666", "end_time": "1999-01-01 12:00:00"}' https://mathieubon.com:3001/addscore
 
 
 
@@ -184,7 +197,7 @@ app.get('/playerlist', (req, res) => {
     })
 })
 // Test /countplayers
-// curl -X GET 'http://mathieubon.com:3001/playerlist'
+// curl -X GET 'https://mathieubon.com:3001/playerlist'
 
 
 
@@ -198,7 +211,7 @@ app.get('/lastgames/:player_id', (req, res) => {
         })
 })
 // Test /lastgames/player_id
-// curl -X GET "http://mathieubon.com:3001/lastgames/1"
+// curl -X GET "https://mathieubon.com:3001/lastgames/1"
 
 
 
@@ -212,7 +225,7 @@ app.get('/playtime/:player_id', (req, res) => {
         })
 })
 // Test /lastgames/player_id
-// curl -X GET "http://mathieubon.com:3001/playtime/1"
+// curl -X GET "https://mathieubon.com:3001/playtime/1"
 
 
 
@@ -226,7 +239,7 @@ app.post('/updatelastgame', (req, res) => {
         })
 })
 // Test /updatelastgame route
-// curl -X POST -H "Content-Type: application/json" -d '{"player_id":"1", "last_game_id":"4"}' http://mathieubon.com:3001/updatelastgame
+// curl -X POST -H "Content-Type: application/json" -d '{"player_id":"1", "last_game_id":"4"}' https://mathieubon.com:3001/updatelastgame
 
 
 
@@ -240,7 +253,7 @@ app.get('/updateranking', (req, res) => {
         })
 })
 // Test /updaterank
-// curl -X GET 'http://mathieubon.com:3001/updaterank'
+// curl -X GET 'https://mathieubon.com:3001/updaterank'
 
 
 
@@ -253,7 +266,7 @@ app.get('/rankdiff', (req, res) => {
         })
 })
 // Test /rankdiff
-// curl -X GET 'http://mathieubon.com:3001/rankdiff'
+// curl -X GET 'https://mathieubon.com:3001/rankdiff'
 
 
 
