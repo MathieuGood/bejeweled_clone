@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
+import { View } from 'react-native'
 import TouchButton from '../TouchButton'
 import TextField from '../TextField'
 import CustomModal from './CustomModal'
 import { checkEmailAndPasswordMatch } from '../../core/userEntryCheck'
+import IconButton from '../IconButton'
 
 export default function LoginModal({
     changeModalVisible,
@@ -59,12 +61,15 @@ export default function LoginModal({
                 }}
             />
 
-            <TouchButton
-                title="Close"
-                press={() => {
-                    changeModalVisible(false)
-                }}
-            />
+            <View style={{position:'absolute', top:-26, right:-37}}>
+                    <IconButton 
+                        iconName="close"
+                        iconSize={39}
+                        press={() => {
+                            changeModalVisible(false);
+                        }}
+                    />
+            </View>
 
         </CustomModal>
     )

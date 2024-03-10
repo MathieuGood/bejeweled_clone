@@ -27,8 +27,6 @@ const ModalScore = ({visible, changeModalVisible, navigation, resetGame, score})
                  <Text style={{textAlign: 'center', marginBottom: 15, fontSize: 17}}>
                         Your score is <Text style={Styles.scoreStyle}>{score}</Text> points.
                     </Text>
-
-                 {/* logique  pour afficher la Flatlist des meilleurs scores */}
                  
                 <View style={{flexDirection: "row", justifyContent: 'space-evenly'}}>
 
@@ -39,7 +37,7 @@ const ModalScore = ({visible, changeModalVisible, navigation, resetGame, score})
 
                     <TouchButton title="Quit"  press={() => {
                         changeModalVisible(false); 
-                        navigation.navigate('PlayerScreen') //provisoirement retour à cette page
+                        navigation.navigate('PlayerScreen') 
                     }} />
                     
                 </View>
@@ -88,7 +86,7 @@ const Styles = StyleSheet.create({
         marginTop : 15
     },
     scoreStyle: {
-        color: '#E53935', // Par exemple, une couleur rouge pour le score
+        color: '#E53935', 
         fontWeight: 'bold',
     }
 

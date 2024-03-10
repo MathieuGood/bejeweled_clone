@@ -6,6 +6,7 @@ import ScoresModal from '../components/modalComponents/ScoresModal'
 import LoginModal from '../components/modalComponents/LoginModal'
 import RegisterModal from '../components/modalComponents/RegisterModal'
 import SettingsModal from '../components/modalComponents/SettingsModal'
+import Toast from '../components/modalComponents/Toast'
 import { confirmLogout } from '../core/userEntryCheck'
 import { appThemes } from '../themes/appThemes'
 
@@ -23,6 +24,8 @@ export default function HomeScreen({ navigation, route }) {
     const [isLoginModalVisible, setisLoginModalVisible] = useState(false)
     const [isRegisterModalVisible, setisRegisterModalVisible] = useState(false)
     const [isSettingsModalVisible, setisSettingsModalVisible] = useState(false)
+    const [ isLogoutConfirmVisible, setIsLogoutConfirmVisible] = useState(false)
+
 
     // Rerender the screen when the theme changes
     useEffect(() => {
@@ -65,10 +68,19 @@ export default function HomeScreen({ navigation, route }) {
                             press={() => {
                                 route.params
                                     // On click on log out, ask for confirmation and if yes, reload HomeScreen with no parameters
-                                    ? confirmLogout(navigation)
+                                    // ? confirmLogout(navigation)
+                                    
+                                    // // On click on log in , show LoginModal
+                                    // : setisLoginModalVisible(true)
+
+                                    //Modal replaces alert
+                                   // On click on log out, ask for confirmation and if yes, reload HomeScreen with no parameters
+                                    ? setIsLogoutConfirmVisible(true)
+                                    
                                     // On click on log in , show LoginModal
                                     : setisLoginModalVisible(true)
                             }}
+
                         />
 
                     </View>
@@ -143,6 +155,23 @@ export default function HomeScreen({ navigation, route }) {
                         navigation={navigation}
                         route={route}
                     />
+                    <Toast
+                        visible={isLogoutConfirmVisible} 
+                        changeModalVisible={setIsLogoutConfirmVisible} 
+                        iconName="warning"
+                        title="Confirm Logout"
+                        buttonColor="orange" 
+                        iconBackgroundColor="orange"
+                        warning="Are you sure you want to log out ?"
+                        buttonText="Yes"
+                        press={() => {
+                        setIsLogoutConfirmVisible(false)
+                        navigation.navigate('HomeScreen'); 
+                        }}
+                        showCancelButton="true"
+                        widthButton='35%'
+                        >
+                    </Toast>
 
                 </SafeAreaView>
 

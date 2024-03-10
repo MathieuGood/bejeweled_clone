@@ -10,11 +10,12 @@ const IconButton = ({ press, iconName, iconSize=40, iconColor='#2b50c8' , title,
       onPress={press}
       buttonStyle={{ marginHorizontal: 10, paddingHorizontal: 10 }} 
       title={
-        <View >
+        <View  style={{alignItems:'center'}}>
           <Icon
             name={iconName}
             size={iconSize}
             color={iconColor}
+            justifyContent= 'center'
           />
           <Text style={{ color: titleColor, fontWeight: 'bold',marginTop: 5 }}>{title}</Text>
         </View>

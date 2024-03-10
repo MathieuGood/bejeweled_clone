@@ -11,6 +11,7 @@ import AppContext from "../providers/AppContext"
 import TouchButton from "../components/TouchButton"
 import IconButton from "../components/IconButton"
 import ScoresModal from "../components/modalComponents/ScoresModal"
+import Toast from  "../components/modalComponents/Toast"
 import GameGrid from "../components/gameComponents/GameGrid"
 import ScoreBoard from "../components/gameComponents/ScoreBoard"
 import ProgressBar from "../components/gameComponents/ProgressBar"
@@ -29,7 +30,6 @@ import {
 } from "../core/gameFunctions"
 
 import MusicPlayer from "../components/MusicPlayer"
-import CustomModal2 from  "../components/modalComponents/CustomModal2"
 
 
 export default function GameScreen({ navigation, route }) {
@@ -339,13 +339,13 @@ export default function GameScreen({ navigation, route }) {
             hintTiles={hint}
           />
 
-          <CustomModal2
+          <Toast
           visible={isNoHintModalVisible}
           changeModalVisible={setIsNoHintModalVisible}
           title="No hints available"
+          warning= "No matches found on the grid."
           >
-            <Text style={{textAlign: 'center', margin: 20}}>No matches found on the grid.</Text>
-          </CustomModal2>
+          </Toast>
 
           <ProgressBar
             level={level}
@@ -459,7 +459,7 @@ const styles = StyleSheet.create({
   topContainer: {
     backgroundColor: '#e8b923',
     flex: 0.15, 
-    marginHorizontal: 30, //modifier la largeur du container suivant appareil
+    marginHorizontal: 1, //modifier la largeur du container suivant appareil
     paddingVertical: 'auto'
 
      
