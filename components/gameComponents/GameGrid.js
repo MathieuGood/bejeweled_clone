@@ -20,7 +20,7 @@ export default function GameGrid({
         return gameGrid.map((row, rowIndex) => (
             <View key={rowIndex} style={styles.row}>
                 {row.map((tile, colIndex) => {
-                    // Déterminez si cette tuile doit être animée
+                    // Détermine si cette tuile doit être animée
                     const animate = hintTiles && hintTiles.some(hint => hint[0] === rowIndex && hint[1] === colIndex);
     
                     return (

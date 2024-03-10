@@ -9,14 +9,14 @@ export default function SplashScreen({navigation}) {
   };
 
   return (
-    
+
     <View style={styles.container}>
       <LottieView
         style={{ flex: 1, width: '100%' }}
-        source={require('../assets/Animations/lottie.json')} // à choisir entre le 1 à 5
+        source={require('../assets/Animations/lottie.json')} 
         autoPlay
-        loop={false} 
-        onAnimationFinish={handleAnimationFinish} 
+        loop={false}
+        onAnimationFinish={handleAnimationFinish}
       />
     </View>
   );

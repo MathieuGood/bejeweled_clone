@@ -42,18 +42,9 @@ export default function ScoresModal({
                 // If the modal is an endGame modal, display the buttons to restart the game or go back to the menu
                 ? <View style={styles.bottomButtonsContainer}>
 
-                    {/* <TouchButton title="Back to menu" press={() => {
-                        changeModalVisible(false)
-                        route.params
-                            ? navigation.navigate('HomeScreen', { player_id: route.params.player_id, player_name: route.params.player_name })
-                            : navigation.navigate('HomeScreen')
-                    }}
-                    /> */}
                     <IconButton
                         title="Back to menu"
                         iconName="home-outline"
-                        iconColor="#000" 
-                        titleColor="#000"
                         press={() => {
                             changeModalVisible(false);
                             route.params
@@ -62,17 +53,9 @@ export default function ScoresModal({
                         }}
                     />
 
-                    {/* <TouchButton title="Restart game" press={() => {
-                        changeModalVisible(false)
-                        resetGame()
-                    }}
-                    /> */}
-
-                    <IconButton
+                    <IconButton 
                         title="Restart game"
                         iconName="restart"
-                        iconColor="#000"
-                        titleColor="#000"
                         press={() => {
                             changeModalVisible(false);
                             resetGame();
@@ -81,11 +64,15 @@ export default function ScoresModal({
 
                 </View>
                 // If the modal is a highScores modal, display the button to close modal
-                : <View>
-                    <TouchButton title="Close" press={() => {
-                        changeModalVisible(false)
-                    }}
+                : <View style={{position:'absolute', top:-26, right:-37}}>
+                    <IconButton 
+                        iconName="close"
+                        iconSize={39}
+                        press={() => {
+                            changeModalVisible(false);
+                        }}
                     />
+
                 </View>
 
             }
@@ -103,11 +90,11 @@ const styles = StyleSheet.create({
         fontSize: 17
     },
     score: {
-        color: '#E53935', // Par exemple, une couleur rouge pour le score
+        color: '#E53935', 
         fontWeight: 'bold',
     },
     bottomButtonsContainer: {
         flexDirection: "row",
-        justifyContent: 'space-evenly'
+        justifyContent: 'space-evenly',
     }
 })

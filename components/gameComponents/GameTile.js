@@ -15,7 +15,6 @@ export default function GameTile({
     const tileImages = appThemes.tiles[theme];
     const isFirstPress = firstPress ? firstPress[0] === rowIndex && firstPress[1] === colIndex : false;
 
-    // Décider de l'enveloppe d'animation basée sur la prop `animate`
     const content = animate ? (
         <HintAnimation>
             <Image source={tileImages[tileReference]} style={styles.tileImage} />

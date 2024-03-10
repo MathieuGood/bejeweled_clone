@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { Alert, StyleSheet, Text } from 'react-native'
+import { Alert, StyleSheet, Text, View } from 'react-native'
 import TouchButton from '../TouchButton'
+import IconButton from '../IconButton'
 import TextField from '../TextField'
 import CustomModal from './CustomModal'
 import { checkUserEntryAndAddPlayer } from '../../core/userEntryCheck'
@@ -75,12 +76,16 @@ export default function RegisterModal({
                 press={() => checkUserEntryAndAddPlayer(name, email, password, navigation, changeModalVisible)}
             />
 
-            <TouchButton
-                title='Close'
-                press={() => {
-                    changeModalVisible(false)
-                }}
-            />
+            
+            <View style={{position:'absolute', top:-26, right:-37}}>
+                    <IconButton 
+                        iconName="close"
+                        iconSize={39}
+                        press={() => {
+                            changeModalVisible(false);
+                        }}
+                    />
+            </View>
 
         </CustomModal>
     )
