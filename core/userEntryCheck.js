@@ -94,17 +94,17 @@ export const checkEmailAndPasswordMatch = (email, password, navigation, changeMo
 
 
 // Show alert to confirm logout
-export const confirmLogout = (navigation) => {
-    Alert.alert(
-        'Log out',
-        'Are you sure you want to log out?',
-        [
-            { text: 'Cancel' },
-            { text: 'Log out', onPress: () => navigation.navigate('HomeScreen') }
-        ],
-        { cancelable: false }
-    )
-}
+// export const confirmLogout = (navigation) => {
+//     Alert.alert(
+//         'Log out',
+//         'Are you sure you want to log out?',
+//         [
+//             { text: 'Cancel' },
+//             { text: 'Log out', onPress: () => navigation.navigate('HomeScreen') }
+//         ],
+//         { cancelable: false }
+//     )
+// }
 
 
 // Check if name, email and password have right format and add player to database
