@@ -40,9 +40,6 @@ export const appThemes = {
         },
         'others': {
             8: require('../assets/gameTiles/others/ScoreBoard.webp'),
-            9: require('../assets/gameTiles/others/confetti.webp'),
-            10: require('../assets/gameTiles/others/coin.webp')
-
         }
     }
 }
