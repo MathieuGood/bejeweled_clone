@@ -14,6 +14,7 @@ export default function TextField({
         <TextInput
             style={styles.field}
             placeholder={placeholder}
+            placeholderTextColor="#000" 
             value={value}
             onChangeText={onChangeText}
             autoCorrect={false}
