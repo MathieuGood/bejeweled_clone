@@ -3,12 +3,8 @@ import {
   StyleSheet,
   View,
   SafeAreaView,
-  Text,
-  Alert,
-  ImageBackground,
 } from "react-native"
 import AppContext from "../providers/AppContext"
-import TouchButton from "../components/TouchButton"
 import IconButton from "../components/IconButton"
 import ScoresModal from "../components/modalComponents/ScoresModal"
 import Toast from "../components/modalComponents/Toast"
@@ -20,7 +16,6 @@ import {
 } from "../core/apiRequests"
 import {
   buildGameGridWithNoMatches,
-  showGameGrid,
   checkGameGridForAlignments,
   swapTwoItemsOnGrid,
   pushDownValuesAndEraseAlignments,

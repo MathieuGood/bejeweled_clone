@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Alert, StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import TouchButton from '../TouchButton'
 import IconButton from '../IconButton'
 import TextField from '../TextField'
