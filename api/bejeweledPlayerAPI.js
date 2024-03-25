@@ -149,15 +149,20 @@ app.post('/checklogin', (req, res) => {
 
 // Update password
 app.post('/updatepassword', (req, res) => {
-    const { player_email, new_password } = req.body
-    db.query('UPDATE players SET player_password = ? WHERE player_email = ?', [new_password, player_email],
+    const { player_id, current_password, new_password } = req.body
+
+    db.query('UPDATE players SET player_password = ? WHERE player_id = ? AND player_password = ?', [new_password, player_id, current_password],
         (err, result) => {
-            if (err) throw err
-            res.json('Password updated for ' + player_email)
+            if (err) {
+                throw err
+            } else {
+                res.json(result.affectedRows)
+            }
+            
         })
 })
 // Test /updatepassword route
-// curl -X POST -H "Content-Type: application/json" -d '{"player_email":"bon.mathieu@gmail.com", "new_password":"newpassword"}' https://mathieubon.com:3001/updatepassword
+// curl -X POST -H "Content-Type: application/json" -d '{"player_id":"11", "current_password":"testtest", "new_password":"newpassword"}' https://mathieubon.com:3001/updatepassword
 
 
 
@@ -267,20 +272,6 @@ app.get('/rankdiff', (req, res) => {
 })
 // Test /rankdiff
 // curl -X GET 'https://mathieubon.com:3001/rankdiff'
-
-
-
-// Add image to database as BLOB to table custom_images with player_id
-app.post('/addimage', (req, res) => {
-    const { player_id, image } = req.body
-    const imageBuffer = Buffer.from(image, 'base64')
-    db.query('INSERT INTO custom_images (player_id, image) VALUES (?, ?)',
-        [player_id, imageBuffer],
-        (err, result) => {
-            if (err) throw err
-            res.json({ message: 'Image added successfuly', id: result.insertId })
-        })
-})
 
 
 ///////////// UNUSED FOR NOW

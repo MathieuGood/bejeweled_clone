@@ -72,7 +72,8 @@ export const checkCredentials = (email, password, navigation, changeModalVisible
                 console.log(json)
                 console.log(json.player_id, json.player_name)
                 navigation.navigate('HomeScreen', { player_id: json.player_id, player_name: json.player_name })
-                changeModalVisible(false)            } else {
+                changeModalVisible(false)
+            } else {
                 console.log('E-mail or password wrong')
                 Alert.alert(
                     'Error',
@@ -126,6 +127,54 @@ export const checkIfEmailDoesNotExist = (email, callbackFunction) => {
         })
 }
 
+
+
+// Using /updatepassword
+// Update password in database
+export const updatePassword = (player_id, currentPassword, newPassword, changeModalVisible) => {
+    const bodyData = {
+        player_id: player_id,
+        current_password: currentPassword,
+        new_password: newPassword
+    }
+
+    console.log('Updating password for player_id ' + player_id)
+    console.log('Current password : ' + currentPassword)
+    console.log('New password : ' + newPassword)
+
+    fetch('https://mathieubon.com:3001/updatepassword', {
+        method: 'POST',
+        body: JSON.stringify(bodyData),
+        headers: { "Content-Type": "application/json" }
+    })
+        .then((response) => response.json())
+        .then((json) => {
+            if (json === 1) {
+                console.log('Password updated')
+                Alert.alert(
+                    'Password updated',
+                    'Your password has been updated',
+                    [
+                        { text: 'OK', onPress: () => changeModalVisible(false) }
+                    ],
+                    { cancelable: false }
+                )
+            } else {
+                console.log('Incorrect data entered')
+                Alert.alert(
+                    'Error',
+                    'Incorrect data entered',
+                    [
+                        { text: 'OK' }
+                    ],
+                    { cancelable: false }
+                )
+            }
+        })
+        .catch((error) => {
+            console.error(error)
+        })
+}
 
 
 // Using /addscore
