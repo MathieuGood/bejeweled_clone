@@ -1,13 +1,10 @@
 import React, { useContext } from 'react'
-import SubHead from '../SubHead'
 import CustomModal from './CustomModal'
 import AppContext from '../../providers/AppContext'
 import IconButton from '../IconButton'
-
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet } from 'react-native'
 import { appThemes } from '../../themes/appThemes'
 import ThemeCard from '../ThemeCard'
-
 
 
 export default function SettingsModal({
@@ -29,8 +26,6 @@ export default function SettingsModal({
             title={title}
             changeModalVisible={changeModalVisible}
         >
-
-            <SubHead title='Theme' />
 
             <Text style={styles.chooseThemeMessage}>
                 Please select a theme to customize your experience.
@@ -62,15 +57,6 @@ export default function SettingsModal({
                     }}
                     isSelected={theme === 'flatDesign'}
                     imageSource={Image2}
-                />
-
-                <ThemeCard
-                    iconName="image-plus"
-                    title="Upload Image"
-                    onPress={() => {
-                        addImage()
-                    }}
-                    isSelected={theme === 'customImage'}
                 />
 
             </View>

@@ -11,7 +11,7 @@ import AppContext from "../providers/AppContext"
 import TouchButton from "../components/TouchButton"
 import IconButton from "../components/IconButton"
 import ScoresModal from "../components/modalComponents/ScoresModal"
-import Toast from  "../components/modalComponents/Toast"
+import Toast from "../components/modalComponents/Toast"
 import GameGrid from "../components/gameComponents/GameGrid"
 import ScoreBoard from "../components/gameComponents/ScoreBoard"
 import ProgressBar from "../components/gameComponents/ProgressBar"
@@ -41,29 +41,6 @@ export default function GameScreen({ navigation, route }) {
   //
   ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  // const exampleGrid = [
-  //     [4, 5, 6, 6, 5, 1, 7, 2],
-  //     [1, 5, 6, 7, 7, 1, 3, 3],
-  //     [1, 3, 6, 0, 4, 7, 2, 1],
-  //     [0, 5, 6, 7, 7, 0, 3, 0],
-  //     [2, 0, 3, 3, 1, 2, 6, 1],
-  //     [0, 7, 2, 3, 2, 6, 6, 1],
-  //     [5, 4, 0, 3, 0, 2, 2, 1],
-  //     [7, 4, 6, 4, 1, 0, 5, 4],
-  // ]
-
-  let exampleGrid = [
-    [5, 1, 2, 3, 2, 0, 5, 0],
-    [4, 0, 6, 0, 5, 0, 7, 1],
-    [1, 7, 7, 1, 7, 7, 3, 7],
-    [3, 5, 6, 4, 2, 6, 1, 1],
-    [0, 5, 6, 3, 4, 7, 5, 1],
-    [3, 7, 4, 0, 3, 2, 3, 0],
-    [2, 2, 0, 4, 5, 4, 7, 0],
-    [4, 0, 3, 6, 0, 5, 2, 6],
-  ]
-
-  // const [gameGrid, setGameGrid] = useState(exampleGrid)
 
   // Get theme from context
   const theme = useContext(AppContext).theme
@@ -95,18 +72,18 @@ export default function GameScreen({ navigation, route }) {
   // Set the modal visibility to false
   const [isModalvisible, setisModalVisible] = useState(false)
 
-   // State to control automatic music playback based on game events and user interactions
-   const [shouldPlayMusic, setShouldPlayMusic] = useState(true);
-  
+  // State to control automatic music playback based on game events and user interactions
+  const [shouldPlayMusic, setShouldPlayMusic] = useState(true);
+
   // State to control the on/off position of the music switch. 
-   const [musicSwitchEnabled, setMusicSwitchEnabled] = useState(true);
+  const [musicSwitchEnabled, setMusicSwitchEnabled] = useState(true);
 
-   // Indicates readiness for navigation.
-   const [isReadyForNavigation, setIsReadyForNavigation] = useState(false);
+  // Indicates readiness for navigation.
+  const [isReadyForNavigation, setIsReadyForNavigation] = useState(false);
 
-   const [hint, setHint] = useState(null);
+  const [hint, setHint] = useState(null);
 
-   const [isNoHintModalVisible, setIsNoHintModalVisible] = useState(false);
+  const [isNoHintModalVisible, setIsNoHintModalVisible] = useState(false);
 
 
 
@@ -135,14 +112,16 @@ export default function GameScreen({ navigation, route }) {
   const showHint = (gameGrid) => {
     let resultHints = getAllHints(gameGrid)
 
-    if (resultHints.length === 0) {
+    if (resultHints.length === 0 || attempts <= 1) {
       console.log("No hints available")
-     
-    setIsNoHintModalVisible(true); 
+
+      setIsNoHintModalVisible(true);
     } else {
       let hint = getOneRandomHint(resultHints)
       setHint(hint); // Met à jour l'état avec les coordonnées du hint sélectionné
       console.log("Hint : ", hint)
+      // Decrement attempts by one
+      setAttempts(attempts - 1)
       return hint
     }
   }
@@ -156,7 +135,7 @@ export default function GameScreen({ navigation, route }) {
     setTimerPause(true)
 
     // Stop music playback when the game ends
-    setShouldPlayMusic(false);  
+    setShouldPlayMusic(false);
     setMusicSwitchEnabled(false);
 
 
@@ -340,10 +319,10 @@ export default function GameScreen({ navigation, route }) {
           />
 
           <Toast
-          visible={isNoHintModalVisible}
-          changeModalVisible={setIsNoHintModalVisible}
-          title="No hints available"
-          warning= "No matches found on the grid."
+            visible={isNoHintModalVisible}
+            changeModalVisible={setIsNoHintModalVisible}
+            title="No hints available"
+            warning="No matches found on the grid."
           >
           </Toast>
 
@@ -398,23 +377,23 @@ export default function GameScreen({ navigation, route }) {
             iconName="help-circle-outline"
             title={"Hint"}
             press={() => {
-               console.log("Hint button pressed")
-               showHint(gameGrid)
+              console.log("Hint button pressed")
+              showHint(gameGrid)
             }}
           />
 
           <IconButton
-          iconName="exit-to-app" 
+            iconName="exit-to-app"
             title="Quit game"
             press={quitGame}
           />
 
-          <MusicPlayer 
-            shouldPlayAutomatically={shouldPlayMusic} 
-            musicSwitchEnabled={musicSwitchEnabled} 
-            setMusicSwitchEnabled={setMusicSwitchEnabled} 
+          <MusicPlayer
+            shouldPlayAutomatically={shouldPlayMusic}
+            musicSwitchEnabled={musicSwitchEnabled}
+            setMusicSwitchEnabled={setMusicSwitchEnabled}
           />
-          
+
 
         </View>
 
@@ -458,12 +437,12 @@ const styles = StyleSheet.create({
   },
   topContainer: {
     backgroundColor: '#e8b923',
-    flex: 0.15, 
+    flex: 0.15,
     marginHorizontal: 1, //modifier la largeur du container suivant appareil
     paddingVertical: 'auto'
 
-     
-    },
+
+  },
   centerContainer: {
     // backgroundColor: 'black',
     flex: 0.8,
@@ -472,12 +451,12 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   bottomContainer: {
-    backgroundColor:  '#87CEEB',
+    backgroundColor: '#87CEEB',
     flex: 0.1,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-     width: '100%'
+    width: '100%'
   },
   // Add opacity to ImageBackground
   imageBackground: {
@@ -486,7 +465,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     opacity: 0.5,
   },
-  toast : {
+  toast: {
     backgroundColor: "red",
     borderRadius: 20,
     padding: 10,
