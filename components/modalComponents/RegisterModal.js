@@ -27,7 +27,7 @@ export default function RegisterModal({
 
     // Clear the fields when the modal is closed
     useEffect(() => {
-        setState({ name: '', email: '', password: '' , passwordConfirmation: ''})
+        setState({ name: '', email: '', password: '', passwordConfirmation: '' })
     },
         [visible])
 

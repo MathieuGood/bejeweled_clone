@@ -8,7 +8,6 @@ import RegisterModal from '../components/modalComponents/RegisterModal'
 import SettingsModal from '../components/modalComponents/SettingsModal'
 import UpdatePasswordModal from '../components/modalComponents/UpdatePasswordModal'
 import Toast from '../components/modalComponents/Toast'
-import { confirmLogout } from '../core/userEntryCheck'
 import { appThemes } from '../themes/appThemes'
 
 
@@ -73,12 +72,6 @@ export default function HomeScreen({ navigation, route }) {
                             title={route.params ? 'Log out ' : 'Log in'}
                             press={() => {
                                 route.params
-                                    // On click on log out, ask for confirmation and if yes, reload HomeScreen with no parameters
-                                    // ? confirmLogout(navigation)
-
-                                    // // On click on log in , show LoginModal
-                                    // : setisLoginModalVisible(true)
-
                                     //Modal replaces alert
                                     // On click on log out, ask for confirmation and if yes, reload HomeScreen with no parameters
                                     ? setIsLogoutConfirmVisible(true)
