@@ -1,24 +1,24 @@
 import React from 'react';
-import { Modal, StyleSheet, View, Text, TouchableOpacity} from 'react-native';
+import { Modal, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { MaterialIcons } from '@expo/vector-icons';
 
-export default function Toast ({
+export default function Toast({
     visible,
     changeModalVisible,
     title,
-    iconName = "close", 
-    buttonText = "OK", 
-    buttonText2="No",
-    iconColor = 'white', 
-    buttonColor = 'red', 
+    iconName = "close",
+    buttonText = "OK",
+    buttonText2 = "No",
+    iconColor = 'white',
+    buttonColor = 'red',
     iconBackgroundColor = 'red',
-    showCancelButton=false,
-    widthButton="70%",
+    showCancelButton = false,
+    widthButton = "70%",
     warning,
     press
-    
-})  {
+
+}) {
     return (
         <Modal
             animationType="slide"
@@ -32,34 +32,35 @@ export default function Toast ({
                 intensity={50}
             >
                 <View style={styles.modalView}>
-                  <View style={[styles.icon ,{backgroundColor: iconBackgroundColor}]}>
-                    <MaterialIcons  name={iconName} size={65} color= {iconColor} />
-                  </View>   
+                    <View style={[styles.icon, { backgroundColor: iconBackgroundColor }]}>
+                        <MaterialIcons name={iconName} size={65} color={iconColor} />
+                    </View>
 
                     <Text style={styles.modalText}>{title}</Text>
                     <Text style={styles.warning}>{warning}</Text>
 
-                  <View style={{flexDirection:"row" }}>
-                    <TouchableOpacity
-                        style={[styles.Button, { backgroundColor: buttonColor },{width: widthButton}]}
-                        onPress={() => {changeModalVisible(false)
-                        press && press()
-                        }}
-                    >
-                        <Text style={styles.textStyle}>{buttonText}</Text>
-                    </TouchableOpacity>
-
-                    {showCancelButton && (
+                    <View style={{ flexDirection: "row" }}>
                         <TouchableOpacity
-                            style={[styles.Button, { backgroundColor: "grey" },{width: widthButton}]}
-                            onPress={() => changeModalVisible(false)}
+                            style={[styles.Button, { backgroundColor: buttonColor }, { width: widthButton }]}
+                            onPress={() => {
+                                changeModalVisible(false)
+                                press && press()
+                            }}
                         >
-                          <Text style={styles.textStyle}>{buttonText2}</Text>
-
+                            <Text style={styles.textStyle}>{buttonText}</Text>
                         </TouchableOpacity>
-                    )}
-                    </View>  
-                    
+
+                        {showCancelButton && (
+                            <TouchableOpacity
+                                style={[styles.Button, { backgroundColor: "grey" }, { width: widthButton }]}
+                                onPress={() => changeModalVisible(false)}
+                            >
+                                <Text style={styles.textStyle}>{buttonText2}</Text>
+
+                            </TouchableOpacity>
+                        )}
+                    </View>
+
                 </View>
             </BlurView>
         </Modal>
@@ -93,13 +94,13 @@ const styles = StyleSheet.create({
         marginTop: 50
     },
     icon: {
-        width: 80, 
-        height: 80, 
-        borderRadius: 40, 
-        alignItems:"center",
-        justifyContent : 'center',
-        position:'absolute',
-        top:  -45,
+        width: 80,
+        height: 80,
+        borderRadius: 40,
+        alignItems: "center",
+        justifyContent: 'center',
+        position: 'absolute',
+        top: -45,
         elevation: 5,
         shadowOpacity: 0.25,
         shadowRadius: 5,
@@ -117,10 +118,10 @@ const styles = StyleSheet.create({
         color: "white",
         fontWeight: "bold",
         textAlign: "center",
-        fontSize:20
+        fontSize: 20
     },
-    warning:{
-        textAlign: 'center', 
+    warning: {
+        textAlign: 'center',
         margin: 20
     }
 });

@@ -18,14 +18,16 @@ export default function RegisterModal({
     const [state, setState] = useState({
         name: '',
         email: '',
-        password: ''
+        password: '',
+        passwordConfirmation: ''
+
     })
 
-    const { name, email, password } = state
+    const { name, email, password, passwordConfirmation } = state
 
     // Clear the fields when the modal is closed
     useEffect(() => {
-        setState({ name: '', email: '', password: '' })
+        setState({ name: '', email: '', password: '', passwordConfirmation: '' })
     },
         [visible])
 
@@ -64,23 +66,32 @@ export default function RegisterModal({
                 secureTextEntry={true}
             />
 
+            <TextField
+                placeholder='Password confirmation'
+                value={passwordConfirmation}
+                onChangeText={text => setState(prevState => {
+                    return { ...prevState, passwordConfirmation: text }
+                })}
+                autoCapitalize='none'
+                secureTextEntry={true}
+            />
+
             <Text
                 style={styles.privacyPolicy}
-                onPress={() => {Alert.alert('Privacy Policy and GDPR Consent', privacyPolicy.privacyPolicy)}}
-                >
+                onPress={() => { Alert.alert('Privacy Policy and GDPR Consent', privacyPolicy.privacyPolicy) }}
+            >
                 Click here to read our privacy policy
             </Text>
 
             <TouchButton
                 title='Create account'
-                press={() => checkUserEntryAndAddPlayer(name, email, password, navigation, changeModalVisible)}
+                press={() => checkUserEntryAndAddPlayer(name, email, password, passwordConfirmation, navigation, changeModalVisible)}
             />
-
             
             <View style={{position:'absolute', top:-2, right:-15}}>
                     <IconButton 
                         iconName="close"
-                        iconSize={25}
+                        iconSize={25}gitgi
                         press={() => {
                             changeModalVisible(false);
                         }}
