@@ -7,7 +7,7 @@
 
 import { Alert } from 'react-native'
 import { checkCredentials } from '../core/apiRequests'
-import { addPlayer, checkIfEmailDoesNotExist } from '../core/apiRequests'
+import { addPlayer, checkIfEmailDoesNotExist, updatePassword } from '../core/apiRequests'
 import { hashPassword } from './passwordHasher'
 
 
@@ -93,22 +93,8 @@ export const checkEmailAndPasswordMatch = (email, password, navigation, changeMo
 }
 
 
-// Show alert to confirm logout
-// export const confirmLogout = (navigation) => {
-//     Alert.alert(
-//         'Log out',
-//         'Are you sure you want to log out?',
-//         [
-//             { text: 'Cancel' },
-//             { text: 'Log out', onPress: () => navigation.navigate('HomeScreen') }
-//         ],
-//         { cancelable: false }
-//     )
-// }
-
-
 // Check if name, email and password have right format and add player to database
-export const checkUserEntryAndAddPlayer = (name, email, password, navigation, changeModalVisible) => {
+export const checkUserEntryAndAddPlayer = (name, email, password, passwordConfirmation, navigation, changeModalVisible) => {
     // Check if entered e-mail does not already exist in the database
     checkIfEmailDoesNotExist(email, () => {
         // Initalize errorMessage to empty string
@@ -118,6 +104,8 @@ export const checkUserEntryAndAddPlayer = (name, email, password, navigation, ch
         checkEmailFormat(email) ? errorMessage += '' : errorMessage += 'Wrong e-mail format.\n'
         checkPasswordFormat(password) ? errorMessage += '' : errorMessage += 'Wrong password format, it must contain at least 6 characters and no space.\n'
         checkNameFormat(name) ? errorMessage += '' : errorMessage += 'Wrong name format, it must contain at least one letter.\n'
+        password === passwordConfirmation ? errorMessage += '' : errorMessage += 'Passwords do not match.\n'
+
 
         // If errorMessage is empty and all the checks went well
         if (errorMessage === '') {
@@ -142,5 +130,40 @@ export const checkUserEntryAndAddPlayer = (name, email, password, navigation, ch
             );
         }
     })
+}
+
+
+// Check if current password matches the entry in the database and format of new password is correct
+// Then update the password in the database
+export const checkUserEntryAndUpdatePassword = (player_id, currentPassword, newPassword, newPasswordConfirmation, navigation, changeModalVisible) => {
+
+    // Initalize errorMessage to empty string
+    let errorMessage = ''
+
+    // Run all entry check functions and feed errorMessage string if the return is false
+    checkPasswordFormat(newPassword) ? errorMessage += '' : errorMessage += 'Wrong password format, it must contain at least 6 characters and no space.\n'
+    newPassword === newPasswordConfirmation ? errorMessage += '' : errorMessage += 'Passwords do not match.\n'
+
+    // Update the password in the database
+    if (errorMessage === '') {
+        console.log('Updating password')
+
+        // Hash currentPassword and newPassword, then update the password in the database
+        hashPassword(currentPassword).then((hashedCurrentPassword) => {
+            hashPassword(newPassword).then((hashedNewPassword) => {
+                updatePassword(player_id, hashedCurrentPassword, hashedNewPassword, changeModalVisible)
+            })
+        })
+    } else {
+        Alert.alert(
+            'Invalid entry',
+            // Remove last line break in error message
+            errorMessage.slice(0, -2),
+            [
+                { text: 'OK' }
+            ],
+            { cancelable: false }
+        );
+    }
 
 }

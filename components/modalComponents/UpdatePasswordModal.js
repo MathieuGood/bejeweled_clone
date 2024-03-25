@@ -4,30 +4,28 @@ import TouchButton from '../TouchButton'
 import IconButton from '../IconButton'
 import TextField from '../TextField'
 import CustomModal from './CustomModal'
-import { checkUserEntryAndAddPlayer } from '../../core/userEntryCheck'
-import privacyPolicy from '../../assets/privacyPolicy'
+import { checkUserEntryAndUpdatePassword } from '../../core/userEntryCheck'
 
 
-export default function RegisterModal({
+export default function UpdatePasswordModal({
     changeModalVisible,
     visible,
     navigation,
     title,
+    route
 }) {
 
     const [state, setState] = useState({
-        name: '',
-        email: '',
-        password: '',
-        passwordConfirmation: ''
-
+        currentPassword: '',
+        newPassword: '',
+        newPasswordConfirmation: ''
     })
 
-    const { name, email, password, passwordConfirmation } = state
+    const { currentPassword, newPassword, newPasswordConfirmation } = state
 
     // Clear the fields when the modal is closed
     useEffect(() => {
-        setState({ name: '', email: '', password: '' , passwordConfirmation: ''})
+        setState({ currentPassword: '', newPassword: '', newPasswordConfirmation: '' })
     },
         [visible])
 
@@ -39,53 +37,38 @@ export default function RegisterModal({
         >
 
             <TextField
-                placeholder='Name'
-                value={name}
+                placeholder='Current password'
+                value={currentPassword}
                 onChangeText={text => setState(prevState => {
-                    return { ...prevState, name: text }
-                })}
-                autoCapitalize='words'
-                secureTextEntry={false}
-            />
-            <TextField
-                placeholder='E-mail'
-                value={email}
-                onChangeText={text => setState(prevState => {
-                    return { ...prevState, email: text }
-                })}
-                autoCapitalize='none'
-                secureTextEntry={false}
-            />
-            <TextField
-                placeholder='Password'
-                value={password}
-                onChangeText={text => setState(prevState => {
-                    return { ...prevState, password: text }
+                    return { ...prevState, currentPassword: text }
                 })}
                 autoCapitalize='none'
                 secureTextEntry={true}
             />
 
             <TextField
-                placeholder='Password confirmation'
-                value={passwordConfirmation}
+                placeholder='New password'
+                value={newPassword}
                 onChangeText={text => setState(prevState => {
-                    return { ...prevState, passwordConfirmation: text }
+                    return { ...prevState, newPassword: text }
                 })}
                 autoCapitalize='none'
                 secureTextEntry={true}
             />
 
-            <Text
-                style={styles.privacyPolicy}
-                onPress={() => { Alert.alert('Privacy Policy and GDPR Consent', privacyPolicy.privacyPolicy) }}
-            >
-                Click here to read our privacy policy
-            </Text>
+            <TextField
+                placeholder='New password confirmation'
+                value={newPasswordConfirmation}
+                onChangeText={text => setState(prevState => {
+                    return { ...prevState, newPasswordConfirmation: text }
+                })}
+                autoCapitalize='none'
+                secureTextEntry={true}
+            />
 
             <TouchButton
-                title='Create account'
-                press={() => checkUserEntryAndAddPlayer(name, email, password, passwordConfirmation, navigation, changeModalVisible)}
+                title='Update password'
+                press={() => checkUserEntryAndUpdatePassword(route.params.player_id, currentPassword, newPassword, newPasswordConfirmation, navigation, changeModalVisible)}
             />
 
 
