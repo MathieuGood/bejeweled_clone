@@ -154,7 +154,7 @@ export default function GameScreen({ navigation, route }) {
   // Reset all the states to default in order to start a new game
   const resetGame = () => {
     setGameGrid(buildGameGridWithNoMatches(gridSize, gridNumberOfDifferentItems))
-    setAttempts(3)
+    setAttempts(5)
     setScore(0)
     setLevel(1)
     setProgressBar(50)
