@@ -1,4 +1,5 @@
-import * as React from 'react';
+import * as React from 'react'
+import { Platform } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
@@ -23,7 +24,9 @@ export default function App() {
            <NavigationContainer>
 
             <Stack.Navigator>
-              <Stack.Screen name='SplashScreen' component={SplashScreen} options={{ headerShown: false }} />
+              {Platform.OS === 'ios' && (
+                <Stack.Screen name='SplashScreen' component={SplashScreen} options={{ headerShown: false }} />
+              )}
               <Stack.Screen name='HomeScreen' component={HomeScreen} options={{ headerShown: false }} />
               <Stack.Screen name='GameScreen' component={GameScreen} options={{ headerShown: false }} />
               <Stack.Screen name='SettingsScreen' component={SettingsScreen} options={{ headerShown: false }} />
