@@ -8,7 +8,7 @@ function buildRankingUpdateEmail(player_email, player_name, apiResponseResults) 
             {
                 From: {
                     Email: "mathieu.bon@uha.fr",
-                    Name: "Bejeweled Clone"
+                    Name: "Jewels Juggle"
                 },
                 To: [
                     {
@@ -16,7 +16,7 @@ function buildRankingUpdateEmail(player_email, player_name, apiResponseResults) 
                         Name: player_name
                     }
                 ],
-                Subject: "Bejeweled Clone 💎 You went down in the rankings!",
+                Subject: "Jewels Juggle 💎 You went down in the rankings!",
                 TextPart:
                     `Dear ${player_name},
                     
@@ -26,14 +26,26 @@ function buildRankingUpdateEmail(player_email, player_name, apiResponseResults) 
 
                     See you soon 👋
                     
-                    Bejeweled Clone Team`,
+                    Jewels Juggle Team`,
 
-                HTMLPart:
-                    `<p>Dear ${player_name},</p>` +
-                    `<p>You went down from #${previousRank} to ${currentRank}.</p>` +
-                    `<p>Come play again to reclaim your spot!</p>` +
-                    `<p>See you soon 👋<p>` +
-                    `<p>Bejeweled Clone team</p>`
+                    HTMLPart:
+                    '<div style="background-color: #f5f5dc; font-family: \'Georgia\', serif; color: #333; width: 100%; min-height: 100vh; padding: 20px; box-sizing: border-box;">' +
+                    '<div style="background-color: #e6e2d3; border: 1px solid #d4c0a1; padding: 20px; max-width: 600px; margin: auto; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">' +
+                    '<img src="assets/gameTiles/others/banniere" alt="Jewels Juggle" style="max-width: 100%; height: auto; display: block; margin-bottom: 20px;">' +
+                    '<h1 style="color: #2b50c8; font-family: \'Georgia\', serif;">Jewels Juggle💎</h1>' +
+                    '<p>Dear ' + player_name + ',</p>' +
+                    '<p>You went down from <strong> #' + previousRank + '</strong> to <strong>#' + currentRank + '</strong>.</p>' +
+                    '<p>Come play again to reclaim your spot!</p>' +
+                    '<p>See you soon 👋</p>' +
+                    '<p>The Jewels Juggle Team</p>' +
+                    '<div style="font-size: 14px; color: #666; margin-top: 40px; padding-top: 20px; border-top: 1px solid #ccc;">' +
+                    '<p>We have sent you this email because you provided your email address during your registration for the game Jewels Juggle. Your email address will not be used for any other purpose unless you have previously opted in to receive emails from us.</p>' +
+                    '<p>Jewels Juggle Inc., Strasbourg, France</p>' +
+                    '<p>To ensure that emails from Jewels Juggle reach your inbox, please add bon.mathieu@gmail.com to your address book.</p>' +
+                    '<p>To unsubscribe, please email <a href="mailto:bon.mathieu@gmail.com" style="color: #2b50c8;">bon.mathieu@gmail.com</a></p>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>'
             }
         ]
     }
