@@ -81,11 +81,6 @@ export default function GameScreen({ navigation, route }) {
   const [isNoHintModalVisible, setIsNoHintModalVisible] = useState(false);
 
 
-
-
-
-
-
   ////////////////////////////////////////////////////////////////////////////////////////////////////
   //
   // Functions

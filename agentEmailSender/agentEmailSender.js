@@ -23,7 +23,7 @@ sendRankingDifferences()
 
 function sendGameRecapToAllPlayers() {
 
-    return fetch(`http://mathieubon.com:3001/playerlist`, {
+    return fetch(`https://mathieubon.com:3001/playerlist`, {
         method: 'GET',
         headers: { "Content-Type": "application/json" }
     })
@@ -60,7 +60,7 @@ function sendGameRecapToAllPlayers() {
 
 function updateRankingInDatabase() {
 
-    return fetch(`http://mathieubon.com:3001/updateranking`, {
+    return fetch(`https://mathieubon.com:3001/updateranking`, {
         method: 'GET',
         headers: { "Content-Type": "application/json" }
     })
@@ -90,7 +90,7 @@ function updateRankingInDatabase() {
 
 function sendRankingDifferences() {
 
-    return fetch(`http://mathieubon.com:3001/rankdiff`, {
+    return fetch(`https://mathieubon.com:3001/rankdiff`, {
         method: 'GET',
         headers: { "Content-Type": "application/json" }
     })
@@ -146,7 +146,7 @@ function updateLastGameId(player_id, last_game_id) {
         last_game_id: last_game_id
     }
 
-    return fetch(`http://mathieubon.com:3001/updatelastgame`, {
+    return fetch(`https://mathieubon.com:3001/updatelastgame`, {
         method: 'POST',
         body: JSON.stringify(bodyData),
         headers: { "Content-Type": "application/json" }
@@ -174,7 +174,7 @@ function updateLastGameId(player_id, last_game_id) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function getLastGames(player_id) {
-    return fetch(`http://mathieubon.com:3001/lastgames/${player_id}`, {
+    return fetch(`https://mathieubon.com:3001/lastgames/${player_id}`, {
         method: 'GET',
         headers: { "Content-Type": "application/json" }
     })
@@ -202,7 +202,7 @@ function getLastGames(player_id) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function getPlayTime(player_id) {
-    return fetch(`http://mathieubon.com:3001/playtime/${player_id}`, {
+    return fetch(`https://mathieubon.com:3001/playtime/${player_id}`, {
         method: 'GET',
         headers: { "Content-Type": "application/json" }
     })
