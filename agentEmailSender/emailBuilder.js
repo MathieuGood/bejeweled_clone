@@ -84,7 +84,7 @@ function buildRecapEmail(player_email, player_name, play_time, last_games) {
         const playTimeHours = Math.floor(play_time / 3600)
         const playTimeMinutes = Math.floor((play_time % 3600) / 60)
         const playTimeSeconds = play_time % 60
-        
+
         let formattedPlayTime = playTimeSeconds + ' seconds'
         // Only display hours and minutes if they are not 0
         if (playTimeHours > 0) {
@@ -129,28 +129,28 @@ function buildRecapEmail(player_email, player_name, play_time, last_games) {
                     
                     Jewels Juggle Team`,
                 HTMLPart:
-                    '<div style="background-color: #f5f5dc; font-family: \'Georgia\', serif; color: #333; width: 100%; min-height: 100vh; padding: 20px; box-sizing: border-box;">' +
-                    '<div style="background-color: #e6e2d3; border: 1px solid #d4c0a1; padding: 20px; max-width: 600px; margin: auto; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">' +
-                    '<img src="../assets/gameTiles/others/banniere.png" alt="banniere Jewels Juggle" style="max-width: 100%; height: auto; display: block; margin-bottom: 20px;">' +
-                    '<h1 style="color: #2b50c8; font-family: \'Georgia\', serif;">Jewels Juggle💎</h1>' +
-                    '<p>Dear ' + player_name + ',</p>' +
-                    '<p>Thank you for playing Jewels Juggle 💎</p>' +
-                    '<p>Here is a recap of your last games :</p>' +
-                    '<table><thead><tr><th>Date and time</th><th>Score</th></tr></thead>' +
-                    '<tbody>' + 
-                    scoresHTMLContent +
-                    '</tbody></table><br>' +
-                    playTimeTextContent +
-                    '<p>See you soon 👋<p>' +
-                    '<p>Jewels Juggle team</p>' +
-                    '<div style="font-size: 14px; color: #666; margin-top: 40px; padding-top: 20px; border-top: 1px solid #ccc;">' +
-                    '<p>We have sent you this email because you provided your email address during your registration for the game Jewels Juggle. Your email address will not be used for any other purpose unless you have previously opted in to receive emails from us.</p>' +
-                    '<p>Jewels Juggle Inc., Strasbourg, France</p>' +
-                    '<p>To ensure that emails from Jewels Juggle reach your inbox, please add bon.mathieu@gmail.com to your address book.</p>' +
-                    '<p>To unsubscribe, please email <a href="mailto:bon.mathieu@gmail.com" style="color: #2b50c8;">bon.mathieu@gmail.com</a></p>' +
-                    '</div>' +
-                    '</div>' +
-                    '</div>'
+                '<div style="background-color: #f5f5dc; font-family: \'Georgia\', serif; color: #333; width: 100%; min-height: 100vh; padding: 20px; box-sizing: border-box;">' +
+                '<div style="background-color: #e6e2d3; border: 1px solid #d4c0a1; padding: 20px; max-width: 600px; margin: auto; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">' +
+                '<img src="../assets/gameTiles/others/banniere.png" alt="banniere Jewels Juggle" style="max-width: 100%; height: auto; display: block; margin-bottom: 20px;">' +
+                '<h1 style="color: #2b50c8; font-family: \'Georgia\', serif;">Jewels Juggle💎</h1>' +
+                '<p>Dear ' + player_name + ',</p>' +
+                '<p>Thank you for playing Jewels Juggle 💎</p>' +
+                '<p>Here is a recap of your last games :</p>' +
+                '<table><thead><tr><th>Date and time</th><th>Score</th></tr></thead>' +
+                '<tbody>' + 
+                 scoresHTMLContent +
+                '</tbody></table><br>' +
+                 playTimeTextContent +
+                '<p>See you soon 👋<p>' +
+                '<p>Jewels Juggle team</p>' +
+                '<div style="font-size: 14px; color: #666; margin-top: 40px; padding-top: 20px; border-top: 1px solid #ccc;">' +
+                '<p>We have sent you this email because you provided your email address during your registration for the game Jewels Juggle. Your email address will not be used for any other purpose unless you have previously opted in to receive emails from us.</p>' +
+                '<p>Jewels Juggle Inc., Strasbourg, France</p>' +
+                '<p>To ensure that emails from Jewels Juggle reach your inbox, please add bon.mathieu@gmail.com to your address book.</p>' +
+                '<p>To unsubscribe, please email <a href="mailto:bon.mathieu@gmail.com" style="color: #2b50c8;">bon.mathieu@gmail.com</a></p>' +
+                '</div>' +
+                '</div>' +
+                '</div>'
             
             }
         ]
