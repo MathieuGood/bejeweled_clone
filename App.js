@@ -17,20 +17,20 @@ const Stack = createNativeStackNavigator()
 export default function App() {
   return (
     <AppProvider>
-        <ThemePreloader />
-         <FontLoader/>
-        
-           <NavigationContainer>
+      <ThemePreloader />
+      <FontLoader />
 
-            <Stack.Navigator>
-              {Platform.OS === 'ios' && (
-                <Stack.Screen name='SplashScreen' component={SplashScreen} options={{ headerShown: false }} />
-              )}
-              <Stack.Screen name='HomeScreen' component={HomeScreen} options={{ headerShown: false }} />
-              <Stack.Screen name='GameScreen' component={GameScreen} options={{ headerShown: false }} />
-            </Stack.Navigator>
+      <NavigationContainer>
 
-          </NavigationContainer>
+        <Stack.Navigator>
+          {Platform.OS === 'ios' && (
+            <Stack.Screen name='SplashScreen' component={SplashScreen} options={{ headerShown: false }} />
+          )}
+          <Stack.Screen name='HomeScreen' component={HomeScreen} options={{ headerShown: false }} />
+          <Stack.Screen name='GameScreen' component={GameScreen} options={{ headerShown: false }} />
+        </Stack.Navigator>
+
+      </NavigationContainer>
     </AppProvider>
 
   );
