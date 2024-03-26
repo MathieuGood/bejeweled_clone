@@ -55,7 +55,7 @@ INSERT INTO players (
 ', 8),
     ('Tutankhamun', 'tutankhamun@pharaoh.com', '826714ca3371f84c489ebb76e5a2929303be1acc15a1e5a0ef0f73191f869c9c37b735ccbd817bedbab3910bcc7daf523f7682053fb87a65963cb89fba19f252
 ', 0),
-    ('Norah', 'norah.essaih@uha.fr', 'd00c904644a7600b286cac762442ebd9838263665eef4ff48c47839ea3e88c998aea961628f1042da0bcb9e3571b85bfd4fb02ef146b6bc6cb4508f28ab19254', 0),
+    ('Safyne', 'norah.essaih@gmail.com', 'a537a3d7252ea25fca20a986f5f79243b8c778a3ca66e69a5eb5591a249985ae55d9ad9a3943f7cc502c388b3feb346a126d085f8fd3840064337af1a3ad4271', 0),
     ('Miaou', 'oplatralala@gmail.com', '938f81e4ad808235762b6692a3b65a336cb71b4bc26a5f3308acf24f8ce26bdc04626c72857605003eb6d3153431cfdec9271077ce40b88f2349f0bf8a993113', 0)
     ;
 
