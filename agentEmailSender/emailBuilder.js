@@ -72,7 +72,7 @@ function buildRecapEmail(player_email, player_name, play_time, last_games) {
         const playTimeHours = Math.floor(play_time / 3600)
         const playTimeMinutes = Math.floor((play_time % 3600) / 60)
         const playTimeSeconds = play_time % 60
-        
+
         let formattedPlayTime = playTimeSeconds + ' seconds'
         // Only display hours and minutes if they are not 0
         if (playTimeHours > 0) {

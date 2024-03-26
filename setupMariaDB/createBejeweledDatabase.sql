@@ -87,12 +87,6 @@ INSERT INTO games (
     (150, 8, 124, '2024-01-09 06:00:00')
     ;
 
-
-CREATE TABLE images (
-    image_id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    player_id INT UNSIGNED NOT NULL,
-    image_file MEDIUMBLOB);
-
     
 -- --------------------------------------------------------------------------------------
 --
