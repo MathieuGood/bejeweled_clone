@@ -87,16 +87,15 @@ export default function RegisterModal({
                 title='Create account'
                 press={() => checkUserEntryAndAddPlayer(name, email, password, passwordConfirmation, navigation, changeModalVisible)}
             />
-
-
-            <View style={{ position: 'absolute', top: -26, right: -37 }}>
-                <IconButton
-                    iconName="close"
-                    iconSize={39}
-                    press={() => {
-                        changeModalVisible(false);
-                    }}
-                />
+            
+            <View style={{position:'absolute', top:-2, right:-15}}>
+                    <IconButton 
+                        iconName="close"
+                        iconSize={25}gitgi
+                        press={() => {
+                            changeModalVisible(false);
+                        }}
+                    />
             </View>
 
         </CustomModal>

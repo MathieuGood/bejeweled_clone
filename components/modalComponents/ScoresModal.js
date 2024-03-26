@@ -64,10 +64,10 @@ export default function ScoresModal({
 
                 </View>
                 // If the modal is a highScores modal, display the button to close modal
-                : <View style={{position:'absolute', top:-26, right:-37}}>
+                : <View style={{position:'absolute', top:-2, right:-15}}>
                     <IconButton 
                         iconName="close"
-                        iconSize={39}
+                        iconSize={25}
                         press={() => {
                             changeModalVisible(false);
                         }}
