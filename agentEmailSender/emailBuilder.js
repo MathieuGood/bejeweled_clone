@@ -1,7 +1,16 @@
-function buildRankingUpdateEmail(player_email, player_name, apiResponseResults) {
+function buildRankingUpdateEmail(player_email, player_name, rankings, highscores) {
 
-    const previousRank = apiResponseResults[0].prev
-    const currentRank = apiResponseResults[0].current
+    const previousRank = rankings[0].prev
+    const currentRank = rankings[0].current
+    let highscoresHTMLContent = ''
+
+    highscores.forEach((result) => {
+        rank = result.rank
+        player = result.player_name
+        score = result.score
+        row = `<tr><td>${rank}</td><td>${player}</td><td>${score}</td></tr>`
+        highscoresHTMLContent += row
+    })
 
     const emailToSend = {
         Messages: [
@@ -28,24 +37,28 @@ function buildRankingUpdateEmail(player_email, player_name, apiResponseResults) 
                     
                     Jewels Juggle Team`,
 
-                    HTMLPart:
-                    '<div style="background-color: #f5f5dc; font-family: \'Georgia\', serif; color: #333; width: 100%; min-height: 100vh; padding: 20px; box-sizing: border-box;">' +
-                    '<div style="background-color: #e6e2d3; border: 1px solid #d4c0a1; padding: 20px; max-width: 600px; margin: auto; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">' +
-                    '<img src="https://mathieubon.com/api/bejeweled_agentEmailSender/email-banner.png" alt="Jewels Juggle" style="max-width: 100%; height: auto; display: block; margin-bottom: 20px;">' +
-                    '<h1 style="color: #2b50c8; font-family: \'Georgia\', serif;">Jewels Juggle💎</h1>' +
-                    '<p>Dear ' + player_name + ',</p>' +
-                    '<p>You went down from <strong> #' + previousRank + '</strong> to <strong>' + currentRank + '</strong>.</p>' +
-                    '<p>Come play again to reclaim your spot!</p>' +
-                    '<p>See you soon 👋</p>' +
-                    '<p>The Jewels Juggle Team</p>' +
-                    '<div style="font-size: 14px; color: #666; margin-top: 40px; padding-top: 20px; border-top: 1px solid #ccc;">' +
-                    '<p>We have sent you this email because you provided your email address during your registration for the game Jewels Juggle. Your email address will not be used for any other purpose unless you have previously opted in to receive emails from us.</p>' +
-                    '<p>Jewels Juggle Inc., Strasbourg, France</p>' +
-                    '<p>To ensure that emails from Jewels Juggle reach your inbox, please add bon.mathieu@gmail.com to your address book.</p>' +
-                    '<p>To unsubscribe, please email <a href="mailto:bon.mathieu@gmail.com" style="color: #2b50c8;">bon.mathieu@gmail.com</a></p>' +
-                    '</div>' +
-                    '</div>' +
-                    '</div>'
+                HTMLPart:
+                    `<div style="background-color: #f5f5dc; font-family: 'Georgia', serif; color: #333; width: 100%; min-height: 100vh; padding: 20px; box-sizing: border-box;">
+                    <div style="background-color: #e6e2d3; border: 1px solid #d4c0a1; padding: 20px; max-width: 600px; margin: auto; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                    <img src="https://mathieubon.com/api/bejeweled_agentEmailSender/email-banner.png" alt="Jewels Juggle" style="max-width: 100%; height: auto; display: block; margin-bottom: 20px;">
+                    <h1 style="color: #2b50c8; font-family: 'Georgia', serif;">Jewels Juggle💎</h1>
+                    <p>Dear ${player_name},</p>
+                    <p>You went down from <strong> #${previousRank}</strong> to <strong>${currentRank}</strong>.</p>
+                    <p>Come play again to reclaim your spot!</p>
+                    <table>
+                    <thead><tr><th>Rank</th><th>Player</th><th>Score</th></tr></thead>
+                    <tbody> ${highscoresHTMLContent} </tbody>
+                    </table>
+                    <p>See you soon 👋</p>
+                    <p>The Jewels Juggle Team</p>
+                    <div style="font-size: 14px; color: #666; margin-top: 40px; padding-top: 20px; border-top: 1px solid #ccc;">
+                    <p>We have sent you this email because you provided your email address during your registration for the game Jewels Juggle. Your email address will not be used for any other purpose unless you have previously opted in to receive emails from us.</p>
+                    <p>Jewels Juggle Inc., Strasbourg, France</p>
+                    <p>To ensure that emails from Jewels Juggle reach your inbox, please add bon.mathieu@gmail.com to your address book.</p>
+                    <p>To unsubscribe, please email <a href="mailto:bon.mathieu@gmail.com" style="color: #2b50c8;">bon.mathieu@gmail.com</a></p>
+                    </div>
+                    </div>
+                    </div>`
             }
         ]
     }
@@ -137,7 +150,7 @@ function buildRecapEmail(player_email, player_name, play_time, last_games) {
                     '<p>Thank you for playing Jewels Juggle 💎</p>' +
                     '<p>Here is a recap of your last games :</p>' +
                     '<table><thead><tr><th>Date and time</th><th>Score</th></tr></thead>' +
-                    '<tbody>' + 
+                    '<tbody>' +
                     scoresHTMLContent +
                     '</tbody></table><br>' +
                     playTimeTextContent +
@@ -151,7 +164,7 @@ function buildRecapEmail(player_email, player_name, play_time, last_games) {
                     '</div>' +
                     '</div>' +
                     '</div>'
-            
+
             }
         ]
     }
