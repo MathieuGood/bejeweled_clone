@@ -88,45 +88,93 @@ function updateRankingInDatabase() {
 //
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function sendRankingDifferences() {
+// function sendRankingDifferences() {
 
+//     return fetch(`https://mathieubon.com:3001/rankdiff`, {
+//         method: 'GET',
+//         headers: { "Content-Type": "application/json" }
+//     })
+//         .then(response => response.json())
+//         .then(json => {
+//             // Get the response for ranking difference
+//             if (json) {
+//                 console.log(json)
+//                 // For each player in the database
+//                 json.forEach((ranking) => {
+//                     // Run function to send recap by e-mail if last played game has ended for an hour at least
+//                     // console.log(ranking)
+//                     let rank = 'unranked'
+//                     // If player has been losing ranks
+//                     if (ranking.rank > ranking.prev_rank || ranking.rank === null) {
+//                         if (ranking.rank !== null) {
+//                             rank = `#${ranking.rank}`
+//                         }
+//                         console.log(`>>>>>>${ranking.player_name} was rank #${ranking.prev_rank}, now he is ${rank} `)
+//                         console.log('SEND E-MAIL NOW to ' + ranking.player_email)
+//                         const email = buildRankingUpdateEmail(ranking.player_email, ranking.player_name, [{ prev: ranking.prev_rank, current: rank }])
+//                         sendMail(email)
+//                     }
+//                 })
+
+//                 // When all e-mails are sent, updates prev_rank in in players table
+//                 updateRankingInDatabase()
+
+//             } else {
+//                 console.log('File empty or no return from API call')
+//                 return null
+//             }
+//         })
+//         .catch(error => {
+//             console.error('Error in sendRankingDifferences : ' + error)
+//             return null
+//         });
+// }
+
+
+
+function sendRankingDifferences() {
+    // Fetch ranking differences
     return fetch(`https://mathieubon.com:3001/rankdiff`, {
         method: 'GET',
         headers: { "Content-Type": "application/json" }
     })
         .then(response => response.json())
         .then(json => {
-            // Get the response for ranking difference
             if (json) {
-                console.log(json)
-                // For each player in the database
-                json.forEach((ranking) => {
-                    // Run function to send recap by e-mail if last played game has ended for an hour at least
-                    // console.log(ranking)
-                    let rank = 'unranked'
-                    // If player has been losing ranks
-                    if (ranking.rank > ranking.prev_rank || ranking.rank === null) {
-                        if (ranking.rank !== null) {
-                            rank = `#${ranking.rank}`
-                        }
-                        console.log(`>>>>>>${ranking.player_name} was rank #${ranking.prev_rank}, now he is ${rank} `)
-                        console.log('SEND E-MAIL NOW to ' + ranking.player_email)
-                        const email = buildRankingUpdateEmail(ranking.player_email, ranking.player_name, [{ prev: ranking.prev_rank, current: rank }])
-                        sendMail(email)
-                    }
+                // Fetch highscores
+                return fetch(`https://mathieubon.com:3001/highscores`, {
+                    method: 'GET',
+                    headers: { "Content-Type": "application/json" }
                 })
-
-                // When all e-mails are sent, updates prev_rank in in players table
-                updateRankingInDatabase()
-
+                    .then(response => response.json())
+                    .then(highscores => {
+                        console.log(json)
+                        console.log(highscores)
+                        // Process ranking differences
+                        json.forEach((ranking) => {
+                            let rank = 'unranked';
+                            if (ranking.rank > ranking.prev_rank || ranking.rank === null) {
+                                if (ranking.rank !== null) {
+                                    rank = `#${ranking.rank}`;
+                                }
+                                console.log(`>>>>>>${ranking.player_name} was rank #${ranking.prev_rank}, now he is ${rank}`);
+                                console.log('SEND E-MAIL NOW to ' + ranking.player_email);
+                                // Build email with highscores included
+                                const email = buildRankingUpdateEmail(ranking.player_email, ranking.player_name, [{ prev: ranking.prev_rank, current: rank }], highscores)
+                                sendMail(email);
+                            }
+                        });
+                        // When all e-mails are sent, update prev_rank in players table
+                        updateRankingInDatabase();
+                    });
             } else {
-                console.log('File empty or no return from API call')
-                return null
+                console.log('File empty or no return from API call');
+                return null;
             }
         })
         .catch(error => {
-            console.error('Error in sendRankingDifferences : ' + error)
-            return null
+            console.error('Error in sendRankingDifferences : ' + error);
+            return null;
         });
 }
 
@@ -244,7 +292,7 @@ function sendRecapEmailIfTimeReached(player_id) {
 
                 // Check if last game has been played for at least one hour
                 if (end_time < now) {
-                    console.log('Last games : ' + ' for player ID ' + player_id )
+                    console.log('Last games : ' + ' for player ID ' + player_id)
                     console.log(last_games)
                     const player_email = last_games[last_games.length - 1]['player_email']
                     const player_name = last_games[last_games.length - 1]['player_name']
