@@ -7,7 +7,7 @@ function buildRankingUpdateEmail(player_email, player_name, apiResponseResults) 
         Messages: [
             {
                 From: {
-                    Email: "mathieu.bon@uha.fr",
+                    Email: "bon.mathieu@gmail.com",
                     Name: "Jewels Juggle"
                 },
                 To: [
@@ -34,7 +34,7 @@ function buildRankingUpdateEmail(player_email, player_name, apiResponseResults) 
                     '<img src="https://mathieubon.com/api/bejeweled_agentEmailSender/email-banner.png" alt="Jewels Juggle" style="max-width: 100%; height: auto; display: block; margin-bottom: 20px;">' +
                     '<h1 style="color: #2b50c8; font-family: \'Georgia\', serif;">Jewels Juggle💎</h1>' +
                     '<p>Dear ' + player_name + ',</p>' +
-                    '<p>You went down from <strong> #' + previousRank + '</strong> to <strong>#' + currentRank + '</strong>.</p>' +
+                    '<p>You went down from <strong> #' + previousRank + '</strong> to <strong>' + currentRank + '</strong>.</p>' +
                     '<p>Come play again to reclaim your spot!</p>' +
                     '<p>See you soon 👋</p>' +
                     '<p>The Jewels Juggle Team</p>' +
@@ -105,7 +105,7 @@ function buildRecapEmail(player_email, player_name, play_time, last_games) {
         Messages: [
             {
                 From: {
-                    Email: "mathieu.bon@uha.fr",
+                    Email: "bon.mathieu@gmail.com",
                     Name: "Jewels Juggle"
                 },
                 To: [
