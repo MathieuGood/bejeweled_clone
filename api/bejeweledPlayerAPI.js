@@ -1,7 +1,7 @@
 const express = require('express')
 const mysql = require('mysql2')
-const fs = require('fs');
-const https = require('https');
+const fs = require('fs')
+const https = require('https')
 
 
 
@@ -22,13 +22,13 @@ const db = mysql.createConnection({
 
 db.connect((err) => {
     if (err) {
-        console.error('Error connecting to MySQL database: ', err);
+        console.error('Error connecting to MySQL database: ', err)
         // If no connection, retry after 2 seconds
-        setTimeout(handleDisconnect, 2000);
+        setTimeout(handleDisconnect, 2000)
     }
     console.log('Bejeweled Clone Player API')
     console.log('Connected to MySQL database')
-});
+})
 
 
 // When error code encoutered, try to connect again to database calling handleDisconnect()
@@ -36,9 +36,9 @@ db.on('error', (err) => {
     if (err.code === 'PROTOCOL_CONNECTION_LOST') {
         handleDisconnect()
     } else {
-        throw err;
+        throw err
     }
-});
+})
 
 
 function handleDisconnect() {
@@ -56,26 +56,23 @@ function handleDisconnect() {
 //
 /////////////////////////////////////////////////////////////////////////////////////
 
+
 const app = express()
 const port = 3001
 
 app.use(express.json())
 
 
-
-
-
-
 // Load SSL certificate and key
 const options = {
     key: fs.readFileSync('privkey.pem'),
     cert: fs.readFileSync('fullchain.pem')
-};
+}
 
 // Start HTTPS server
 https.createServer(options, app).listen(port, () => {
-    console.log(`Server running on https://localhost:${port}`);
-});
+    console.log(`Server running on https://localhost:${port}`)
+})
 
 
 
@@ -158,7 +155,7 @@ app.post('/updatepassword', (req, res) => {
             } else {
                 res.json(result.affectedRows)
             }
-            
+
         })
 })
 // Test /updatepassword route
@@ -223,7 +220,7 @@ app.get('/lastgames/:player_id', (req, res) => {
 // Get total play time in seconds by player_id
 app.get('/playtime/:player_id', (req, res) => {
     const { player_id } = req.params
-    db.query('SELECT SUM(duration) AS play_time FROM games WHERE games.player_id = ?;',
+    db.query('SELECT SUM(duration) AS play_time FROM games WHERE games.player_id = ?',
         [player_id], (err, results) => {
             if (err) throw err
             res.json(results[0])
