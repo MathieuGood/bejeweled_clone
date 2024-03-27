@@ -51,10 +51,8 @@ INSERT INTO players (
     ('Bastet', 'bastet@egyptian-god.com', 'de4c2ff99fb34242646a324885db79ca9ef82a5f4b36c657b83ecf6931c008de87b6daf99a1c46336f36687d0ab1fc9b91f5bc07e7c3913bec3844993fd2fbad', 5),
     ('Cleopatra', 'cleopatra@pharaoh.com', '94d9c79958a928808f4b1afdb6bf51f6a5d4a0b2bb6f07f40e47b2f0a158667520f19ba2242edceec140ffe8f2ea0993025d3436c0655fb4d25c8ae5290ebe08', 6),
     ('Ramses II', 'ramsestwo@pharaoh.com', 'e2d07c0ac978e5fb3c92050e3dd46fa7494ca66425f1e413c6dd3663ef448d624606d6ec2ba5a9f786cde78d3b4af113d032c2a48ef388970c7d0a811900b865', 7),
-    ('Horus', 'horus@egyptian-god.com', '826714ca3371f84c489ebb76e5a2929303be1acc15a1e5a0ef0f73191f869c9c37b735ccbd817bedbab3910bcc7daf523f7682053fb87a65963cb89fba19f252
-', 8),
-    ('Tutankhamun', 'tutankhamun@pharaoh.com', '826714ca3371f84c489ebb76e5a2929303be1acc15a1e5a0ef0f73191f869c9c37b735ccbd817bedbab3910bcc7daf523f7682053fb87a65963cb89fba19f252
-', 0),
+    ('Horus', 'horus@egyptian-god.com', '826714ca3371f84c489ebb76e5a2929303be1acc15a1e5a0ef0f73191f869c9c37b735ccbd817bedbab3910bcc7daf523f7682053fb87a65963cb89fba19f252', 8),
+    ('Tutankhamun', 'tutankhamun@pharaoh.com', '826714ca3371f84c489ebb76e5a2929303be1acc15a1e5a0ef0f73191f869c9c37b735ccbd817bedbab3910bcc7daf523f7682053fb87a65963cb89fba19f252', 0),
     ('Safyne', 'norah.essaih@gmail.com', 'a537a3d7252ea25fca20a986f5f79243b8c778a3ca66e69a5eb5591a249985ae55d9ad9a3943f7cc502c388b3feb346a126d085f8fd3840064337af1a3ad4271', 0),
     ('Miaou', 'oplatralala@gmail.com', '938f81e4ad808235762b6692a3b65a336cb71b4bc26a5f3308acf24f8ce26bdc04626c72857605003eb6d3153431cfdec9271077ce40b88f2349f0bf8a993113', 0)
     ;
