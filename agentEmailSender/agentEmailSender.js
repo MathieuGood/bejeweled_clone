@@ -109,7 +109,6 @@ function sendRankingDifferences() {
                         if (ranking.rank !== null) {
                             rank = `#${ranking.rank}`
                         }
-
                         console.log(`>>>>>>${ranking.player_name} was rank #${ranking.prev_rank}, now he is ${rank} `)
                         console.log('SEND E-MAIL NOW to ' + ranking.player_email)
                         const email = buildRankingUpdateEmail(ranking.player_email, ranking.player_name, [{ prev: ranking.prev_rank, current: rank }])
