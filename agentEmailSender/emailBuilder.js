@@ -144,7 +144,7 @@ function buildRecapEmail(player_email, player_name, play_time, last_games) {
                 HTMLPart:
                     '<div style="background-color: #f5f5dc; font-family: \'Georgia\', serif; color: #333; width: 100%; min-height: 100vh; padding: 20px; box-sizing: border-box;">' +
                     '<div style="background-color: #e6e2d3; border: 1px solid #d4c0a1; padding: 20px; max-width: 600px; margin: auto; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">' +
-                    '<img src="../assets/gameTiles/others/banniere.png" alt="banniere Jewels Juggle" style="max-width: 100%; height: auto; display: block; margin-bottom: 20px;">' +
+                    '<img src="https://mathieubon.com/api/bejeweled_agentEmailSender/email-banner.png" alt="banniere Jewels Juggle" style="max-width: 100%; height: auto; display: block; margin-bottom: 20px;">' +
                     '<h1 style="color: #2b50c8; font-family: \'Georgia\', serif;">Jewels Juggle💎</h1>' +
                     '<p>Dear ' + player_name + ',</p>' +
                     '<p>Thank you for playing Jewels Juggle 💎</p>' +
