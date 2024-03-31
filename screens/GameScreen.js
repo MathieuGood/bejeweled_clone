@@ -22,6 +22,7 @@ import {
   fillEmptyCellsWithNoMatches,
   getAllHints,
   getOneRandomHint,
+  showGameGrid,
 } from "../core/gameFunctions"
 
 import MusicPlayer from "../components/MusicPlayer"
@@ -213,6 +214,7 @@ export default function GameScreen({ navigation, route }) {
   useEffect(() => {
     // Get current grid from state
     let grid = gameGrid
+    showGameGrid(grid)
 
     if (firstPress === null) {
       // If it user's first press on a cell, record press to firstPress state
@@ -225,6 +227,7 @@ export default function GameScreen({ navigation, route }) {
 
       // If the two selected cells are ok for swapping (result in new match)
       if (swapTwoItemsOnGrid(grid, firstPress, lastPress) != false) {
+
         // Swap cells
         let swapGrid = swapTwoItemsOnGrid(grid, firstPress, lastPress)
         // Check if there are matches
