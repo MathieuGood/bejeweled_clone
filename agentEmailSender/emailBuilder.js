@@ -63,10 +63,6 @@ function buildRankingUpdateEmail(player_email, player_name, rankings, highscores
         ]
     }
 
-    // console.log(emailToSend)
-    // console.log(player_email, player_name)
-    // console.log(emailToSend.Messages[0].To[0])
-
     return emailToSend
 }
 
