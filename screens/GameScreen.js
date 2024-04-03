@@ -243,10 +243,11 @@ export default function GameScreen({ navigation, route }) {
           pushDownValuesAndEraseAlignments(grid, level, setScore, score, setLevel, setProgressBar)
 
           // Fill the empty cells with random values, checking there are no matches
-          grid = fillEmptyCellsWithNoMatches(grid)
-
-          // Save the new grid to the gameGrid state
-          setGameGrid(grid)
+          // Add delay to show the erased cells before filling the empty cells
+          setTimeout(() => {
+            grid = fillEmptyCellsWithNoMatches(grid)
+            setGameGrid(grid)
+          }, 400)
 
           // If no hints can be found, end the game
           if (getAllHints(grid).length === 0) {
