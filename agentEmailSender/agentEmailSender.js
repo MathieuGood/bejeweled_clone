@@ -246,7 +246,7 @@ function sendRecapEmailIfTimeReached(player_id) {
                 // Set end_time as time of last game + 1 hour
                 let end_time = new Date(last_games[last_games.length - 1]['end_time'])
                 end_time.setTime(end_time.getTime() + 60 * 60 * 1000)
-
+                console.log("Checking if now " + now + " is greater than end_time " + end_time)
                 // Check if last game has been played for at least one hour
                 if (end_time < now) {
                     console.log('Last games : ' + ' for player ID ' + player_id)
