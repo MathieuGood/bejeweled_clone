@@ -50,7 +50,7 @@ export default function GameScreen({ navigation, route }) {
   const [gridBackup, setGridBackup] = useState([])
 
   // Set the number of attempts to 3
-  const [attempts, setAttempts] = useState(3)
+  const [attempts, setAttempts] = useState(5)
 
   // Set timer start
   const [timer, setTimer] = useState(0)
