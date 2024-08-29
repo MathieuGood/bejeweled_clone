@@ -94,8 +94,6 @@ INSERT INTO games (
 DELIMITER //
 
 -- Get all the games superior to last_game_id based on inputted player_email
-
--- Recently changes input paramter to INT, if not working anymore replace it with VARCHAR(255)
 CREATE PROCEDURE getLastGames(IN id INT)
 BEGIN
     SELECT game_id, games.player_id, player_name, player_email, score, duration, end_time, last_game_id

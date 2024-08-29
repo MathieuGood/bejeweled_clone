@@ -1,13 +1,13 @@
-import { useEffect } from 'react';
-import { preloadImages } from './PreloadThemes'
-import { appThemes } from '../../themes/appThemes'
+import { useEffect } from "react"
+import { preloadImages } from "./PreloadThemes"
+import { appThemes } from "../../themes/appThemes"
 
 const ThemePreloader = () => {
-  useEffect(() => {
-    preloadImages(appThemes);
-  }, []);
+	useEffect(() => {
+		preloadImages(appThemes)
+	}, [])
 
-  return null; 
-};
+	return null
+}
 
-export default ThemePreloader;
+export default ThemePreloader
