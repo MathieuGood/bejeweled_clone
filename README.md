@@ -28,6 +28,8 @@ Jewels Juggle is a personal rendition of the classic game Bejeweled. The game is
 
 <div style="display: flex; justify-content: space-around">
     <img src="doc/jewels_juggle_screenshot_1.png" alt="Jewels Juggle" style="flex: 1; max-width:200px height:auto"/>
-    <img src="doc/jewels_juggle_screenshot_2.png" alt="Jewels Juggle" style="flex: 1;"/>
+    <img src="doc/jewels_juggle_screenshot_2.png" alt="Jewels Juggle" style="flex: 1; max-width:200px height:auto"/>
+<div>
     <video src="doc/bejeweled_demo.mp4" style="flex: 1;"></video>
+</div>
 </div>
