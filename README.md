@@ -24,13 +24,6 @@ Jewels Juggle is a personal rendition of the classic game Bejeweled. The game is
 -   Email notification when user loses a rank
 -   Score recap sent to user's email one hour after last game ends
 
-
-
-<div>
-
-</div>
-
-
 ## Screenshots
 
 <div style="display: flex; justify-content: space-around">
