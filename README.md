@@ -16,6 +16,7 @@ Jewels Juggle is a personal rendition of the classic game Bejeweled. The game is
 
 ### Interface
 
+-   Splash screen animation
 -   Theme selection
 
 ### User account and notifications
@@ -26,10 +27,9 @@ Jewels Juggle is a personal rendition of the classic game Bejeweled. The game is
 
 ## Screenshots
 
-<div style="display: flex; justify-content: space-around">
-    <img src="doc/jewels_juggle_screenshot_1.png" alt="Jewels Juggle" style="flex: 1; max-width:200px height:auto"/>
-    <img src="doc/jewels_juggle_screenshot_2.png" alt="Jewels Juggle" style="flex: 1; max-width:200px height:auto"/>
-<div>
-    <video src="doc/bejeweled_demo.mp4" style="flex: 1;"></video>
+<div style="display: flex; justify-content: space-between;">
+    <video src="doc/bejeweled_demo.mp4" style="width:32%; height:auto;"></video>
+    <img src="doc/jewels_juggle_screenshot_1.png" alt="Jewels Juggle" style="width:32%; height:auto;"/>
+    <img src="doc/jewels_juggle_screenshot_2.png" alt="Jewels Juggle" style="width:32%; height:auto;"/>
 </div>
-</div>
+
